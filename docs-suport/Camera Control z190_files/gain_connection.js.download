@@ -1,0 +1,102 @@
+// JavaScript Document
+
+var g_bGainGray = false;
+
+var GainCtrl = {
+	
+	GetValue : function()
+	{
+		var names = {"Camera.Gain.Value":["*"]}
+		var id = client.property.GetValue({params: names, onresponse: function(resp) {
+			var respGain = JSON.stringify(resp.error || resp.result);
+			var gainData = JSON.parse(respGain);
+			if (gainData == "timeout")
+			{		
+			}
+			else
+			{
+				var gainValue = gainData["Camera.Gain.Value"];
+				g_objGain.innerHTML = gainValue;
+				g_objGain.userData[1].SetSelect(gainValue);
+			}
+		}});
+	},
+	
+	SetValue : function(SelectedValue)
+	{
+		var names = {"Camera.Gain.Value":SelectedValue};
+		var id = client.property.SetValue({params: names, onresponse: function(resp) {}});	
+	},
+
+    NotifyGainStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.Gain.Mode":
+                    GainCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+	
+	NotifySetGainData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {
+									
+			switch(key)
+			{
+				case "Camera.Gain.Value":
+					g_objGain.innerHTML = value;
+					g_objGain.userData[1].SetSelect(value);
+					break;
+				case "P.Menu.pmw-f5x.Event.EventID":
+					if ((EVENT_PLAY_UPDATE == value)
+						|| (EVENT_THUMBNAIL_UPDATE == value)
+						|| (EVENT_700P_CONNECTION_STATUS_REFRESH_WIFI == value)
+						|| (EVENT_ABB_EXECUTE_FOR_GREY_OUT == value)
+						|| (EVENT_AWB_MODE_DISPLAY == value)
+						|| (EVENT_VIEW_UPDATE == value)
+						|| (EVENTKIND_POOLFEED_REFRESH == value))
+						{
+							GainCtrl.GetStatus();
+						}	
+					break;
+				default: 
+					break;
+			}
+		})
+	},
+	
+	GetStatus : function()
+	{
+		var names = {"Camera.Gain.Mode":null};
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) {
+			var resp_str = JSON.stringify(resp.error || resp.result);
+			var statusData = JSON.parse(resp_str);
+			if (statusData == "timeout")
+			{
+				//TODO
+			}
+			else
+			{
+				if ("Locked" == statusData["Camera.Gain.Mode"])
+				{
+					g_bGainGray = true;
+					if (g_OldObject == g_objGain)
+					{
+						g_objGain.userData[1].ShowDialog(false);
+						g_OldObject = null;
+					}
+				}
+				else
+				{
+					g_bGainGray = false;
+				}
+				g_objGain.userData[0].SetDisable(g_bGainGray);
+			}
+		}});
+	}
+}

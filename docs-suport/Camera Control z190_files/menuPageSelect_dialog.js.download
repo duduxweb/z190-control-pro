@@ -1,0 +1,199 @@
+
+function menuPageSelector(objSrc, arrItems, objName, nDefaultUrl, CallbackFun, menuHeight)
+{
+	this.objSrc = objSrc;
+	this.arrItems = arrItems;
+	this.objName = objName;
+	this.CallbackFun = CallbackFun;
+	
+	var m_DefaultUrl = nDefaultUrl;
+	var that = this;
+	var m_objTitle = null;
+	var m_objMaincontainer = null;
+	var m_objSeparator = null;
+	this.create = function()
+	{
+		var objMaincontainer = document.createElement("DIV");
+		objMaincontainer.className = "DIV_PAGE_SWITCH_MENU";
+		m_objMaincontainer = objMaincontainer;
+		this.objSrc.appendChild(objMaincontainer);
+
+		var objTitle = document.createElement("DIV");
+		objTitle.id = "DIV_SWITCH_MENU_TITLE";
+		objTitle.className = "DIV_SWITCH_MENU_TITLE";
+		objTitle.style.display="none";
+		objTitle.style.top="28px";
+		objTitle.style.left = "8px";
+		objMaincontainer.appendChild(objTitle);
+		m_objTitle = objTitle;
+		
+		var objSeparator = document.createElement("DIV");
+		objSeparator.className = "DIV_SWITCH_MENU_SEPARATOR";
+		objSeparator.style.display="none";
+		m_objSeparator = objSeparator;
+		objMaincontainer.appendChild(objSeparator);
+		
+		var objListSepShadow = document.createElement("DIV");
+		objListSepShadow.className = "DIV_LIST_SEP_SHADOW";
+		objListSepShadow.style.height = menuHeight + "px";
+		objMaincontainer.appendChild(objListSepShadow);
+
+		var style_top = 50;
+
+		for(var i = 0; i < this.arrItems.length; ++i)
+		{
+			switch (i) {
+			case 0:
+			case 2:
+			case 4:
+				var objMenuItem = document.createElement("DIV");
+				objMenuItem.id = i + "_DIV_" + this.objName + "_ITEM";
+				objMenuItem.className = "DIV_GLOBAL_MENU_SUBTITLE";
+				objMenuItem.style.top = style_top + "px";
+				objMenuItem.innerHTML = this.arrItems[i];
+
+				objMaincontainer.appendChild(objMenuItem);
+				style_top += 40;
+				break;
+			case 1:
+			case 3:
+				var objMenuItem = document.createElement("DIV");
+				objMenuItem.id = i + "_DIV_" + this.objName + "_ITEM";
+				objMenuItem.className = "DIV_GLOBAL_MENU_ITEM";
+				objMenuItem.style.top = style_top + "px";
+				objMenuItem.innerHTML = this.arrItems[i];
+
+				AddEvent(objMenuItem, "click", this.MenuItemClick);
+				AddEvent(objMenuItem, "mousedown", this.MenuItemMouseDown);
+				AddEvent(objMenuItem, "mouseup", this.MenuItemMouseUp);
+				AddEvent(objMenuItem, "mouseover", this.MenuItemMouseOver);
+				AddEvent(objMenuItem, "mouseout", this.MenuItemMouseOut);
+				AddEvent(objMenuItem, "touchstart", this.MenuItemTouchStart);
+				AddEvent(objMenuItem, "touchend", this.MenuItemTouchEnd);
+				AddEvent(objMenuItem, "touchcancel", this.MenuItemTouchEnd);
+
+				objMaincontainer.appendChild(objMenuItem);
+				style_top += 46;
+
+				var objSeparator = document.createElement("DIV");
+				objSeparator.className = "DIV_SWITCH_MENU_SEPARATOR";
+				objSeparator.style.top = style_top +"px";
+				objMaincontainer.appendChild(objSeparator);
+				break;
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				var objMenuItem = document.createElement("DIV");
+				objMenuItem.id = i + "_DIV_" + this.objName + "_ITEM";
+				objMenuItem.className = "DIV_GLOBAL_MENU_ITEM";
+				objMenuItem.style.top = style_top + "px";
+				objMenuItem.innerHTML = this.arrItems[i];
+
+				AddEvent(objMenuItem, "click", this.MenuItemClick);
+				AddEvent(objMenuItem, "mousedown", this.MenuItemMouseDown);
+				AddEvent(objMenuItem, "mouseup", this.MenuItemMouseUp);
+				AddEvent(objMenuItem, "mouseover", this.MenuItemMouseOver);
+				AddEvent(objMenuItem, "mouseout", this.MenuItemMouseOut);
+				AddEvent(objMenuItem, "touchstart", this.MenuItemTouchStart);
+				AddEvent(objMenuItem, "touchend", this.MenuItemTouchEnd);
+				AddEvent(objMenuItem, "touchcancel", this.MenuItemTouchEnd);
+
+				objMaincontainer.appendChild(objMenuItem);
+				style_top += 46;
+				break;
+			default:
+				break;
+			}
+		}
+			$( m_DefaultUrl+"_DIV_"+this.objName+"_ITEM").style.color = "rgb(255,170,0)";
+			$( m_DefaultUrl+"_DIV_"+this.objName+"_ITEM").style.background = "url(WebCommon/images/Parts_CR_T_GM_List_Selected.png) no-repeat";
+	};
+
+	this.MenuItemClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		that.CallbackFun(parseInt(objSrc.id));
+	}
+	 
+	this.MenuItemMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.background = "rgb(255,170,0)";
+		objSrc.style.color = "rgb(0,0,0)";
+	}
+	 
+	this.MenuItemMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.background = "rgb(20,20,20)";
+		if(m_DefaultUrl+"_DIV_"+that.objName+"_ITEM" == objSrc.id)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+		}
+		else 
+		{
+			objSrc.style.color = "rgb(230,230,230)"; 
+		}
+	}
+	 
+	this.MenuItemMouseOver = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		$( m_DefaultUrl+"_DIV_"+that.objName+"_ITEM").style.background = "url(WebCommon/images/Parts_CR_T_GM_List_Selected.png) no-repeat";
+	}
+	 
+	this.MenuItemMouseOut = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.background = "rgb(20,20,20)";
+		if(m_DefaultUrl+"_DIV_"+that.objName+"_ITEM" == objSrc.id)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+			$( m_DefaultUrl+"_DIV_"+that.objName+"_ITEM").style.background = "url(WebCommon/images/Parts_CR_T_GM_List_Selected.png) no-repeat";
+		}
+		else 
+		{
+			objSrc.style.color = "rgb(230,230,230)"; 
+		}
+	};
+
+	this.MenuItemTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		objSrc.style.background = "rgb(255,170,0)";
+		objSrc.style.color = "rgb(0,0,0)";
+	};
+	 
+	this.MenuItemTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.background = "rgb(20,20,20)";
+		if(m_DefaultUrl+"_DIV_"+that.objName+"_ITEM" == objSrc.id)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+			$( m_DefaultUrl+"_DIV_"+that.objName+"_ITEM").style.background = "url(WebCommon/images/Parts_CR_T_GM_List_Selected.png) no-repeat";
+		}
+		else 
+		{
+			objSrc.style.color = "rgb(230,230,230)"; 
+		}
+		
+		that.CallbackFun(parseInt(objSrc.id));
+	 };
+	 
+	this.SetTitle = function(strTitle)
+	{
+		m_objTitle.innerHTML = strTitle;
+	};
+	
+	this.SetMainContainerHeight = function(iHeight)
+	{
+		m_objMaincontainer.style.height = iHeight + "px";
+		m_objSeparator.style.height = iHeight + "px";
+	}
+	
+	this.create();
+};

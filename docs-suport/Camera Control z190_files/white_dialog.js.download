@@ -1,0 +1,817 @@
+// JavaScript Document
+
+function WhiteDialog(objAttachSrc, nDftSelect, funcCallback, objName)
+{
+	this.AttachSrc = objAttachSrc;
+	this.CallBackFunc = funcCallback;
+	this.NameID = objName;
+	
+	var m_objSelf = this;
+	var m_CurValue = nDftSelect;
+	var m_OldValue = nDftSelect;
+	var mutil = [-15, -5, -1, 0, 1, 5, 15];
+	var mutilNum = 7;
+	var m_ObjText = null;
+	var m_Object = null;
+	var m_Slider = null;
+	var m_objPlusBtn = null;
+	var m_objMinusBtn = null;
+	
+	var m_MainSelectArea = null;
+	var m_SubSelectArea = null;
+	var m_objCurrentItem = null;
+	
+	var m_MainPannelListValue = ["Preset", "Memory A", "Memory B"];
+	var m_WhiteSwitchBSetting = 'Memory';
+	var m_CurrentMode = null;
+        var m_OldMode = null;
+	var m_CurrentValue = [];
+
+    var m_IsMainPannelClick_P = false;  //just for memory a/b
+    var m_IsMainPannelClick_A = false;  //just for memory a/b
+    var m_IsMainPannelClick_B = false;  //just for memory a/b
+	
+	this.Create = function()
+	{
+		var divMainContainer = document.createElement("DIV");
+		divMainContainer.className = "DIV_DLG_MAIN";
+		GetParent(this.AttachSrc).appendChild(divMainContainer);
+		divMainContainer.style.display = "none";
+		m_Object = divMainContainer;
+		
+		var divTitle = document.createElement("DIV");
+                divTitle.className = "DIV_DLG_TITLE";
+		divMainContainer.appendChild(divTitle);
+		m_ObjTitle = divTitle;
+		
+		var divArrow = document.createElement("DIV");
+		divArrow.className = "DIV_DLG_RIGHT_ARROW";
+		divMainContainer.appendChild(divArrow);
+		
+		var divTopSeparator = document.createElement("DIV");
+		divTopSeparator.className = "DIV_DLG_SEPARATOR";
+		divTopSeparator.style.left= "16px";
+		divTopSeparator.style.top = "37px";
+		divMainContainer.appendChild(divTopSeparator);
+		
+		//main pannel
+		var divMainSelect = document.createElement("DIV");
+		divMainSelect.className = "DIV_DLG_SUB";
+		divMainContainer.appendChild(divMainSelect);
+		m_MainSelectArea = divMainSelect;
+		
+		var divSelectArea = document.createElement("DIV");
+		divSelectArea.className = "DIV_DLG_ITEMAREA";
+		divMainSelect.appendChild(divSelectArea);
+		//m_ObjItemArea = divSelectArea;
+		
+		for (var i = 0; i < m_MainPannelListValue.length; i++)
+		{
+			var divItem = document.createElement("DIV");
+			divItem.className = "DIV_DLG_ITEM";
+			divItem.style.top = (i * 48) + "px";
+			divItem.innerHTML = m_MainPannelListValue[i];// value from .html
+			divItem.id = i + "_" + this.NameID;
+			if (i % 2 == 0)
+			{
+				j(divItem).css("background-color","rgb(28,28,28)");
+			}
+			
+			var divItemIcon = document.createElement("DIV");
+			divItemIcon.className = "DIV_DLG_ITEM_ICON";	
+			divItem.appendChild(divItemIcon);
+			
+
+			var divCurrentData = document.createElement("DIV");
+			divCurrentData.id =  i + "DIV_DLG_WHITE_CURRENT_DATA";
+			divCurrentData.className = "DIV_DLG_WHITE_CURRENT_DATA";
+			divItem.appendChild(divCurrentData);
+			
+			if (i > 0)
+			{
+				var divShutterArrow = document.createElement("DIV");
+				divShutterArrow.className = "DIV_DLG_ARROW";
+				divShutterArrow.innerHTML = ">";
+				divShutterArrow.id = i + "_WHITE_ARROW";
+				divItem.appendChild(divShutterArrow);
+			}
+			
+			AddEvent(divItem, "click", this.CallbackMainItemClick);
+			AddEvent(divItem, "mousedown", this.CallbackMainItemMouseDown);
+			AddEvent(divItem, "mouseup", this.CallbackMainItemMouseUp);
+			AddEvent(divItem, "touchstart", this.CallbackMainItemTouchStart);	
+			AddEvent(divItem, "touchend", this.CallbackMainItemTouchEnd);
+			AddEvent(divItem, "touchcancel", this.CallbackMainItemTouchEnd);
+			
+			if (i ==0)
+			{
+				m_objCurrentItem = divItem;
+				m_objCurrentItem.childNodes.item(1).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+				m_objCurrentItem.childNodes.item(1).style.backgroundRepeat = "no-repeat";
+				m_objCurrentItem.style.color = "rgb(255, 170, 0)";
+				m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+			}
+			divSelectArea.appendChild(divItem);
+		}
+		
+		if (m_MainPannelListValue.length < 6)
+		{
+			for (var i = m_MainPannelListValue.length; i < 6; i++)
+			{
+				var divItem = document.createElement("DIV");
+				divItem.className = "DIV_DLG_ITEM";
+				divItem.style.top = (i * 48) + "px";
+				divItem.id = i + "_" + this.NameID;
+				if (i % 2 == 0)
+				{
+					j(divItem).css("background-color","rgb(28,28,28)");
+				}
+				AddEvent(divItem, "click", this.CallbackMainItemEmptyClick);
+				divSelectArea.appendChild(divItem);
+			}
+		}
+		
+		var divMainBottomSeparator = document.createElement("DIV");
+		divMainBottomSeparator.className = "DIV_DLG_SEPARATOR";
+		divMainBottomSeparator.style.top = "288px";
+		divMainSelect.appendChild(divMainBottomSeparator);
+		
+		//sub pannel
+		var divSubSelect = document.createElement("DIV");
+		divSubSelect.className = "DIV_DLG_SUB";
+		divSubSelect.style.display = "none";
+		divMainContainer.appendChild(divSubSelect);
+		m_SubSelectArea = divSubSelect;
+		
+		var divTextField= document.createElement("DIV");
+		divTextField.className = "DIV_DLG_TEXT_FIELD";
+		divTextField.id = "0_DIV_" + this.NameID + "_DLG_TEXTFIELD";
+		divTextField.style.top = "76px";
+		divSubSelect.appendChild(divTextField);
+		m_ObjText = divTextField;
+		
+		var divMinusBtn = document.createElement("DIV");
+		divMinusBtn.id = "4_DIV_" + this.NameID + "_DLG_BTN";
+		divMinusBtn.className = "DIV_DLG_MINUS_BTN";
+		divMinusBtn.style.top = "80px";
+		divSubSelect.appendChild(divMinusBtn);
+		var arrMinusBtnImgs = ["Parts_CR_T_CC_Spinner_Button_Minus_Normal", "Parts_CR_T_CC_Spinner_Button_Minus_Pressed", "Parts_CR_T_CC_Spinner_Button_Minus_Normal", "Parts_CR_T_CC_Spinner_Button_Minus_Normal", ""];
+		divMinusBtn.userData = new ButtonCtrl(divMinusBtn, arrMinusBtnImgs, this.PlusOrMinisButtonClick);
+		m_objMinusBtn = divMinusBtn;
+			
+		var divPlusBtn = document.createElement("DIV");
+		divPlusBtn.id = "5_DIV_" + this.NameID + "_DLG_BTN";
+		divPlusBtn.className = "DIV_DLG_PLUS_BTN";
+		divPlusBtn.style.top = "80px";
+		divSubSelect.appendChild(divPlusBtn);
+		var arrPlusBtnImgs = ["Parts_CR_T_CC_Spinner_Button_Plus_Normal", "Parts_CR_T_CC_Spinner_Button_Plus_Pressed", "Parts_CR_T_CC_Spinner_Button_Plus_Normal", "Parts_CR_T_CC_Spinner_Button_Plus_Normal", ""];
+		divPlusBtn.userData = new ButtonCtrl(divPlusBtn, arrPlusBtnImgs, this.PlusOrMinisButtonClick);
+		m_objPlusBtn = divPlusBtn;
+		
+		var lblMiddlePic = document.createElement("DIV");
+		lblMiddlePic.className = "LBL_PICKER_SPIRNG_SCALE_MIDDLE_DLG";
+		divSubSelect.appendChild(lblMiddlePic);
+	
+		//slider
+		var divSliderGroove = document.createElement("DIV");
+		divSliderGroove.className = "DIV_PICKER_SPE_GROOVE_DLG";
+		divSliderGroove.style.top = "200px";
+		divSubSelect.appendChild(divSliderGroove);
+		
+		var divSlider = document.createElement("DIV");
+		divSlider.id = "DIV_PICKER_ZOOM_SLIDER_" + this.NameID;
+		divSlider.className = "DIV_PICKER_SPRING_SLIDER_DLG";
+		divSlider.style.top = "182px";
+		divSlider.style.left = "105px";
+		divSubSelect.appendChild(divSlider);
+		m_Slider = divSlider;
+		
+		divSlider.userData = new Array();
+		divSlider.userData[0] = new FocusBackSlider(divSlider, mutil, mutilNum, this.sliderCallBack);
+		
+		var divMainBottomSeparator = document.createElement("DIV");
+		divMainBottomSeparator.className = "DIV_DLG_SEPARATOR";
+		divMainBottomSeparator.style.top = "288px";
+		divSubSelect.appendChild(divMainBottomSeparator);
+		
+		var divBackButton = document.createElement("DIV");
+		divBackButton.className = "DIV_DLG_BACK_BTN";
+		divBackButton.id = "2_DIV_" + this.NameID + "_DLG_BTN";
+		divBackButton.innerHTML = "Back";
+		divBackButton.style.left = -9 + "px";
+		divBackButton.style.top = 286 + "px";
+		AddEvent(divBackButton, "click", this.CallbackButtonClick);
+		AddEvent(divBackButton, "mouseout", this.CallbackButtonMouseOut);
+		AddEvent(divBackButton, "mousedown", this.CallbackButtonMouseDown);
+		AddEvent(divBackButton, "mouseup", this.CallbackButtonMouseUp);	
+		AddEvent(divBackButton, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divBackButton, "touchend", this.CallbackBtnTouchEnd);	
+		AddEvent(divBackButton, "touchcancel", this.CallbackBtnTouchEnd);
+		divSubSelect.appendChild(divBackButton);
+		
+		var divSubOKButton = document.createElement("DIV");
+		divSubOKButton.className = "DIV_DLG_BUTTON";
+		divSubOKButton.id = "3_DIV_" + this.NameID + "_DLG_BTN";
+		divSubOKButton.style.left = 176 + "px";
+		divSubOKButton.style.top = 286 + "px";
+		divSubOKButton.innerHTML = "OK";
+		
+		AddEvent(divSubOKButton, "click", this.CallbackButtonClick);
+		AddEvent(divSubOKButton, "mouseout", this.CallbackButtonMouseOut);
+		AddEvent(divSubOKButton, "mousedown", this.CallbackButtonMouseDown);
+		AddEvent(divSubOKButton, "mouseup", this.CallbackButtonMouseUp);	
+		AddEvent(divSubOKButton, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divSubOKButton, "touchend", this.CallbackBtnTouchEnd);	
+		AddEvent(divSubOKButton, "touchcancel", this.CallbackBtnTouchEnd);
+		divSubSelect.appendChild(divSubOKButton);
+	
+		// var divCanelButton = document.createElement("DIV");
+		// divCanelButton.className = "DIV_DLG_BUTTON";
+		// divCanelButton.id = "0_DIV_" + this.NameID + "_DLG_BTN";
+		// divCanelButton.innerHTML = "Cancel";
+		// divCanelButton.style.left = -9 + "px";
+		// divCanelButton.style.top = 286 + "px";
+        //
+		//
+		// AddEvent(divCanelButton, "click", this.CallbackButtonClick);
+		// AddEvent(divCanelButton, "mouseout", this.CallbackButtonMouseOut);
+		// AddEvent(divCanelButton, "mousedown", this.CallbackButtonMouseDown);
+		// AddEvent(divCanelButton, "mouseup", this.CallbackButtonMouseUp);
+		// AddEvent(divCanelButton, "touchstart", this.CallbackBtnTouchStart);
+		// AddEvent(divCanelButton, "touchend", this.CallbackBtnTouchEnd);
+		// AddEvent(divCanelButton, "touchcancel", this.CallbackBtnTouchEnd);
+		// divMainSelect.appendChild(divCanelButton);
+		
+		var divOKButton = document.createElement("DIV");
+		divOKButton.className = "DIV_DLG_BUTTON";
+		divOKButton.id = "1_DIV_" + this.NameID + "_DLG_BTN";
+		divOKButton.style.left = 176 + "px";
+		divOKButton.style.top = 286 + "px";
+		divOKButton.innerHTML = "OK";
+		
+		AddEvent(divOKButton, "click", this.CallbackButtonClick);
+		AddEvent(divOKButton, "mouseout", this.CallbackButtonMouseOut);
+		AddEvent(divOKButton, "mousedown", this.CallbackButtonMouseDown);
+		AddEvent(divOKButton, "mouseup", this.CallbackButtonMouseUp);	
+		AddEvent(divOKButton, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divOKButton, "touchend", this.CallbackBtnTouchEnd);	
+		AddEvent(divOKButton, "touchcancel", this.CallbackBtnTouchEnd);
+		divMainSelect.appendChild(divOKButton);
+
+		
+		divMainContainer.style.left = parseInt(this.AttachSrc.style.left) - 298 + "px";
+		divMainContainer.style.top = parseInt(this.AttachSrc.style.top) - 186 + "px";
+	};
+	
+	this.ShowDialog = function()
+	{
+
+		if ((arguments.length != 0) && (false == arguments[0]))
+		{
+			m_Object.style.display = "none";
+			return;
+		}
+		
+		if("block" == m_Object.style.display) {
+			m_Object.style.display = "none";
+		}
+		else {
+			m_Object.style.display = "block";
+			m_MainSelectArea.style.display = "block";
+			m_SubSelectArea.style.display = "none";
+			m_OldValue = m_CurValue;
+                        m_OldMode = m_CurrentMode;
+		}
+
+        m_IsMainPannelClick_P = false;
+        m_IsMainPannelClick_A = false;
+        m_IsMainPannelClick_B = false;
+	}
+	
+	this.CallbackMainItemClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if (objSrc.id == "" || objSrc.style.opacity == "0.2")
+		{
+			return;//select nothing, return is safe.
+		}
+		
+		if (objSrc.className == "DIV_DLG_WHITE_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		m_objCurrentItem.children[0].style.backgroundImage = "";
+		m_objCurrentItem.style.color = "rgb(230, 230, 230)";
+		m_objCurrentItem.childNodes.item(2).style.color = "rgb(230, 230, 230)";
+		
+		objSrc.children[0].style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+		objSrc.style.color = "rgb(255, 170, 0)";
+		m_objCurrentItem = objSrc;
+		m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+		
+		if (parseInt(objSrc.id, 10) == 0)
+		{
+			m_IsMainPannelClick_P = true;
+            m_IsMainPannelClick_A = false;
+            m_IsMainPannelClick_B = false;
+			m_objSelf.CallBackFunc(objSrc, m_MainPannelListValue[parseInt(objSrc.id)], m_CurrentValue[parseInt(objSrc.id)]);
+		}
+		else if(parseInt(objSrc.id, 10) == 1)
+		{
+            m_IsMainPannelClick_A = true;
+            m_IsMainPannelClick_P = false;
+            m_IsMainPannelClick_B = false;
+            m_objSelf.CallBackFunc(objSrc, m_MainPannelListValue[parseInt(objSrc.id)], m_CurrentValue[parseInt(objSrc.id)]);
+		}
+		else
+		{
+			m_IsMainPannelClick_B = true;
+            m_IsMainPannelClick_A = false;
+            m_IsMainPannelClick_P = false;
+			m_objSelf.CallBackFunc(objSrc, m_MainPannelListValue[parseInt(objSrc.id)], m_CurrentValue[parseInt(objSrc.id)]);
+		}
+	};
+	
+	this.CallbackMainItemMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if (objSrc.className == "DIV_DLG_WHITE_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ITEM_ICON"|| objSrc.className == "DIV_DLG_ARROW")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+		objSrc.style.backgroundColor = "rgb(255,170,0)";
+
+		objSrc.childNodes.item(2).style.color = "rgb(0,0,0)";
+	};
+	
+	this.CallbackMainItemMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if (objSrc.className == "DIV_DLG_WHITE_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ITEM_ICON"|| objSrc.className == "DIV_DLG_ARROW")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (objSrc == m_objCurrentItem)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+			objSrc.childNodes.item(2).style.color = "rgb(255,170,0)";
+		}
+		else
+		{
+			objSrc.style.color = "rgb(230,230,230)";
+			objSrc.childNodes.item(2).style.color = "rgb(230,230,230)";
+		}
+		
+		if (parseInt(objSrc.id) % 2 == 0)
+		{
+			objSrc.style.backgroundColor = "rgb(28,28,28)";
+		}
+		else
+		{
+			objSrc.style.backgroundColor = "";
+		}	
+	};
+	this.CallbackMainItemTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if (objSrc.className == "DIV_DLG_WHITE_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW"|| objSrc.className == "DIV_DLG_ITEM_ICON")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+		objSrc.style.backgroundColor = "rgb(255,170,0)";
+
+		objSrc.childNodes.item(2).style.color = "rgb(0,0,0)";
+	};
+	
+	this.CallbackMainItemTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if (objSrc.className == "DIV_DLG_WHITE_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW"|| objSrc.className == "DIV_DLG_ITEM_ICON")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (objSrc == m_objCurrentItem)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+			objSrc.childNodes.item(2).style.color = "rgb(255,170,0)";
+		}
+		else
+		{
+			objSrc.style.color = "rgb(230,230,230)";
+			objSrc.childNodes.item(2).style.color = "rgb(230,230,230)";
+		}
+		
+		if (parseInt(objSrc.id) % 2 == 0)
+		{
+			objSrc.style.backgroundColor = "rgb(28,28,28)";
+		}
+		else
+		{
+			objSrc.style.backgroundColor = "";
+		}
+		
+		if (objSrc.id == "" || objSrc.style.opacity == "0.2")
+		{
+			return;//select nothing, return is safe.
+		}
+		
+		m_objCurrentItem.children[0].style.backgroundImage = "";
+		m_objCurrentItem.style.color = "rgb(230, 230, 230)";
+		m_objCurrentItem.childNodes.item(2).style.color = "rgb(230, 230, 230)";
+		
+		objSrc.children[0].style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+		objSrc.style.color = "rgb(255, 170, 0)";
+		m_objCurrentItem = objSrc;
+		m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+
+        if (parseInt(objSrc.id, 10) == 0)
+        {
+            m_IsMainPannelClick_P = true;
+            m_IsMainPannelClick_A = false;
+            m_IsMainPannelClick_B = false;
+            m_objSelf.CallBackFunc(objSrc, m_MainPannelListValue[parseInt(objSrc.id)], m_CurrentValue[parseInt(objSrc.id)]);
+        }
+        else if(parseInt(objSrc.id, 10) == 1)
+        {
+            m_IsMainPannelClick_A = true;
+            m_IsMainPannelClick_P = false;
+            m_IsMainPannelClick_B = false;
+            m_objSelf.CallBackFunc(objSrc, m_MainPannelListValue[parseInt(objSrc.id)], m_CurrentValue[parseInt(objSrc.id)]);
+        }
+        else
+        {
+            m_IsMainPannelClick_B = true;
+            m_IsMainPannelClick_A = false;
+            m_IsMainPannelClick_P = false;
+            m_objSelf.CallBackFunc(objSrc, m_MainPannelListValue[parseInt(objSrc.id)], m_CurrentValue[parseInt(objSrc.id)]);
+        }
+	};
+	
+	this.CallbackButtonClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);	
+		switch(parseInt(objSrc.id))
+		{
+			case 0:
+				m_Object.style.display = "none";
+				if(m_OldMode == m_CurrentMode &&  m_OldValue == m_CurValue)
+                                {
+				   m_objSelf.CallBackFunc(objSrc, null,null);
+                                }
+                                else
+                                {                             
+                                  m_objSelf.CallBackFunc(objSrc, m_OldMode,m_OldValue);
+                                }
+				break;
+			case 1:
+			case 3:
+				m_Object.style.display = "none";
+				m_objSelf.CallBackFunc(objSrc, "","","OK");
+				break;
+			case 2:
+				m_Object.style.display = "block";
+				m_MainSelectArea.style.display = "block";
+				m_SubSelectArea.style.display = "none";
+				break;
+			default:
+				break;
+		}
+        m_IsMainPannelClick_P = false;
+        m_IsMainPannelClick_A = false;
+        m_IsMainPannelClick_B = false;
+
+	};
+	
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+		if(2 == parseInt(objSrc.id))
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Pressed.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		}
+	};
+
+	this.hideWhiteColorTemp =function(WhiteMode)
+	{
+		if(WhiteMode == "ATW" && m_SubSelectArea.style.display == "block" && m_IsMainPannelClick_B && !m_IsMainPannelClick_A){
+			 m_Object.style.display = "block";
+			 m_MainSelectArea.style.display = "block";
+			m_SubSelectArea.style.display = "none";
+            m_IsMainPannelClick_P = false;
+            m_IsMainPannelClick_A = false;
+            m_IsMainPannelClick_B = false;
+		}
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(230,230,230)";
+		if (2 == parseInt(objSrc.id))
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Normal.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		}
+		
+		switch(parseInt(objSrc.id))
+		{
+			case 0:
+				m_Object.style.display = "none";
+                                if(m_OldMode == m_CurrentMode &&  m_OldValue == m_CurValue)
+                                {
+				   m_objSelf.CallBackFunc(objSrc, null,null);
+                                }
+                                else
+                                {                             
+                                   m_objSelf.CallBackFunc(objSrc, m_OldMode,m_OldValue);
+                                }
+				break;
+			case 1:
+			case 3:
+				m_Object.style.display = "none";
+				m_objSelf.CallBackFunc(objSrc, "","","OK");
+				break;
+			case 2:
+				m_Object.style.display = "block";
+				m_MainSelectArea.style.display = "block";
+				m_SubSelectArea.style.display = "none";
+				break;
+			default:
+				break;
+		}
+        m_IsMainPannelClick_P = false;
+        m_IsMainPannelClick_A = false;
+        m_IsMainPannelClick_B = false;
+	};
+	
+	this.CallbackButtonMouseOver = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if((0 == parseInt(objSrc.id)) || (1 == parseInt(objSrc.id)))
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		}
+	};
+	
+	this.CallbackButtonMouseOut = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);	
+		objSrc.style.color = "rgb(230,230,230)";
+		if((0 == parseInt(objSrc.id)) || (1 == parseInt(objSrc.id)))
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		}
+	};
+	
+	this.CallbackButtonMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.color = "rgb(0,0,0)";
+		if (2 == parseInt(objSrc.id))
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Pressed.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		}
+	};
+	
+	this.CallbackButtonMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.color = "rgb(230,230,230)";
+		if(2 == parseInt(objSrc.id))
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Normal.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		}
+	};
+	
+	this.PlusOrMinisButtonClick = function(objSrc)
+	{
+		m_objSelf.CallBackFunc(objSrc, 0);
+	};
+		
+	this.sliderCallBack = function(value)
+	{
+		if (((value > 0) && (0.2 != m_objPlusBtn.style.opacity))
+			||((value < 0) && (0.2 != m_objMinusBtn.style.opacity)))
+		{
+			if (null != m_objSelf.CallBackFunc) 
+			{
+				m_objSelf.CallBackFunc(m_Slider, "", value);
+			}
+		}
+	};
+	
+	this.SwitchMaxMinValue = function ()
+	{
+		if (parseInt(m_CurValue) >= 50000)
+		{
+			m_objSelf.SetPlusBtnDisabled(true);
+			m_objSelf.SetMinusBtnDisabled(false);
+		}
+		else if (parseInt(m_CurValue) <= 1500)
+		{
+			m_objSelf.SetPlusBtnDisabled(false);
+			m_objSelf.SetMinusBtnDisabled(true);
+		}
+		else
+		{
+			m_objSelf.SetPlusBtnDisabled(false);
+			m_objSelf.SetMinusBtnDisabled(false);
+		}
+	}
+	
+	this.SetPlusBtnDisabled = function (bGary)
+	{	
+		m_objPlusBtn.userData.SetDisabled(bGary);
+		m_objPlusBtn.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Plus_Normal.png)";
+	}
+	
+	this.SetMinusBtnDisabled = function (bGary)
+	{
+		m_objMinusBtn.userData.SetDisabled(bGary);
+		m_objMinusBtn.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Minus_Normal.png)";
+	}
+	
+	
+	this.SetTitle = function(strTitle)
+	{
+		m_ObjTitle.innerHTML = strTitle;
+	};
+	
+	this.SetWhiteMode = function (mode)
+	{
+		if (m_CurrentMode != mode)
+		{
+			m_CurrentMode = mode;
+			m_objCurrentItem.childNodes.item(1).style.backgroundImage = "";
+			m_objCurrentItem.style.color = "rgb(230, 230, 230)";
+			m_objCurrentItem.childNodes.item(2).style.color = "rgb(230, 230, 230)";
+
+			if (m_CurrentMode == "Preset")
+			{
+				m_objCurrentItem = $(0 + "_" + m_objSelf.NameID);
+				m_objCurrentItem.childNodes.item(1).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+				m_objCurrentItem.childNodes.item(1).style.backgroundRepeat = "no-repeat";
+				m_objCurrentItem.style.color = "rgb(255, 170, 0)";
+				m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+			}
+			else if (m_CurrentMode == "Memory A")
+			{
+				m_objCurrentItem = $(1 + "_" + m_objSelf.NameID);
+				m_objCurrentItem.childNodes.item(1).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+				m_objCurrentItem.childNodes.item(1).style.backgroundRepeat = "no-repeat";
+				m_objCurrentItem.style.color = "rgb(255, 170, 0)";
+				m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+			}
+			else if ((m_CurrentMode == "Memory B") || (m_CurrentMode == "ATW" && m_WhiteSwitchBSetting == 'ATW'))
+			{
+				m_objCurrentItem = $(2 + "_" + m_objSelf.NameID);
+				m_objCurrentItem.childNodes.item(1).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+				m_objCurrentItem.childNodes.item(1).style.backgroundRepeat = "no-repeat";
+				m_objCurrentItem.style.color = "rgb(255, 170, 0)";
+				m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+			}
+		}
+		m_objSelf.SetSubPannel();
+	}
+	
+	this.SetSubPannel = function()
+	{
+		if (m_CurrentMode == "Preset")
+		{
+			//m_CurValue = selectValue;
+		}
+		else if (m_CurrentMode == "Memory A")
+		{
+			m_ObjText.innerHTML = m_CurrentValue[1] + "K";
+			m_CurValue = m_CurrentValue[1] + "K";
+			m_objSelf.SwitchMaxMinValue();
+		}
+		else if (m_CurrentMode == "Memory B")
+		{
+			m_ObjText.innerHTML = m_CurrentValue[2] + "K";
+			m_CurValue = m_CurrentValue[2] + "K";
+			m_objSelf.SwitchMaxMinValue();
+		}
+	};
+	
+	this.IsDialogShow = function()
+	{
+		var b_IsDlgShow = true;
+		if(m_Object.style.display == "none")
+		{
+			b_IsDlgShow = false;
+		}
+		return b_IsDlgShow;
+	};
+	
+	this.ChangeDialogMode = function(arrValue)
+	{
+		var isEnableATW = false;
+		j.each(arrValue, function(key,value) 
+		{
+			if ("ATW" == key)
+			{
+				isEnableATW = true;
+			}
+		})
+
+		if(isEnableATW){
+			if(m_WhiteSwitchBSetting != 'ATW'){
+				var elItem = j('#' + 2 + "_" + m_objSelf.NameID);
+				elItem.html(elItem.html().replace('Memory B', 'ATW'));
+				elItem.children('#2DIV_DLG_WHITE_CURRENT_DATA').hide();
+				elItem.children('#2_WHITE_ARROW').hide();
+				m_WhiteSwitchBSetting = 'ATW';
+			}
+		}
+		else{
+			if(m_WhiteSwitchBSetting != 'Memory'){
+				var elItem = j('#' + 2 + "_" + m_objSelf.NameID);
+				elItem.html(elItem.html().replace('ATW', 'Memory B'));
+				elItem.children('#2DIV_DLG_WHITE_CURRENT_DATA').show();
+				elItem.children('#2_WHITE_ARROW').show();
+				m_WhiteSwitchBSetting = 'Memory';
+			}
+		}
+	};
+
+	this.SetValue = function(arrValue)
+	{
+		j.each(arrValue, function(key,value) 
+		{
+			switch (key)
+			{
+				case "Preset":
+					j('#0DIV_DLG_WHITE_CURRENT_DATA').text(value + 'K');
+					m_CurrentValue[0] = value;
+					break;
+				case "Memory A":
+					j('#1DIV_DLG_WHITE_CURRENT_DATA').text(value + 'K');
+					m_CurrentValue[1] = value;
+					break;
+				case "Memory B":
+					j('#2DIV_DLG_WHITE_CURRENT_DATA').text(value + 'K');
+					m_CurrentValue[2] = value;
+					break;
+				default:
+					break;
+			}
+		})
+		m_objSelf.SetSubPannel();
+	};
+	
+	this.ShowSubPannel = function()
+	{
+		if (m_IsMainPannelClick_A || (m_IsMainPannelClick_B && m_WhiteSwitchBSetting === 'Memory') )
+		{
+			m_MainSelectArea.style.display = "none";
+			m_SubSelectArea.style.display = "block";
+			WhiteCtrl.SetSliderValue(-101);
+			m_objSelf.SetSubPannel();
+		}
+	};
+	
+	this.CallbackMainItemEmptyClick = function(objEvent)
+	{
+	};
+	
+	this.Create();
+}

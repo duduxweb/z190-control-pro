@@ -1,0 +1,387 @@
+// JavaScript Document
+var IrisReturn = 378;
+
+function IrisSlider(objSrc, objCallback)
+{
+	var Iris_x = 0;
+	var IrisCurrent_X = 0;
+	var IrisMin_x = 122;
+	var IrisMax_x = 574;
+	var Iris_Array =  [122, 127, 132, 140, 150, 162, 174, 186, 201, 227, 249, 269, 282, 294, 306, 318, 337, 354, 387, 405, 427, 455, 472, 540, 574  ];
+	var Value_Array = [1.6, 1.7, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.1, 3.4, 3.7, 4,   4.4, 4.8, 5.2, 5.6, 6.2, 6.8, 7.3, 8,   8.7, 9.6, 10,  11,  65535];
+	var IrisMouseDown = false;
+	var IrisTouchStart = false;
+	this.Parent = GetParent(objSrc);
+	this.AttachSrc = objSrc;
+	this.Width = parseInt(objSrc.style.width);
+	this.CallbackFunc = objCallback;
+	this.Type = "SLIDER";
+	var m_objSelf = null;
+	var blank = 0;
+	var b_IsTouchMouseStart = false;
+	IrisCurrent_X = j(objSrc).position().left;
+	var defaultX = j(objSrc).position().left;
+	var iCurrentLeft = j(objSrc).css("left");
+	Iris_x = j(objSrc).position().left;
+	var iMousemove_PreviousX = -1;
+	var iMousemove_CurrentX = -1;
+	var iCurrentLeft = j(objSrc).css("left");
+	
+	
+	this.Initialize = function()
+	{
+		if (!m_objSelf)
+		{
+			m_objSelf = this;
+		    AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+		    AddEvent(document, "mousemove", this.CallbackBtnMouseMove);
+		    AddEvent(document, "mouseup", this.CallbackBtnMouseUp);
+		    AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+		    AddEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			AddEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchCancel);
+			
+		}
+		
+	};
+		
+	//Mouse Event
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		IrisMouseDown = true;
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		IrisCurrent_X = j(objSrc).position().left;
+		iMousemove_PreviousX = objEvent.pageX;
+		iCurrentLeft = j(objSrc).css("left");
+		b_IsTouchMouseStart = true;
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris_Pressed.png)";
+		return false;
+	};
+
+	this.CallbackBtnMouseMove = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if(!b_IsTouchMouseStart) 
+		{
+			return false;
+		}
+		iMousemove_CurrentX = objEvent.pageX;
+		IrisCurrent_X += iMousemove_CurrentX - iMousemove_PreviousX;
+		iMousemove_PreviousX = objEvent.pageX;
+		
+		if (IrisCurrent_X < IrisMin_x)
+		{
+			IrisCurrent_X = IrisMin_x;
+		}
+		else if (IrisCurrent_X > IrisMax_x)
+		{
+			IrisCurrent_X = IrisMax_x;
+		}
+		else
+		{
+			//it's nothing to do
+		}
+		
+		//gray when dragging
+		iCurrentLeft = j("#IRIS_SLIDER_HANDLE").css("left");
+		var minDirection = 1000;
+		var minIndex = -1;
+		for (var i = 0; i < Iris_Array.length; ++i)
+		{
+			if (minDirection >= Math.abs(Iris_Array[i]-parseInt(iCurrentLeft)))
+			{
+				minDirection = Math.abs(Iris_Array[i]-parseInt(iCurrentLeft));
+				minIndex = i;
+			}
+		}
+		IrisReturn = Iris_Array[minIndex];
+		m_objSelf.IrisMouseChangeValue();
+	
+		j("#IRIS_SLIDER_HANDLE").css({left: IrisCurrent_X, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris_Pressed.png)"});	
+		
+		
+		return false;
+		
+	};
+	
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		IrisMouseDown = false;
+		if (b_IsTouchMouseStart)
+		{
+			b_IsTouchMouseStart = false;
+		}
+		m_objSelf.UpdateIrisSlider();
+
+		if(objEvent ==null)
+		{
+			return false;
+		}
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		return true;
+	};
+	
+	
+	//Touch Event
+	this.CallbackBtnTouchStart = function(objEvent)
+	{	
+		IrisTouchStart = true;
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		var touch = objEvent.touches[0];
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		IrisCurrent_X = touch.screenX;
+		defaultX = j(objSrc).position().left;
+		blank = IrisCurrent_X - defaultX;
+		IrisCurrent_X -= blank;
+		iMousemove_PreviousX = touch.screenX;
+		iCurrentLeft = j(objSrc).css("left");
+		m_objSelf.IrisTouchChangeValue();
+		b_IsTouchMouseStart = true;
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris_Pressed.png)";
+		return false;
+	};
+	
+	this.CallbackBtnTouchMove = function(objEvent)
+	{	
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();	
+		var touch = objEvent.touches[0];
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if(!b_IsTouchMouseStart) 
+		{
+			return false;
+		}
+		
+		iMousemove_CurrentX = touch.screenX;
+		IrisCurrent_X += iMousemove_CurrentX - iMousemove_PreviousX;
+		Iris_x = touch.screenX - blank;
+		iMousemove_PreviousX = touch.screenX;
+		if (IrisCurrent_X < IrisMin_x)
+		{
+			IrisCurrent_X = IrisMin_x;
+		}
+		else if (IrisCurrent_X > IrisMax_x)
+		{
+			IrisCurrent_X = IrisMax_x;
+		}
+		else
+		{
+			//it's nothing to do
+		}
+
+		iCurrentLeft = j("#IRIS_SLIDER_HANDLE").css("left");
+		var minDirection = 1000;
+		var minIndex = -1;
+		for (var i = 0; i < Iris_Array.length; ++i)
+		{
+			if (minDirection >= Math.abs(Iris_Array[i]-parseInt(iCurrentLeft)))
+			{
+				minDirection = Math.abs(Iris_Array[i]-parseInt(iCurrentLeft));
+				minIndex = i;
+			}
+		}
+		IrisReturn = Iris_Array[minIndex];
+		j("#IRIS_SLIDER_HANDLE").css({left: IrisCurrent_X});
+		m_objSelf.IrisTouchChangeValue();
+		return false;
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		IrisTouchStart = false;
+		if (b_IsTouchMouseStart)
+		{
+		    b_IsTouchMouseStart = false;
+		}
+		m_objSelf.UpdateIrisSlider();
+
+		if(objEvent ==null)
+		{
+			return false;
+		}
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+	    return true;
+	};
+	
+	this.CallbackBtnTouchCancel = function(objEvent)
+	{
+		IrisTouchStart = false;
+		if (b_IsTouchMouseStart)
+		{
+		    b_IsTouchMouseStart = false;
+		}
+		m_objSelf.UpdateIrisSlider();
+
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		return true;
+	}
+	
+	this.CallbackBtnClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+	
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (m_objSelf.CallbackFunc)
+		{
+			m_objSelf.CallbackFunc(m_objSelf.AttachSrc);
+		}
+	};
+	
+	this.IrisTouchChangeValue = function()
+	{
+		var i = 0;
+		
+		if (IrisCurrent_X < IrisMin_x)
+		{
+			IrisCurrent_X = IrisMin_x;
+		}
+		else if (IrisCurrent_X > IrisMax_x)
+		{
+			IrisCurrent_X = IrisMax_x;
+		}
+		
+		for (i = 0; i < Iris_Array.length-1; i++)
+		{
+			if (IrisCurrent_X == Iris_Array[i])
+			{
+				IrisValue = Value_Array[i];
+			}
+			
+			if (IrisCurrent_X > Iris_Array[i] && IrisCurrent_X <= Iris_Array[i + 1])
+			{
+				IrisValue = Value_Array[i + 1];
+			}
+		}
+		IrisCtrl.SetValue();
+	}
+	
+	this.IrisMouseChangeValue = function()
+	{
+		var i = 0;
+		
+		if (IrisCurrent_X < IrisMin_x)
+		{
+			IrisCurrent_X = IrisMin_x;
+		}
+		else if (IrisCurrent_X > IrisMax_x)
+		{
+			IrisCurrent_X = IrisMax_x;
+		}
+		
+		for (i = 0; i < Iris_Array.length-1; i++)
+		{
+			if (IrisCurrent_X == Iris_Array[i])
+			{
+				IrisValue = Value_Array[i];
+			}
+			
+			if (IrisCurrent_X > Iris_Array[i] && IrisCurrent_X <= Iris_Array[i + 1])
+			{
+				IrisValue = Value_Array[i + 1];
+			}
+		}
+		//j("#DIV_IRIS_VALUE").text("F" + IrisValue);
+		IrisCtrl.SetValue();
+		
+	}
+	
+	this.SetDisabled = function(bDisabled)
+	{
+	
+		if (bDisabled)
+		{
+
+			if (IrisMouseDown)
+			{
+				this.CallbackBtnMouseUp();
+				
+			}
+			if (IrisTouchStart)
+			{
+				this.CallbackBtnTouchEnd();
+			}
+			RemoveEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+		    RemoveEvent(document, "mousemove", this.CallbackBtnMouseMove);
+		    RemoveEvent(document, "mouseup", this.CallbackBtnMouseUp);
+			RemoveEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			RemoveEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			RemoveEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			
+		}
+		else
+		{
+			 AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+		     AddEvent(document, "mousemove", this.CallbackBtnMouseMove);
+		     AddEvent(document, "mouseup", this.CallbackBtnMouseUp);
+		     AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			 AddEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			 AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+		
+		}
+	}
+	
+	this.UpdateIrisSlider = function()
+	{
+		if (!b_IsTouchMouseStart)
+		{
+			if (IsIrisClose == "true" || IsIrisClose == true)
+			{
+				IrisReturn = IrisMax_x;
+			}
+			else
+			{
+				for (var i = 0; i < Value_Array.length; i++)
+				{
+					if (Irisplusone(IrisValue1) == Value_Array[i])
+					{
+						IrisReturn = Iris_Array[i];
+					}
+				}
+			}
+
+			j("#IRIS_SLIDER_HANDLE").css({left: IrisReturn, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png)"});
+		}
+	}
+
+	this.Initialize();
+}

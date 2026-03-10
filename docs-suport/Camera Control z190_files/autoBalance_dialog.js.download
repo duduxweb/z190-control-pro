@@ -1,0 +1,228 @@
+// JavaScript Document
+function AutoBalanceDialog (objSrc, AlertText, CallbackFunc)
+{
+	this.AlertText = AlertText;
+	this.CallbackFunc = CallbackFunc;
+	
+	var m_Object = objSrc;
+	var m_ObjTitle = null;
+	var m_ObjFirstTextField = null;
+	var m_ObjSecondTextField = null;
+	var that = null;
+	
+	this.Create = function () 
+	{
+		m_Object.style.display = "none";
+		
+		var divTitle = document.createElement("DIV");
+		divTitle.id = "AUTO_BAN_DIALOG_TITLE";
+		divTitle.className = "AUTO_BAN_DIALOG_TITLE";
+		m_ObjTitle = divTitle;
+		m_Object.appendChild(divTitle);
+		
+		var divTextField = document.createElement("DIV");
+		divTextField.id="1_AUTO_BAN_DIALOG_TEXTFIELD";
+		divTextField.className = "AUTO_BAN_DIALOG_TEXTFIELD";
+		//divTextField.innerHTML = this.AlertText;
+		m_Object.appendChild(divTextField);	
+
+		j(divTextField).css("padding", "0");
+		j(divTextField).append('<table style="height:100%;width:100%"><tr><td id="AUTO_BAN_DIALOG_TD" style="vertical-align:middle;line-height:3px;"><p id="AUTO_BAN_DIALOG_P_1"></p><p id="AUTO_BAN_DIALOG_P_2"></p></td></tr>');
+		//j("p#AUTO_BAN_DIALOG_P_1").text(this.AlertText);
+		//j("p#AUTO_BAN_DIALOG_P_2").text(this.secondText);
+		//m_ObjTextField = divTextField;
+		m_ObjFirstTextField = j("p#AUTO_BAN_DIALOG_P_1")[0];
+		m_ObjFirstTextField.innerHTML = this.AlertText;
+		m_ObjSecondTextField = j("p#AUTO_BAN_DIALOG_P_2")[0];
+		//m_ObjTextField = divTextField; 
+		that = this;
+		
+		var divHeadSeparator = document.createElement("DIV");
+		divHeadSeparator.className = "DIV_DLG_SEPARATOR";
+		divHeadSeparator.style.top = "16px";
+		divHeadSeparator.style.left = "16px";
+		divHeadSeparator.style.width = "324px";
+	//	m_Object.appendChild(divHeadSeparator);
+		
+		var divLeftSeparator = document.createElement("DIV");
+		divLeftSeparator.className = "DIV_DLG_SEPARATOR";
+		divLeftSeparator.style.top = "16px";
+		divLeftSeparator.style.left = "16px";
+		divLeftSeparator.style.width = "1px";
+		divLeftSeparator.style.height = "230px";
+	//	m_Object.appendChild(divLeftSeparator);
+		
+		var divRightSeparator = document.createElement("DIV");
+		divRightSeparator.className = "DIV_DLG_SEPARATOR";
+		divRightSeparator.style.top = "16px";
+		divRightSeparator.style.left = "342px";
+		divRightSeparator.style.width = "1px";
+		divRightSeparator.style.height = "231px";
+	//	m_Object.appendChild(divRightSeparator);
+		
+		var divBottomSeparator = document.createElement("DIV");
+		divBottomSeparator.className = "DIV_DLG_SEPARATOR";
+		divBottomSeparator.style.top = "246px";
+		divBottomSeparator.style.left = "16px";
+		divBottomSeparator.style.width = "326px";
+	//	m_Object.appendChild(divBottomSeparator);
+		
+		var divTopSeparator = document.createElement("DIV");
+		divTopSeparator.className = "DIV_DLG_SEPARATOR";
+		divTopSeparator.style.top = "37px";
+		divTopSeparator.style.left = "16px";
+		divTopSeparator.style.width = "324px";
+		m_Object.appendChild(divTopSeparator);
+		
+		var divDownSeparator = document.createElement("DIV");
+		divDownSeparator.className = "DIV_DLG_SEPARATOR";
+		divDownSeparator.style.top = "187px";
+		divDownSeparator.style.left = "16px";
+		divDownSeparator.style.width = "324px";
+		m_Object.appendChild(divDownSeparator);
+		
+		var divExecuteBtn =document.createElement("DIV");
+		divExecuteBtn.id = "1_AUTO_BAN_DIALOG_BTN"
+		divExecuteBtn.className = "DIV_DLG_SETTING_BTN";
+		divExecuteBtn.style.top = "188px";
+		divExecuteBtn.style.left = "245px";
+		divExecuteBtn.innerHTML = "Execute";
+		AddEvent(divExecuteBtn, "click", this.CallbackBtnClick);
+		AddEvent(divExecuteBtn, "mouseover", this.CallbackBtnMouseOver);
+		AddEvent(divExecuteBtn, "mouseout", this.CallbackBtnMouseOut);
+		AddEvent(divExecuteBtn, "mousedown", this.CallbackBtnMouseDown);
+		AddEvent(divExecuteBtn, "mouseup", this.CallbackBtnMouseUp);
+		AddEvent(divExecuteBtn, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divExecuteBtn, "touchend", this.CallbackBtnTouchEnd);
+		AddEvent(divExecuteBtn, "touchcancel", this.CallbackBtnTouchEnd);
+		
+		var  divCanclBtn = document.createElement("DIV");
+		divCanclBtn.id = "2_AUTO_BAN_DIALOG_BTN"
+		divCanclBtn.className = "DIV_DLG_SETTING_BTN";
+		divCanclBtn.style.top = "188px";
+		divCanclBtn.style.left = "8px";
+		divCanclBtn.innerHTML = "Cancel";
+		AddEvent(divCanclBtn, "click", this.CallbackBtnClick);
+		AddEvent(divCanclBtn, "mouseover", this.CallbackBtnMouseOver);
+		AddEvent(divCanclBtn, "mouseout", this.CallbackBtnMouseOut);
+		AddEvent(divCanclBtn, "mousedown", this.CallbackBtnMouseDown);
+		AddEvent(divCanclBtn, "mouseup", this.CallbackBtnMouseUp);
+		AddEvent(divCanclBtn, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divCanclBtn, "touchend", this.CallbackBtnTouchEnd);
+		AddEvent(divCanclBtn, "touchcancel", this.CallbackBtnTouchEnd);
+		
+		m_Object.appendChild(divExecuteBtn);
+		m_Object.appendChild(divCanclBtn);
+		
+	}
+	
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(230,230,230)";
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+	};
+	
+	this.CallbackBtnClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if(1 == parseInt(objSrc.id))
+		{	
+			if (that.CallbackFunc)
+			{
+				that.CallbackFunc();
+			}
+			objABMask.style.display = "block";
+		}
+		m_Object.style.display = "none";
+		$("DIV_MASKDIALOG").style.display = "none";
+		g_OldObjectBtn = null;
+		GetMessagePopupStatus();
+	};
+	
+	this.CallbackBtnMouseOver = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+	};
+	
+	this.CallbackBtnMouseOut = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+	};
+	
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		objSrc.style.color = "rgb(23,23,23)";
+	};
+	
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		objSrc.style.color = "rgb(230,230,230)";
+	};
+	
+	this.ShowDialog = function()
+	{
+		if ((arguments.length != 0) && (false == arguments[0]))
+		{
+			m_Object.style.display = "none";
+			$("DIV_MASKDIALOG").style.display = "none";
+			return;
+		}
+
+		if("none" == m_Object.style.display) {
+			m_Object.style.display = "block";
+			$("DIV_MASKDIALOG").style.display = "block";
+		}
+		else {
+			m_Object.style.display = "none";
+			$("DIV_MASKDIALOG").style.display = "none";
+		}
+	}
+	
+	this.SetText = function(firstText, secondText)
+	{
+		m_ObjFirstTextField.innerHTML = firstText;
+		m_ObjSecondTextField.innerHTML = secondText; 	
+	}
+	
+	this.SetTitle = function(objTitle)
+	{
+		m_ObjTitle.innerHTML = objTitle;
+	}
+	
+	this.IsDialogShow = function()
+	{
+		var b_IsDialogShow = true;
+		if(m_Object.style.display == "none")
+		{
+			b_IsDialogShow= false;
+		}
+		return b_IsDialogShow;
+	};
+	
+	this.Create();
+}

@@ -1,0 +1,1061 @@
+// JavaScript Document
+
+var Status1Value = "";
+var Status2Value = "";
+var SpeedValue = 0; 
+var RECRedStatusValue = 0; // 0: OFF 1:REC
+var PlayBackInfoStatusValue = 0; // 0: OFF 1:PLAY
+var g_IsSimulRecord = false;
+var g_MediaStatus = ""; 
+var StatusMode = 0;  // 0:Normal  1:S&Q
+var MediaCardEle=["DIV_STATUS_MEDIA_A_LIGHT","DIV_STATUS_MEDIA_B_LIGHT"];
+var AppStatText=["DIV_STATUS","2_DIV_STATUS"];
+var STBYORREC=["DIV_STATUS_LIGHT","DIV_STATUS_B_LIGHT"];
+var MediaCardPng=["url(../../WebCommon/images/Parts_PFXR_T_CC_Status_MediaCard_A.png)","url(../../WebCommon/images/Parts_PFXR_T_CC_Status_MediaCard_B.png)"];
+var g_SimulateMode = null;
+
+var RecordCtrl = {
+	
+	RecorderOpen : function() 
+	{
+        var params = [];
+        var id = client.clip.recorder.Open({params: params,	onresponse: function(resp){  
+																					 
+        }});
+    
+    },
+	
+	//Get RecordStatus Functions
+	GetValue : function ()
+	{
+
+
+		var SpeedValue = 0;
+		var names = {"P.Clip.Mediabox.Mode":["*"],
+					"P.Clip.Mediabox.Speed":["*"],
+					"P.Clip.Mediabox.Status":["*"],
+					"P.Clip.Mediabox.TimeCode.Type":["*"],
+                                        "P.Clip.Mediabox.TimeCode.Value":["*"],
+					"P.Clip.Mediabox.TimeCode.Locked":["*"],
+					"P.Clip.Mediabox.SimulRec.Enabled":["*"],
+                    "P.Clip.Mediabox.SimulRec.Mode":["*"]};
+		var id = client.property.GetValue({params: names,	onresponse: function(resp) {
+		  var respRecorder = JSON.stringify(resp.error || resp.result);
+		  var selectedShutterSpeed = JSON.parse(respRecorder);
+		  if (selectedShutterSpeed == "timeout")
+		  {
+					
+		  }
+		  else
+		  {
+		  	var TimeCodeFlag = 1;
+			g_IsSimulRecord = selectedShutterSpeed["P.Clip.Mediabox.SimulRec.Enabled"];
+			g_SimulateMode = selectedShutterSpeed["P.Clip.Mediabox.SimulRec.Mode"];
+		 	j.each(selectedShutterSpeed, function(key, value) {
+		  	if (key == "P.Clip.Mediabox.Status")
+			{
+                                CameraStatus= value;
+				//Recorder.Status : "Recording", "Ready"
+				if ("Recording" == value || "RecordingWithCall" == value || "RecPausing" == value)
+				{
+					if (RECRedStatusValue != 1)
+					{
+						j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+						RECRedStatusValue = 1;
+					}
+				}
+				else//"Ready"
+				{
+					if (RECRedStatusValue != 0)
+					{
+						j("#"+STBYORREC[0]).css({"background-image":""});
+						RECRedStatusValue = 0;
+					}
+				}
+				
+				if ("Playing" == value)
+				{
+					PlayBackInfoStatusValue = 1;	
+				}
+				else if ("Standby" == value || "NoMedia" == value)
+				{
+					if (PlayBackInfoStatusValue != 0)
+					{
+						PlayBackInfoStatusValue = 0;
+						j("#"+STBYORREC[0]).css({"background-image":""});
+					}
+				}
+				else if ("Recording" == value)
+				{
+					PlayBackInfoStatusValue = 0;
+				}
+				
+				
+				if ("NoMedia" == value)
+				{
+					g_MediaStatus = value;
+					j("#"+AppStatText[0]).text("");
+					j("#"+STBYORREC[0]).text("");
+					 j("#3_DIV_STATUS").text("");
+					Status1Value = "";
+					Status2Value = "";
+                    if (g_IsSimulRecord)
+                    {
+                        j("#3_DIV_STATUS").text("Simul");
+                    }
+                    else
+                    {
+                        RecordCtrl.SetNoMediaStatus();
+                    }
+
+                }
+				else if ("Recording" == value)
+				{
+					g_MediaStatus = value;
+					if (g_IsSimulRecord)
+					{
+						RecordCtrl.SetMediaRecordingSpecialStatus();
+					}
+					else
+					{
+						RecordCtrl.SetMediaRecordingStatus();
+					}	
+				}
+				else if ("Standby" == value)
+				{
+					g_MediaStatus = value;
+					j("#"+STBYORREC[0]).css({"background-image":"none"});
+					if (g_IsSimulRecord)
+					{
+						RecordCtrl.SetMediaStandbySpecialStatus();
+					}
+					else
+					{
+						RecordCtrl.SetMediaStandbyStatus();
+					}
+				}
+				else if ("RecPausing" == value)
+				{
+					g_MediaStatus = value;
+					if (g_IsSimulRecord)
+					{
+						RecordCtrl.SetMediaStandbySpecialStatus();
+					}
+					else
+					{
+						RecordCtrl.SetMediaStandbyStatus();
+					}
+				}
+				else if ("Playing" == value)
+				{
+					g_MediaStatus = value;
+                    j("#2_DIV_STATUS").css({"background-image":"none"});
+					if (SpeedValue == 1)
+					{
+						
+						j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Play.png)"});
+						j("#"+AppStatText[0]).text("Play");
+						j("#"+AppStatText[0]).css({color:"#fff"});
+                        //j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+						// j("#2_DIV_STATUS").text("");
+						 j("#3_DIV_STATUS").text("");
+						Status1Value = "Play";
+						Status2Value = "";
+					}
+					else if (SpeedValue == 0)
+					{
+                        j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Pause.png)"});
+                        j("#"+AppStatText[0]).text("Pause");
+                        j("#"+AppStatText[0]).css({color:"#fff"});
+                       // j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+						// j("#2_DIV_STATUS").text("");
+						 j("#3_DIV_STATUS").text("");
+						Status1Value = "Pause";
+						Status2Value = "";
+					}
+					else if (SpeedValue  > 1)
+					{
+						j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_FFwd.png)"});
+						j("#"+AppStatText[0]).text("Fwdx" + SpeedValue);
+						j("#"+AppStatText[0]).css({color:"#fff"});
+                        //j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+						// j("#2_DIV_STATUS").text("");
+						 j("#3_DIV_STATUS").text("");
+						Status1Value = "Fwdx" + SpeedValue;
+						Status2Value = "";
+					}
+					else if (SpeedValue  < 0)
+					{
+						j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_FRev.png)"});
+						var SpeedValueAbs = -SpeedValue;
+						j("#"+AppStatText[0]).text("Revx" + SpeedValueAbs);
+						j("#"+AppStatText[0]).css({color:"#fff"});
+                        //j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+						// j("#2_DIV_STATUS").text("");
+						 j("#3_DIV_STATUS").text("");
+						Status1Value = "Revx" + SpeedValueAbs;
+						Status2Value = "";
+					}
+					else
+					{
+						j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Play.png)"});
+						j("#"+AppStatText[0]).text("Play");
+						j("#"+AppStatText[0]).css({color:"#fff"});
+                        //j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+						// j("#2_DIV_STATUS").text("");
+						 j("#3_DIV_STATUS").text("");
+						Status1Value = "Play";
+						Status2Value = "";
+					}
+					
+
+				}
+				else if ("Pausing" == value)
+				{
+					g_MediaStatus = value;
+					j("#"+AppStatText[0]).text("Pause");
+					j("#"+AppStatText[0]).css({color:"#fff"});
+                    //j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+					// j("#2_DIV_STATUS").text("");
+					 j("#3_DIV_STATUS").text("");
+					Status1Value = "Pause";
+					Status2Value = "";
+				}
+				else if ("Stopping" == value)
+				{
+					g_MediaStatus = value;
+					j("#"+AppStatText[0]).text("Stop");
+					j("#"+AppStatText[0]).css({color:"#fff"});
+					 j("#3_DIV_STATUS").text("");
+					Status1Value = "Stop";
+					Status2Value = "";
+				}
+				else
+				{
+					g_MediaStatus = "";
+					j("#"+AppStatText[0]).text("");
+					 j("#3_DIV_STATUS").text("");
+					Status1Value = "";
+					Status2Value = "";
+				}
+			}
+			else if (key == "P.Clip.Mediabox.Mode")
+			{
+				if ("Normal" == value)
+				{
+					StatusMode = 0;
+				}
+				else if ("Interval" == value)
+				{
+					StatusMode = 2;
+				}
+				else if ("ClipContinuous" == value)
+				{
+					StatusMode = 3;
+				}
+				else if ("PictureCache" == value)
+				{
+					StatusMode = 4;
+				}
+				else if ("Frame" ==  value)
+				{
+					StatusMode = 5;
+				}
+				else 
+				{
+					StatusMode = 1;
+				}
+				
+			}
+			else if (key == "P.Clip.Mediabox.Speed")
+			{
+				SpeedValue = Math.round(value);	
+			}  
+			
+			else if (key == "P.Clip.Mediabox.TimeCode.Type")
+			{
+				 if (value == "Unknown")
+				 {
+				 	j("#0_TCG_NAME").text("");
+				 	TimeCodeFlag = 0;
+				 }
+				 else if (value == "Duration") 
+				 {
+				 	j("#0_TCG_NAME").text("Dur");
+				 	TimeCodeFlag = 1;
+				 }
+				 else if (value == "Counter")
+				 {
+					j("#0_TCG_NAME").text("Cnt");
+				 	TimeCodeFlag = 1;
+				 }
+				 /*else if (value == "TimeCode") 
+				 {
+				 	j("#0_TCG_NAME").text("TC");
+				 	TimeCodeFlag = 1;
+				 }
+				 else if (value == "UB") 
+				 {
+				 	j("#0_TCG_NAME").text("UB");
+				 	TimeCodeFlag = 1;
+				 }*/
+				 else if (value == "UB")
+				 {
+					j("#0_TCG_NAME").text("UBG");
+				 	TimeCodeFlag = 1;
+				 }
+				 else 
+				 {
+				 	j("#0_TCG_NAME").text(value);
+				 	TimeCodeFlag = 1;
+				 }
+				 
+				
+			} 
+			else if (key == "P.Clip.Mediabox.TimeCode.Value")
+			{
+				if (TimeCodeFlag == 0)
+				{
+					j("#1_TIMECODE_VALUE").text("");
+				}
+				else
+				{
+					j("#1_TIMECODE_VALUE").text(value);
+					if ($("0_TCG_NAME").innerHTML == "UBG")
+					{
+						$("1_TIMECODE_VALUE").style.fontSize = "30px";
+					}
+					else
+					{
+						$("1_TIMECODE_VALUE").style.fontSize = "36px";
+					}
+				}
+				
+			}
+			else if (key == "P.Clip.Mediabox.TimeCode.Locked")//return bool
+			{
+				if (true == value)
+				{
+					j("#0_EXT_LK_NAME").text("Ext-Lk");
+				}
+				else if (false == value)
+				{
+					j("#0_EXT_LK_NAME").text("");
+				}
+				else if ("true" == value)
+				{
+					j("#0_EXT_LK_NAME").text("Ext-Lk");
+				}
+				else
+				{
+					j("#0_EXT_LK_NAME").text("");
+				}
+			}
+			else
+			{
+			}
+			SetCardNotifyData({});
+			SetAudioNotifyData({});
+		  	})
+		  }
+		}});
+		
+	},
+	
+	SetMediaRecordingSpecialStatus : function()
+	{
+
+        if(g_SimulateMode == "SLOT_AB"){
+            j("#DIV_STATUS").text("Rec");
+            j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("Simul");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#DIV_STATUS").css({color:"#fff"});
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+            j("#"+STBYORREC[1]).css({"background-image":""});
+        }else if(g_SimulateMode == "SLOT_A"){
+            j("#3_DIV_STATUS").text("Simul");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#DIV_STATUS").text("Rec");
+            j("#DIV_STATUS").css({color:"#fff"});
+            j("#2_DIV_STATUS").text("");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#2_DIV_STATUS").css({"background-image":MediaCardPng[0]});
+            j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+            j("#"+STBYORREC[1]).css({"background-image":""});
+        }else if(g_SimulateMode == "SLOT_B"){
+            j("#3_DIV_STATUS").text("Simul");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#DIV_STATUS").text("Rec");
+            j("#DIV_STATUS").css({color:"#fff"});
+            j("#2_DIV_STATUS").text("");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#2_DIV_STATUS").css({"background-image":MediaCardPng[1]});
+            j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+            j("#"+STBYORREC[1]).css({"background-image":""});
+        }else
+        {
+            j("#DIV_STATUS").text("Rec");
+            j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("Simul");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#DIV_STATUS").css({color:"#fff"});
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+            j("#"+STBYORREC[1]).css({"background-image":""});
+        }
+        Status1Value = "Simul";
+        Status2Value = "Rec";
+
+	},
+	
+	SetMediaRecordingStatus : function()
+	{
+		if (StatusMode == 0 || StatusMode == 4)
+		{
+
+            j("#"+AppStatText[0]).text("Rec");
+			j("#3_DIV_STATUS").text("");
+			j("#"+AppStatText[0]).css({color:"#fff"});
+			Status1Value = "Rec";
+			Status2Value = "";
+		}
+		else if (StatusMode == 2)
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Rec");
+			j("#3_DIV_STATUS").text("Int");
+			j("#3_DIV_STATUS").css({color:"#fff"});
+			j("#"+AppStatText[0]).css({color:"#fff"});
+			Status1Value = "Int";
+			Status2Value = "Rec";
+		}
+		else if (StatusMode == 3)
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Rec");
+			j("#3_DIV_STATUS").text("Cont");
+			j("#3_DIV_STATUS").css({color:"#fff"});
+			j("#"+AppStatText[0]).css({color:"#fff"});
+			Status1Value = "Cont";
+			Status2Value = "Rec";
+		}
+		else if (StatusMode == 5)
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Rec");
+			j("#3_DIV_STATUS").text("Frm");
+			j("#3_DIV_STATUS").css({color:"#fff"});
+			j("#"+AppStatText[0]).css({color:"#00ff00"});
+			Status1Value = "Int";
+			Status2Value = "Stby"
+		}
+		else
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Rec");
+			j("#3_DIV_STATUS").text("S&Q");
+			j("#3_DIV_STATUS").css({color:"#fff"});
+			j("#"+AppStatText[0]).css({color:"#fff"});
+			Status1Value = "S&Q";
+			Status2Value = "Rec";
+		}
+        j("#"+STBYORREC[0]).css({"background-image":"none"});
+        j("#"+STBYORREC[1]).css({"background-image":""});
+        j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+	},
+	
+	SetMediaStandbySpecialStatus : function()
+	{
+        if(g_SimulateMode == "SLOT_AB"){
+            j("#DIV_STATUS").text("Stby");
+            j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("Simul");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#DIV_STATUS").css({color:"#00ff00"});
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#"+STBYORREC[0]).css({"background-image":"none"});
+        }else if(g_SimulateMode == "SLOT_A"){
+            j("#3_DIV_STATUS").text("Simul");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#DIV_STATUS").text("Stby");
+            j("#DIV_STATUS").css({color:"#00ff00"});
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#2_DIV_STATUS").css({"background-image":MediaCardPng[0]});
+            j("#"+STBYORREC[0]).css({"background-image":"none"});
+        }else if(g_SimulateMode == "SLOT_B"){
+            j("#3_DIV_STATUS").text("Simul");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#DIV_STATUS").text("Stby");
+            j("#DIV_STATUS").css({color:"#00ff00"});
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#2_DIV_STATUS").css({"background-image":MediaCardPng[1]});
+            j("#"+STBYORREC[0]).css({"background-image":"none"});
+        }else
+        {
+            j("#DIV_STATUS").text("Stby");
+            j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("Simul");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            j("#DIV_STATUS").css({color:"#00ff00"});
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            j("#"+STBYORREC[0]).css({"background-image":"none"});
+        }
+        Status1Value = "Simul";
+        Status2Value = "Stby";
+
+	},
+	
+	SetMediaStandbyStatus : function()
+	{
+		if (StatusMode == 0)
+		{
+			j("#"+AppStatText[0]).text("Stby");
+			j("#3_DIV_STATUS").text("");
+			j("#"+AppStatText[0]).css({color:"#00ff00"});
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+			Status1Value = "Stby";
+			Status2Value = "";
+		}
+		else if (StatusMode == 2)
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Stby");
+			j("#3_DIV_STATUS").text("Int");
+			j("#"+AppStatText[0]).css({color:"#00ff00"});
+			j("#3_DIV_STATUS").css({color:"#fff"});
+            if(CameraStatus == "RecPausing")
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+            }
+            else
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"none"});
+            }
+			Status1Value = "Int";
+			Status2Value = "Stby";
+		}
+		else if (StatusMode == 3)
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Stby");
+			j("#3_DIV_STATUS").text("Cont");
+			j("#"+AppStatText[0]).css({color:"#00ff00"});
+			j("#3_DIV_STATUS").css({color:"#fff"});
+			Status1Value = "Cont";
+			Status2Value = "Stby";
+		}
+		else if (StatusMode == 4)
+		{
+			j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Cache.png)"});
+			// j("#DIV_STATUS").text("");
+			j("#3_DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Cache");
+			j("#"+AppStatText[0]).css({color:"#fff"});
+			Status1Value = "Cache";
+			Status2Value = "";
+		}
+		else
+		{
+			// j("#DIV_STATUS").text("");
+			j("#"+AppStatText[0]).text("Stby");
+			j("#3_DIV_STATUS").text("S&Q");
+			j("#"+AppStatText[0]).css({color:"#00ff00"});
+			j("#3_DIV_STATUS").css({color:"#fff"});
+			Status1Value = "S&Q";
+			Status2Value = "Stby";
+		}
+        j("#2_DIV_STATUS").css({"background-image":"none"});
+	},
+
+    SetNoMediaStatus : function()
+    {
+        if (StatusMode == 0)
+        {
+
+        }
+        else if (StatusMode == 2)
+        {
+            j("#3_DIV_STATUS").text("Int");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            Status1Value = "Int";
+        }
+        else if (StatusMode == 3)
+        {
+            j("#3_DIV_STATUS").text("Cont");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            Status1Value = "Cont";
+        }
+        else if (StatusMode == 4)
+        {
+        	j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Cache.png)"});
+            j("#3_DIV_STATUS").text("");
+            j("#"+AppStatText[0]).text("Cache");
+            j("#"+AppStatText[0]).css({color:"#fff"});
+            Status1Value = "Cache";
+            Status2Value = "";
+        }
+        else
+        {
+            j("#3_DIV_STATUS").text("S&Q");
+            j("#3_DIV_STATUS").css({color:"#fff"});
+            Status1Value = "S&Q";
+        }
+    },
+
+	RecorderStopRecord : function()
+	{
+        var params = ["main"];
+        var id = client.clip.recorder.Stop({params: params, onresponse: function(resp){
+                                               
+        }});
+	},
+		
+	RecorderStartRecord : function()
+	{
+
+        var params = ["main"];
+        var id = client.clip.recorder.Start({params: params, onresponse: function(resp){
+                                               
+        }});
+	},	
+/**************************************************
+*  Sever Notify Functions
+***************************************************/
+	NotifySubscribe : function () {
+		names = [];
+		names.push("Notify.Property");
+		names.push("Notify.Properties");
+		names.push("Notify.Process");
+		var id = client.notify.Subscribe({params: names,	onresponse: function(resp){
+									
+		}});
+	},
+	
+	NotifyUnsubscribe : function () {
+		names = [];
+		names.push("Notify.Properties");
+		var id = client.notify.Unsubscribe({params: names,	onresponse: function(resp){
+										
+		}});
+	},
+
+	NotifyRecordStatusByCardStatus :function (){
+        if(IsMediaAactive&&IsMediaAMount)
+        {
+            MediaStatus = 0;
+            //j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+            //j("#"+MediaCardEle[1]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_MediaCard_NoMedia.png)"});
+            j("#"+AppStatText[1]).text("");
+            if ("Standby" == CameraStatus)
+            {
+                g_MediaStatus = CameraStatus;
+                j("#"+STBYORREC[0]).css({"background-image":""});
+                j("#"+STBYORREC[1]).css({"background-image":""});
+                if (g_IsSimulRecord)
+                {
+                    RecordCtrl.SetMediaStandbySpecialStatus();
+                }
+                else
+                {
+                    RecordCtrl.SetMediaStandbyStatus();
+                }
+            }else if ("Recording" == CameraStatus)
+            {
+                g_MediaStatus = CameraStatus;
+                if (g_IsSimulRecord)
+                {
+                    RecordCtrl.SetMediaRecordingSpecialStatus();
+                }
+                else
+                {
+                    RecordCtrl.SetMediaRecordingStatus();
+                }
+            }
+        }else if(IsMediaBactive&&IsMediaBMount)
+        {
+            MediaStatus=1;
+            // j("#"+MediaCardEle[MediaStatus]).css({"background-image":MediaCardPng[MediaStatus]});
+            //j("#"+MediaCardEle[0]).css({"background-image":""});
+            // j("#"+MediaCardEle[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_MediaCard_NoMedia.png)"});
+            j("#"+AppStatText[0]).text("");
+            if ("Standby" == CameraStatus)
+            {
+                g_MediaStatus = CameraStatus;
+                j("#"+STBYORREC[0]).css({"background-image":"none"});
+                if (g_IsSimulRecord)
+                {
+                    RecordCtrl.SetMediaStandbySpecialStatus();
+                }
+                else
+                {
+                    RecordCtrl.SetMediaStandbyStatus();
+                }
+            }else if ("Recording" == CameraStatus)
+            {
+                g_MediaStatus = CameraStatus;
+                if (g_IsSimulRecord)
+                {
+                    RecordCtrl.SetMediaRecordingSpecialStatus();
+                }
+                else
+                {
+                    RecordCtrl.SetMediaRecordingStatus();
+                }
+            }
+        }else{
+            MediaStatus = 2;
+            // j("#"+MediaCardEle[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_MediaCard_NoMedia.png)"});
+            // j("#"+MediaCardEle[1]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_MediaCard_NoMedia.png)"});
+            j("#"+AppStatText[0]).text("");
+            j("#"+AppStatText[1]).text("");
+        }
+	},
+
+
+
+
+
+	NotifySetRecorderData : function (objArrItem)
+	{
+		var TimeCodeFlag = 1;
+		for(var key in objArrItem)
+		{
+			if (key == "P.Clip.Mediabox.Status")
+			{
+
+                CameraStatus= objArrItem[key];
+
+			}
+			else if (key == "P.Clip.Mediabox.Mode")
+			{
+				if ("Normal" == objArrItem[key])
+				{
+					StatusMode = 0;
+				}
+				else if ("Interval" == objArrItem[key])
+				{
+					StatusMode = 2;
+				}
+				else if ("ClipContinuous" == objArrItem[key])
+				{
+					StatusMode = 3;
+				}
+				else if ("PictureCache" == objArrItem[key])
+				{
+					StatusMode = 4;
+				}
+				else if ("Frame" == objArrItem[key])
+				{
+					StatusMode = 5;
+				}
+				else
+				{
+					StatusMode = 1;
+				}
+
+			}
+			else if (key == "P.Clip.Mediabox.Speed")
+			{
+				SpeedValue = Math.round(objArrItem[key]);
+			}
+
+			else if (key == "P.Clip.Mediabox.TimeCode.Type")
+			{
+				if (objArrItem[key] == "Unknown")
+				 {
+				 	j("#0_TCG_NAME").text("");
+				 	TimeCodeFlag = 0;
+				 }
+				 else if (objArrItem[key] == "Duration")
+				 {
+				 	j("#0_TCG_NAME").text("Dur");
+				 	TimeCodeFlag = 1;
+				 }
+				 else if (objArrItem[key] == "Counter")
+				 {
+					j("#0_TCG_NAME").text("Cnt");
+				 	TimeCodeFlag = 1;
+				 }
+				 /*else if (value == "TimeCode")
+				 {
+				 	j("#0_TCG_NAME").text("TC");
+				 	TimeCodeFlag = 1;
+				 }
+				 else if (value == "UB")
+				 {
+				 	j("#0_TCG_NAME").text("UB");
+				 	TimeCodeFlag = 1;
+				 }*/
+				 else
+				 {
+				 	j("#0_TCG_NAME").text(objArrItem[key]);
+				 	TimeCodeFlag = 1;
+				 }
+			}
+			else if (key == "P.Clip.Mediabox.TimeCode.Value")
+			{
+				if (TimeCodeFlag == 0)
+				{
+					j("#1_TIMECODE_VALUE").text("");
+				}
+				else
+				{
+					j("#1_TIMECODE_VALUE").text(objArrItem[key]);
+					if ($("0_TCG_NAME").innerHTML == "UBG")
+					{
+						$("1_TIMECODE_VALUE").style.fontSize = "30px";
+					}
+					else
+					{
+						$("1_TIMECODE_VALUE").style.fontSize = "36px";
+					}
+				}
+			}
+			else if (key == "P.Clip.Mediabox.TimeCode.Locked")//return bool
+			{
+				if (true == objArrItem[key])
+				{
+					j("#0_EXT_LK_NAME").text("Ext-Lk");
+				}
+				else if (false == objArrItem[key])
+				{
+					j("#0_EXT_LK_NAME").text("");
+				}
+				else if ("true" == objArrItem[key])
+				{
+					j("#0_EXT_LK_NAME").text("Ext-Lk");
+				}
+				else
+				{
+					j("#0_EXT_LK_NAME").text("");
+				}
+			}
+			else if (key == "P.Clip.Mediabox.SimulRec.Enabled")
+			{
+				g_IsSimulRecord = objArrItem[key];
+				if (g_IsSimulRecord)
+				{
+					if (g_MediaStatus == "Standby" || "RecPausing" == g_MediaStatus)
+					{
+						RecordCtrl.SetMediaStandbySpecialStatus();
+					}
+					else if (g_MediaStatus == "Recording")
+					{
+						RecordCtrl.SetMediaRecordingSpecialStatus();
+					}
+				}
+				else
+				{
+					if (g_MediaStatus == "Standby" || "RecPausing" == g_MediaStatus)
+					{
+						RecordCtrl.SetMediaStandbyStatus();
+					}
+					else if (g_MediaStatus == "Recording")
+					{
+						RecordCtrl.SetMediaRecordingStatus();
+					}
+				}
+			}
+            else if(key == "P.Clip.Mediabox.SimulRec.Mode")
+            {
+                g_SimulateMode = objArrItem[key];
+            }
+			else
+			{
+			}
+            RecordCtrl.UpdateRecordStatus(key);
+			SetCardNotifyData({});
+			SetAudioNotifyData({});
+             }
+	},
+
+    UpdateRecordStatus :function (key)
+    {
+    if(key == "P.Clip.Mediabox.Status"|| key == "P.Clip.Mediabox.Mode"|| key == "P.Clip.Mediabox.Speed" || key == "Storage.Drive.Status" || key == "System.Storage")
+    {
+        if ("Recording" == CameraStatus || "RecordingWithCall" == CameraStatus || "RecPausing" == CameraStatus)
+        {
+            if (RECRedStatusValue != 1)
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Rec.png)"});
+                RECRedStatusValue = 1;
+            }
+        }
+        else//"Ready"
+        {
+            if (RECRedStatusValue != 0)
+            {
+                j("#"+STBYORREC[MediaStatus]).css({"background-image":""});
+                RECRedStatusValue = 0;
+            }
+        }
+
+        if ("Playing" == CameraStatus)
+        {
+            PlayBackInfoStatusValue = 1;
+        }
+        else if ("Standby" == CameraStatus || "NoMedia" == CameraStatus)
+        {
+            j("#"+STBYORREC[0]).css({"background-image":"none"});
+            if (PlayBackInfoStatusValue != 0)
+            {
+                PlayBackInfoStatusValue = 0;
+            }
+        }
+        else if ("Recording" == CameraStatus)
+        {
+            PlayBackInfoStatusValue = 0;
+        }
+
+
+        if ("NoMedia" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            j("#DIV_STATUS").text("");
+            j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("");
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            Status1Value = "";
+            Status2Value = "";
+            if (g_IsSimulRecord)
+            {
+                j("#3_DIV_STATUS").text("Simul");
+            }
+            else
+            {
+                RecordCtrl.SetNoMediaStatus();
+            }
+
+        }
+        else if ("Recording" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            if (g_IsSimulRecord)
+            {
+                RecordCtrl.SetMediaRecordingSpecialStatus();
+            }
+            else
+            {
+                RecordCtrl.SetMediaRecordingStatus();
+            }
+        }
+        else if ("Standby" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            if (g_IsSimulRecord)
+            {
+                RecordCtrl.SetMediaStandbySpecialStatus();
+            }
+            else
+            {
+                RecordCtrl.SetMediaStandbyStatus();
+            }
+        }
+        else if ("RecPausing" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            if (g_IsSimulRecord)
+            {
+                RecordCtrl.SetMediaStandbySpecialStatus();
+            }
+            else
+            {
+                RecordCtrl.SetMediaStandbyStatus();
+            }
+        }
+        else if ("Playing" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            j("#2_DIV_STATUS").css({"background-image":"none"});
+            if (SpeedValue == 1)
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Play.png)"});
+                j("#"+AppStatText[0]).text("Play");
+                j("#"+AppStatText[0]).css({color:"#fff"});
+                // j("#2_DIV_STATUS").text("");
+                j("#3_DIV_STATUS").text("");
+                Status1Value = "Play";
+                Status2Value = "";
+            }
+            else if (SpeedValue == 0)
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Pause.png)"});
+                j("#"+AppStatText[0]).text("Pause");
+                j("#"+AppStatText[0]).css({color:"#fff"});
+                // j("#2_DIV_STATUS").text("");
+                j("#3_DIV_STATUS").text("");
+                Status1Value = "Pause";
+                Status2Value = "";
+            }
+            else if (SpeedValue  > 1)
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_FFwd.png)"});
+                j("#"+AppStatText[0]).text("Fwdx" + SpeedValue);
+                j("#"+AppStatText[0]).css({color:"#fff"});
+                // j("#2_DIV_STATUS").text("");
+                j("#3_DIV_STATUS").text("");
+                Status1Value = "Fwdx" + SpeedValue;
+                Status2Value = "";
+            }
+            else if (SpeedValue  < 0)
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_FRev.png)"});
+                var SpeedValueAbs = -SpeedValue;
+                j("#"+AppStatText[0]).text("Revx" + SpeedValueAbs);
+                j("#"+AppStatText[0]).css({color:"#fff"});
+                // j("#2_DIV_STATUS").text("");
+                j("#3_DIV_STATUS").text("");
+                Status1Value = "Revx" + SpeedValueAbs;
+                Status2Value = "";
+            }
+            else
+            {
+                j("#"+STBYORREC[0]).css({"background-image":"url(../../WebCommon/images/Parts_PFXR_T_CC_Status_Play.png)"});
+                j("#"+AppStatText[0]).text("Play");
+                j("#"+AppStatText[0]).css({color:"#fff"});
+                // j("#2_DIV_STATUS").text("");
+                j("#3_DIV_STATUS").text("");
+                Status1Value = "Play";
+                Status2Value = "";
+            }
+
+
+        }
+        else if ("Pausing" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            j("#"+AppStatText[0]).text("Pause");
+            j("#"+AppStatText[0]).css({color:"#fff"});
+            // j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("");
+            Status1Value = "Pause";
+            Status2Value = "";
+        }
+        else if ("Stopping" == CameraStatus)
+        {
+            g_MediaStatus = CameraStatus;
+            j("#"+AppStatText[0]).text("Stop");
+            j("#"+AppStatText[0]).css({color:"#fff"});
+            // j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("");
+            Status1Value = "Stop";
+            Status2Value = "";
+        }
+        else
+        {
+            g_MediaStatus = "";
+            j("#DIV_STATUS").text("");
+            j("#2_DIV_STATUS").text("");
+            j("#3_DIV_STATUS").text("");
+            Status1Value = "";
+            Status2Value = "";
+        }
+    }
+}
+}
+
+
+
+

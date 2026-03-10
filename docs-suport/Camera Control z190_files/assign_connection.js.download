@@ -1,0 +1,228 @@
+// JavaScript Document
+var g_isAssignProxyRecVisable = true;
+AssignCtrl = {
+	
+	GetValue : function()
+	{
+		var names = {"Button.Assign":["*"]};
+		var id = client.property.GetValue({params: names, onresponse: function(resp) {
+			var respAssign = JSON.stringify(resp.error || resp.result);
+			var AssignData = JSON.parse(respAssign);
+			if (AssignData == "timeout")
+			{
+			}
+			else
+			{
+				j.each(AssignData, function(key, value) 
+				{
+					if ("Button.Assign" == key) 
+					{				
+						SetAssignBtnProperties(value);
+					}
+				});
+			}
+		}, timeout : 3000});
+	},
+	
+	GetCapability : function()
+	{
+		var names = ["Button.Assign"];
+		var id = client.capability.GetValue({params: names, onresponse: function(resp) {
+			var respStr = JSON.stringify(resp.error || resp.result);
+			var strData = JSON.parse(respStr);
+			if (strData == "timeout")
+			{
+			}
+			else
+			{
+				j.each(strData, function(key, value) 
+				{
+					if ("Button.Assign" == key) 
+					{
+						var tmpClickAssignBtnIndex = 0;
+						switch(g_clickAssignBtnIndex)
+						{
+							case 1:
+							case 2:
+								tmpClickAssignBtnIndex = g_clickAssignBtnIndex - 1;
+								break;
+							default:
+								tmpClickAssignBtnIndex = g_clickAssignBtnIndex - 1;
+								break;
+						}
+						SetAssignBtnList(value , tmpClickAssignBtnIndex);
+					}
+				});
+				
+				
+				if (parseInt(g_arrAssignLableList[g_clickAssignBtnIndex - 1].id) == 5)
+				{
+					if (g_objAssignLable_5.innerHTML == "Zoom W/T"
+						|| g_objAssignLable_5.innerHTML == "Zoom T/W")
+					{
+					}
+					else
+					{
+						
+						SetAssignListSelsctForSpecialItems(g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML, g_clickAssignBtnIndex - 1);
+//						if (g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML == "Cont Rec")
+//						{
+//							g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect("Clip Continuous Rec");
+//						}
+//						else if (g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML == "Cache Rec")
+//						{
+//							g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect("Picture Cache Rec");
+//						}
+//						else
+//						{
+//							g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect(g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML);
+//						}
+					}
+				}
+				else
+				{
+					SetAssignListSelsctForSpecialItems(g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML, g_clickAssignBtnIndex - 1);
+//					g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect(g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML);
+//					if (g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML == "Cont Rec")
+//					{
+//						g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect("Clip Continuous Rec");
+//					}
+//					else if (g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML == "Cache Rec")
+//					{
+//						g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect("Picture Cache Rec");
+//					}
+//					else
+//					{
+//						g_arrAssignLableList[g_clickAssignBtnIndex - 1].userData[1].SetSelect(g_arrAssignLableList[g_clickAssignBtnIndex - 1].innerHTML);
+//					}
+				}
+				ShowMainPageDialog(g_arrAssignLableList[g_clickAssignBtnIndex - 1]);
+			}
+		}, timeout : 3000});
+	},
+	
+	SetValue : function(targetBtnId, SelectedValue)
+	{
+		var names; 
+		switch (targetBtnId)
+		{
+			case 1:
+				names = {"Button.Assign" : {"Assignable.0" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+			case 2:
+				names = {"Button.Assign" : {"Assignable.1" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+			case 3:
+				names = {"Button.Assign" : {"Assignable.2" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+			case 4:
+				names = {"Button.Assign" : {"Assignable.3" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+			case 5:
+				names = {"Button.Assign" : {"Assignable.4" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+			case 6:
+				names = {"Button.Assign" : {"Assignable.5" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+			case 7:
+				names = {"Button.Assign" : {"Assignable.6" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+				break;
+            case 8:
+                names = {"Button.Assign" : {"Assignable.7" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+                break;
+            case 9:
+                names = {"Button.Assign" : {"Assignable.8" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+                break;
+            case 10:
+                names = {"Button.Assign" : {"Assignable.9" : [g_arrSetAssignItemMap[SelectedValue],"None"]}};
+                break;
+			default:
+				break;
+		}
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }, timeout : 3000});
+	},
+	
+	GetStatus : function()
+	{
+		var names = {"P.Control.ProxyRec.StartStop":null};
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) {
+			var resp_str = JSON.stringify(resp.error || resp.result);
+			var statusData = JSON.parse(resp_str);
+			if (statusData == "timeout")
+			{
+				//TODO
+			}
+			else
+			{
+				var oldValue = g_isAssignProxyRecVisable;
+				if ("Locked" == statusData["P.Control.ProxyRec.StartStop"] && "Locked" == statusData["ProxyRecStartStop"])
+				{
+					g_isAssignProxyRecVisable = false;
+				}
+				else
+				{
+					g_isAssignProxyRecVisable = true;
+				}
+				if (oldValue != g_isAssignProxyRecVisable)
+				{
+					for (var i = 0; i < g_arrAssignLableList.length; i++)
+					{
+                        if (g_arrAssignLableList[i] != null) {
+						    var IsShow = g_arrAssignLableList[i].userData[1].IsDialogShow();
+						    if (IsShow)
+						    {
+								AssignCtrl.GetCapability();
+								break;
+						    }
+                        }
+					}
+				}
+			}
+		}});
+	},
+
+	NotifySetAssignData : function (objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {
+			if ("Button.Assign" == key) 
+			{
+				SetAssignBtnProperties(value);
+                for (var i = 0; i < g_arrAssignLableList.length; i++)
+                {
+                    if (g_arrAssignLableList[i] != null) {
+                        var IsShow = g_arrAssignLableList[i].userData[1].IsDialogShow();
+                        if (IsShow)
+                        {
+                            g_arrAssignLableList[i].userData[1].ShowDialog(false);
+                            g_OldObject = null;
+                        }
+                    }
+                }
+                AssignCtrl.GetStatus();
+				AssignCtrl.GetStatus();
+			}
+			if ("P.Control.ProxyRec.StartStop" == key || "ProxyRecStartStop" == key) 
+			{
+				AssignCtrl.GetStatus();
+			}
+			// if ("P.Menu.pmw-f5x.Event.EventID" == key)
+			// {
+			// 	if (EVENT_ASSIGNABLE_BUTTON_CHANGED == value)
+			// 	{
+			// 		for (var i = 0; i < g_arrAssignLableList.length; i++)
+			// 		{
+             //            if (g_arrAssignLableList[i] != null) {
+			// 			    var IsShow = g_arrAssignLableList[i].userData[1].IsDialogShow();
+			// 			    if (IsShow)
+			// 			    {
+			// 				    g_arrAssignLableList[i].userData[1].ShowDialog(false);
+			// 				    g_OldObject = null;
+			// 			    }
+             //            }
+			// 		}
+			// 		AssignCtrl.GetStatus();
+			// 	}
+			// }
+		});
+	}
+}

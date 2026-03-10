@@ -1,0 +1,211 @@
+// JavaScript Document
+var g_SQFPSValue = null;
+var g_bHighFrameRateEnabled = true;
+var g_bSQPFSEnabled = true;
+var g_bSAndQGray = false;
+var SQFPSCtrl = {
+	
+	GetValue : function ()
+	{
+		var names = {"Camera.SlowAndQuickMotion.Enabled":["*"],
+					"Camera.SlowAndQuickMotion.HighFrameRate.Enabled":["*"],
+					"Camera.SlowAndQuickMotion.FrameRate":["*"]};
+		var id = client.property.GetValue({params: names, onresponse: function(resp) {
+			var respSQFPS = JSON.stringify(resp.error || resp.result);
+			var SQFPSData = JSON.parse(respSQFPS);
+			if (SQFPSData == "timeout")
+			{
+					
+			}
+			else
+			{
+				g_SQFPSValue = SQFPSData["Camera.SlowAndQuickMotion.FrameRate"];
+				g_bSQPFSEnabled = SQFPSData["Camera.SlowAndQuickMotion.Enabled"];
+				g_bHighFrameRateEnabled = SQFPSData["Camera.SlowAndQuickMotion.HighFrameRate.Enabled"];
+				
+				g_bSQPFSEnabled ? j(g_objSandQ).text(g_SQFPSValue + "FPS") : j(g_objSandQ).text("Off");
+			}
+		}});	
+	},
+	
+	GetCapabilities : function()
+	{
+		var names = ["Camera.SlowAndQuickMotion.FrameRate"];
+		
+		var id = client.capability.GetValue({ params: names, onresponse: function(resp) {
+			var respSQFPS = JSON.stringify(resp.error || resp.result);
+			var SQFPSData = JSON.parse(respSQFPS);
+			if (SQFPSData == "timeout")
+			{
+			}
+			else
+			{
+				var arrSQFPSArray = new Array(); //Array to Save S&Q Motion Data
+				
+				for (var key in SQFPSData)
+				{
+					arrSQFPSArray = SQFPSData[key];
+				}
+				arrSQFPSArray = arrSQFPSArray[2];
+				
+				g_objSandQ.userData[1].SetArrItems(arrSQFPSArray);
+				
+				g_objSandQ.userData[1].SetTextValue(g_SQFPSValue)
+				if(true == g_bSQPFSEnabled)
+				{
+				g_objSandQ.userData[1].SetSelect(0);
+				}
+				else if(false == g_bSQPFSEnabled)
+				{
+				g_objSandQ.userData[1].SetSelect(1);
+				j("#0_SQFPS_DLG_ITEM").css("color", "rgb(230,230,230)");
+				}
+				ShowMainPageDialog(g_objSandQ);
+			}
+		}, timeout : 3000});
+	},
+	
+	SetValue : function(objSrc, SelectedIndex, SQFPSValue)
+	{
+		var names = {};
+		
+		if (SQFPSValue == "On")
+		{
+			SelectedIndex = 0;
+		}
+		else if (SQFPSValue == "OFF")
+		{
+            SelectedIndex = 1;
+		}
+		else if (SQFPSValue == "")
+		{
+			//do nothing,g_SQFPSValue doesn't changed.
+		}
+		else
+		{
+			g_SQFPSValue = parseInt(SQFPSValue);
+		}
+		
+		switch (SelectedIndex)
+		{
+			case 0:
+				//SQFPS ON
+				names = {"Camera.SlowAndQuickMotion.Enabled": true, "Camera.SlowAndQuickMotion.HighFrameRate.Enabled": false, "Camera.SlowAndQuickMotion.FrameRate": g_SQFPSValue};
+				break;
+			case 1:
+				//SQFPS OFF
+				names = {"Camera.SlowAndQuickMotion.Enabled": false,"Camera.SlowAndQuickMotion.HighFrameRate.Enabled": false, "Camera.SlowAndQuickMotion.FrameRate": g_SQFPSValue};
+				break;
+			default:
+				break;
+		}
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }, timeout: 3000});	
+	},
+	
+	NotifySetSQFPSData : function (objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {
+			switch(key)
+			{
+				case "Camera.SlowAndQuickMotion.Enabled":
+					{
+						g_bSQPFSEnabled = value;
+						if(g_bSQPFSEnabled == false)
+						{
+							g_objSandQ.userData[1].SetSelect(1);
+							g_objSandQ.innerHTML = "Off";
+						}
+						else
+						{
+							g_objSandQ.userData[1].SetSelect(0);
+                            SQFPSCtrl.GetValue();
+						}
+					}
+					break;
+				case "Camera.SlowAndQuickMotion.FrameRate":
+					{
+						g_SQFPSValue = value;
+						if(g_bSQPFSEnabled)
+						{
+							g_objSandQ.innerHTML = g_SQFPSValue + "FPS";
+						}
+						g_objSandQ.userData[1].SetTextValue(g_SQFPSValue)
+					}
+					break;
+				case "Camera.SlowAndQuickMotion.HighFrameRate.Enabled":
+					{
+						g_bHighFrameRateEnabled = value;
+					}
+					break;
+				case "P.Menu.pmw-f5x.Event.EventID":
+					{
+						if ((EVENT_PLAY_UPDATE == value)
+						|| (EVENT_THUMBNAIL_UPDATE == value)
+						|| (EVENT_RECORDE_UPDATE == value)
+						|| (EVENT_VIEW_UPDATE == value)
+						|| (EVENT_RETURN_SANDQMOTION_ISAVAILABLE == value)
+						|| (EVENT_RETURN_SANDQMOTION_UNAVAILABLE == value)
+						|| (EVENT_NOTIFY_SANDQMOTION_UNAVAILABLE == value)
+						|| (EVENT_NOTIFY_SANDQMOTION_ISAVAILABLE == value)
+						|| (EVENT_ABB_EXECUTE_FOR_GREY_OUT == value)
+						|| (EVENT_AWB_MODE_DISPLAY == value))
+						{
+							SQFPSCtrl.GetStatus();
+						}
+					break;
+					}
+					break;
+				default:
+					break;
+			}
+	})
+	},
+
+    NotifySQFPSStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.SlowAndQuickMotion.Enabled":
+                    SQFPSCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	GetStatus : function ()
+	{
+		var names = {"Camera.SlowAndQuickMotion.Enabled":null};
+		
+		var id = client.property.GetStatus({params: names,
+			onresponse: function(resp) {
+				var resp_str = JSON.stringify(resp.error || resp.result);
+				var respData = JSON.parse(resp_str);
+				if (respData == "timeout")
+				{		
+				}
+				else
+				{
+					var strSandQLocked = respData["Camera.SlowAndQuickMotion.Enabled"];
+					
+					if(strSandQLocked == "Locked")
+					{
+						g_bSAndQGray = true;
+						
+						if (g_OldObject == g_objSandQ)
+						{
+							g_objSandQ.userData[1].ShowDialog(false);
+							g_OldObject = null;
+						}
+					}else 
+					{
+						g_bSAndQGray = false;
+					}
+					g_objSandQ.userData[0].SetDisable(g_bSAndQGray);
+				}
+			},
+			timeout:3000});
+	},
+}

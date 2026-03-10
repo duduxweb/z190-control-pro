@@ -1,0 +1,430 @@
+// JavaScript Document
+
+var FoucsTouchstart = 0;
+var FocusMousestart = 0;
+var Focus_defaultX = 0;
+
+function FocusSlider(objSrc, objCallback)
+{
+	var Focus_x = 0;
+	var FocusMin_x = 120;
+	var FocusMax_x = 565;
+	var Focus_Array = [120,148.5,177,205.5,234,262.5,291,319.5,348,376.5,405,433.5,462,490.5,519,547.5,565];
+	var FocusTouchTimerFlag1 = 0;
+	var FocusTouchTimerFlag2 = -1;
+	var FocusMouseTimerFlag1 = 0;
+	var FocusMouseTimerFlag2 = -1;
+	var Focus_iCurrent_X = 0;
+	var b_IsFocusMouseDown = false;
+	
+	this.Parent = GetParent(objSrc);
+	this.AttachSrc = objSrc;
+	this.Width = parseInt(objSrc.style.width);
+	this.CallbackFunc = objCallback;
+	this.Status = false;
+	var m_objSelf = null;
+	var b_IsTouchStart = false;
+	var b_IsMouseDown = false;
+	Focus_defaultX = j(objSrc).position().left;
+	Focus_x = Focus_defaultX;
+	Focus_iCurrent_X = j(objSrc).position().left;
+	var iMousemove_PreviousX = -1;
+	var iMousemove_CurrentX = -1;
+	var blank = 0;
+	
+	
+	this.Initialize = function()
+	{
+		if (!m_objSelf)
+		{
+			m_objSelf = this;
+			AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(document, "mousemove", this.CallbackBtnMouseMove);
+			AddEvent(document, "mouseup", this.CallbackBtnMouseUp);
+			AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			AddEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchCancel);
+
+		}
+		
+	};
+	
+	
+	//Touch Event
+	this.CallbackBtnTouchStart = function(objEvent)
+	{		
+		b_IsTouchStart = true;
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		var touch = objEvent.touches[0];
+	
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+
+		if(objSrc.id == "FOCUS_SLIDER_HANDLE")
+		{	
+			Focus_iCurrent_X = touch.screenX;
+			blank = Focus_iCurrent_X - Focus_defaultX;
+			Focus_iCurrent_X -= blank;
+			iMousemove_PreviousX = touch.screenX;
+			//iCurrentLeft = j(objSrc).css("left");
+			
+			g_ObjFocusButton.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom_Pressed.png)";
+			
+			if (FocusTouchTimerFlag1 != FocusTouchTimerFlag2)
+			{
+				if (b_IsMouseDown == false)
+				{
+					FoucsTouchstart = setInterval(m_objSelf.FocusTouchChangeValue, 100);
+				}
+			}
+			FocusTouchTimerFlag2 = FocusTouchTimerFlag1;		
+		}
+			
+		return false;
+	};
+	
+	this.CallbackBtnTouchMove = function(objEvent)
+	{
+		
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();	
+		var touch = objEvent.touches[0];
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if(!b_IsTouchStart) 
+		{
+			return false;
+		}
+		
+		iMousemove_CurrentX = touch.screenX;
+		Focus_iCurrent_X += iMousemove_CurrentX - iMousemove_PreviousX;
+		iMousemove_PreviousX = touch.screenX;
+		//get slider current position
+		Focus_x = touch.screenX - blank;
+		
+		if (Focus_iCurrent_X < FocusMin_x)
+		{
+			Focus_iCurrent_X = FocusMin_x;
+		}
+		else if (Focus_iCurrent_X > FocusMax_x)
+		{
+			Focus_iCurrent_X = FocusMax_x;
+		}
+		else
+		{
+		//it's nothing to do
+		}
+
+		if(objSrc.id == "FOCUS_SLIDER_HANDLE")
+		{	
+			j("#FOCUS_SLIDER_HANDLE").css({left:Focus_iCurrent_X});	
+			
+		}
+	
+		return false;
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		FocusTouchTimerFlag1 = 0;
+		FocusTouchTimerFlag2 = -1;
+		
+		b_IsTouchStart = false;
+		clearInterval(FoucsTouchstart);
+		objEvent.preventDefault();
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if(objSrc.id == "FOCUS_SLIDER_HANDLE")
+		{
+			j("#FOCUS_SLIDER_HANDLE").css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png)"});
+				
+				if(Focus_x > Focus_defaultX)
+				{		
+					FocusValue = 0;
+					FocusCtrl.IncrementProperties();	
+		
+				}
+				if(Focus_x < Focus_defaultX)
+				{
+					FocusValue = 0;
+					FocusCtrl.DecrementProperties();
+		
+				}
+	
+		}
+	};
+	
+	this.CallbackBtnTouchCancel = function(objEvent)
+	{
+		FocusTouchTimerFlag1 = 0;
+		FocusTouchTimerFlag2 = -1;
+		
+		b_IsTouchStart = false;
+		clearInterval(FoucsTouchstart);
+		objEvent.preventDefault();
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if(objSrc.id == "FOCUS_SLIDER_HANDLE")
+		{
+			j("#FOCUS_SLIDER_HANDLE").css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png)"});
+				
+				if(Focus_x > Focus_defaultX)
+				{		
+					FocusValue = 0;
+					FocusCtrl.IncrementProperties();	
+		
+				}
+				if(Focus_x < Focus_defaultX)
+				{
+					FocusValue = 0;
+					FocusCtrl.DecrementProperties();
+		
+				}
+	
+		}
+	}
+	
+	
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		b_IsFocusMouseDown = true;
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		Focus_iCurrent_X = j(objSrc).position().left;
+		iMousemove_PreviousX = objEvent.pageX;
+		b_IsMouseDown = true;
+
+		if(objSrc.id == "FOCUS_SLIDER_HANDLE")
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom_Pressed.png)";
+		
+			if (FocusMouseTimerFlag1 != FocusMouseTimerFlag2)
+			{
+				if (b_IsTouchStart == false)
+				{
+					FocusMousestart = setInterval(m_objSelf.FocusMouseChangeValue, 100);
+				}
+			}
+			FocusMouseTimerFlag2 = FocusMouseTimerFlag1;
+		}
+
+		return false;
+	};
+
+	this.CallbackBtnMouseMove = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if(!b_IsMouseDown) 
+		{
+			return false;
+		}
+	
+		iMousemove_CurrentX = objEvent.pageX;
+		Focus_iCurrent_X += iMousemove_CurrentX - iMousemove_PreviousX;
+		iMousemove_PreviousX = objEvent.pageX;
+		
+		if (Focus_iCurrent_X < FocusMin_x)
+		{
+			Focus_iCurrent_X = FocusMin_x;
+		}
+		else if (Focus_iCurrent_X > FocusMax_x)
+		{
+			Focus_iCurrent_X = FocusMax_x;
+		}
+		else
+		{
+			//it's nothing to do
+		}
+		
+		j("#FOCUS_SLIDER_HANDLE").css({left: Focus_iCurrent_X, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom_Pressed.png)"});	
+	
+		return false;
+		
+	};
+	
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		b_IsFocusMouseDown = false;
+		FocusMouseTimerFlag1 = 0;
+		FocusMouseTimerFlag2 = -1;
+		
+		clearInterval(FocusMousestart);
+		
+		objEvent.preventDefault();
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+	
+		if(b_IsMouseDown)
+		{
+			j("#FOCUS_SLIDER_HANDLE").css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png)"});
+			if(Focus_iCurrent_X > Focus_defaultX)
+			{		
+				FocusValue = 0;
+				FocusCtrl.IncrementProperties();	
+	
+			}
+			if(Focus_iCurrent_X < Focus_defaultX)
+			{
+				FocusValue = 0;
+				FocusCtrl.DecrementProperties();
+	
+			}
+			b_IsMouseDown = false;
+			return false;
+			
+		}
+		
+	};
+	
+	this.FocusTouchChangeValue = function()
+	{
+		var i = 0;
+		if (Focus_x < FocusMin_x)
+		{
+			Focus_x = FocusMin_x;
+		}
+		else if (Focus_x > FocusMax_x)
+		{
+			Focus_x = FocusMax_x;
+		}
+		
+		for (i = 0; i < 16; i++)
+		{
+			if (Focus_x == Focus_Array[i])
+			{
+				FocusValue = i - 8;	
+			}
+			
+			else if (Focus_x > Focus_Array[i] && Focus_x <= Focus_Array[i + 1])
+			{
+				FocusValue = i - 7;
+			}
+		}
+		
+		
+		if(Focus_x > Focus_defaultX)
+		{		
+	
+			FocusCtrl.IncrementProperties();	
+			
+		}
+		if(Focus_x < Focus_defaultX)
+		{
+		
+			FocusCtrl.DecrementProperties();
+			
+		}
+	
+	}
+	
+	this.FocusMouseChangeValue = function()
+	{
+	
+		var i = 0;
+		if (Focus_iCurrent_X < FocusMin_x)
+		{
+			Focus_iCurrent_X = FocusMin_x;
+		}
+		else if (Focus_iCurrent_X > FocusMax_x)
+		{
+			Focus_iCurrent_X = FocusMax_x;
+		}
+		
+		for (i = 0; i < 16; i++)
+		{
+			if (Focus_iCurrent_X == Focus_Array[i])
+			{
+				FocusValue = i - 8;	
+			}
+			
+			if (Focus_iCurrent_X > Focus_Array[i] && Focus_iCurrent_X <= Focus_Array[i + 1])
+			{
+				FocusValue = i - 7;
+			}
+		}
+		
+		
+		if(Focus_iCurrent_X > Focus_defaultX)
+		{		
+			
+			FocusCtrl.IncrementProperties();	
+			
+		}
+		if(Focus_iCurrent_X < Focus_defaultX)
+		{
+			
+			FocusCtrl.DecrementProperties();
+			
+		}
+		
+	}
+	
+	
+	this.SetDisabled = function(bDisabled)
+	{
+	
+		if (bDisabled)
+		{
+			if (b_IsFocusMouseDown)
+			{	
+				this.CallbackBtnMouseUp();
+				
+			}
+			if (b_IsTouchStart)
+			{
+				this.CallbackBtnTouchEnd();
+			}
+			RemoveEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			RemoveEvent(document, "mousemove", this.CallbackBtnMouseMove);
+			RemoveEvent(document, "mouseup", this.CallbackBtnMouseUp);
+			RemoveEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			RemoveEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			RemoveEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+		
+		
+		}
+		else
+		{	
+			AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(document, "mousemove", this.CallbackBtnMouseMove);
+			AddEvent(document, "mouseup", this.CallbackBtnMouseUp);
+			AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			
+		}
+	}
+	
+	this.Initialize();
+}

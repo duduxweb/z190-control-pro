@@ -1,0 +1,395 @@
+// JavaScript Document
+var g_shutterEnable = false;
+var g_shutterMode = null;
+var g_strShutterValue = null;
+var g_IsSlowShutter = false;
+var g_SlowShutterValue = null;
+var g_GetListMode = null;
+var g_OldECSValue = 0;
+var g_isECSEnable = false;
+var g_bShutterGray = false;
+// var g_arrShutterAngleList = ["11.2","22.5", "45.0", "90.0", "180.0"];
+var g_arrShutterAngleList = ["360.0","300.0","270.0","240.0","216.0","210.0","180.0","172.8","150.0",
+　"144.0","120.0","90.0","86.4","72.0","45.0","30.0","22.5","11.25","5.6"];
+var g_arrShutterSpeedList = [];
+var g_arrShutterSLSList = ["2","3","4","5","6","7","8","16"];
+var g_isSLSEnable = false;
+var g_RequestedShutterEnable = false;
+
+var ShutterCtrl = {
+	
+	GetValue : function ()
+	{
+		var names = {"Camera.Shutter.Enabled":["*"],
+					"Camera.Shutter.Mode":["*"],
+					"Camera.Shutter.Value":["*"],
+					"Camera.Shutter.Slow.Enabled":["*"],
+					"Camera.Shutter.Slow.Frames":["*"],
+					"Camera.Shutter.ECS.Enabled":["*"]};
+		var id = client.property.GetValue({params: names, onresponse: function(resp) {
+			var respShutter = JSON.stringify(resp.error || resp.result);
+			var ShutterData = JSON.parse(respShutter);
+			if (ShutterData == "timeout")
+			{
+					
+			}
+			else
+			{
+				g_shutterEnable = ShutterData["Camera.Shutter.Enabled"];
+				g_shutterMode = ShutterData["Camera.Shutter.Mode"];
+				g_strShutterValue = ShutterData["Camera.Shutter.Value"];
+				g_IsSlowShutter = ShutterData["Camera.Shutter.Slow.Enabled"];
+				g_SlowShutterValue = ShutterData["Camera.Shutter.Slow.Frames"];
+				g_isECSEnable = ShutterData["Camera.Shutter.ECS.Enabled"];
+				g_GetListMode = g_shutterMode;
+				
+				if (g_IsSlowShutter)
+				{
+					g_shutterMode = "SLS";
+					g_objShutter.innerHTML = g_shutterMode + g_SlowShutterValue + "F";
+				}
+				else
+				{
+					if (!g_shutterEnable)
+					{
+						g_objShutter.innerHTML = "Off";
+						g_objShutter.userData[1].SetSelect("Off");
+					}
+					else 
+					{
+						if (g_isECSEnable)
+						{
+							g_shutterMode = "ECS";
+							g_objShutter.innerHTML = g_strShutterValue + "Hz";
+							g_objShutter.userData[1].SetSelect("ECS");
+							g_objShutter.userData[1].SetSubECSText(g_strShutterValue);
+						}
+						else
+						{
+							g_GetListMode = g_shutterMode;
+							g_objShutter.innerHTML = g_strShutterValue;
+							g_objShutter.userData[1].SetSelect(g_strShutterValue);
+						}
+					}
+				}
+				ShutterCtrl.SetAngleImage();
+			}
+		}});
+	},
+	
+	GetCapabilities : function()
+	{
+		var names = ["Camera.Shutter.Speed"];
+        if (g_GetListMode == "Angle")
+		{
+			g_objShutter.userData[1].SetListItems(g_arrShutterAngleList);
+			g_objShutter.userData[1].SetListItemSelect();
+			ShowMainPageDialog(g_objShutter);
+			return;
+		}
+		var id = client.capability.GetValue({ params: names, onresponse: function(resp) {
+			var respData = JSON.stringify(resp.result);
+			var jsonShutterData = JSON.parse(respData);
+			var arrShutterList = null;
+			for (var key in jsonShutterData)
+			{
+				arrShutterList = jsonShutterData[key];
+			}
+			if ((arrShutterList == null) || (arrShutterList[2] == undefined)) {
+				return;
+			}
+			g_arrShutterSpeedList = arrShutterList[2];
+				
+			g_objShutter.userData[1].SetListItems(g_arrShutterSpeedList);
+			ShowMainPageDialog(g_objShutter);
+		}});
+	},
+	
+	SetValue : function(strSelectedValue)
+	{
+		var names;
+		if ("Off" == strSelectedValue)
+		{
+			names = {"Camera.Shutter.Enabled":false};
+			var id = client.property.SetValue({params: names, onresponse: function(resp){ }});
+		}
+		else if ("ECS" == strSelectedValue)
+		{
+			names = {"Camera.Shutter.ECS.Enabled":true, "Camera.Shutter.Mode":g_GetListMode};
+			var id = client.property.SetValue({params: names, onresponse: function(resp){ }});
+		}
+		else
+		{
+			names = {"Camera.Shutter.ECS.Enabled":false, "Camera.Shutter.Mode":g_GetListMode, "Camera.Shutter.Value":strSelectedValue};
+			if (g_shutterEnable && (g_strShutterValue == strSelectedValue))
+			{
+				return;
+			}
+			var id = client.property.SetValue({params: names, onresponse: function(resp){ }});
+		}
+			
+	},
+	
+	SetECSCancelValue : function(strValue)
+	{
+		var names = {"Camera.Shutter.Mode":"ECS", "Camera.Shutter.Value":strValue};
+		var id = client.property.SetValue({params: names, onresponse: function(resp){ }});	
+	},
+	
+	SetSliderValue : function(iSelectedValue)
+	{
+		var names = {"P.Control.Shutter.Value.Slider":iSelectedValue};
+		var id = client.property.SetValue({params: names, onresponse: function(resp){ }});	
+	},
+	
+	UpdateValue : function(value)
+	{
+		var params = {"Camera.Shutter.Value":value};
+		var id = client.property.UpdateValue({params: params, onresponse:function(resp) {	}});
+	},
+	
+	NotifySetShutterData : function (objArrItem)
+	{
+		j.each(objArrItem,function(key,value){
+		   switch(key)
+		   {
+			   case "Camera.Shutter.Enabled":
+					//カメラ本体からのShutter On/Off切替の場合Shutter Dialogを閉じる
+					if (g_shutterEnable != value)
+					{
+						if (g_RequestedShutterEnable != value)
+						{
+							g_objShutter.userData[1].ShowDialog(false);
+							g_OldObject = null;
+						}
+					}
+			   		g_shutterEnable = value;
+					g_RequestedShutterEnable = value;
+					if (!g_shutterEnable && !g_IsSlowShutter)
+					{
+						g_objShutter.innerHTML = "Off";
+						ShutterCtrl.SetAngleImage();
+					}
+
+			   		break;
+				case "Camera.Shutter.Slow.Enabled":
+					g_IsSlowShutter = value;
+					if (g_IsSlowShutter)
+					{
+						g_shutterMode = "SLS";
+                        g_objShutter.innerHTML = g_shutterMode + g_SlowShutterValue + "F";
+                        ShutterCtrl.SetAngleImage();
+					}else
+					{
+                        g_shutterMode =g_GetListMode;
+                        if (!g_shutterEnable)
+                        {
+                            g_objShutter.innerHTML = "Off";
+                            g_objShutter.userData[1].SetSelect("Off");
+                        }
+                        else
+                        {
+                            if (g_isECSEnable)
+                            {
+                                g_shutterMode = "ECS";
+                                g_objShutter.innerHTML = g_strShutterValue + "Hz";
+                                g_objShutter.userData[1].SetSelect("ECS");
+                                g_objShutter.userData[1].SetSubECSText(g_strShutterValue);
+                            }
+                            else
+                            {
+                                g_objShutter.innerHTML = g_strShutterValue;
+                                g_objShutter.userData[1].SetSelect(g_strShutterValue);
+                                ShutterCtrl.SetAngleImage();
+                            }
+                        }
+					}
+                    ShutterCtrl.GetStatus();
+			   		break;
+				case "Camera.Shutter.Slow.Frames":
+					g_SlowShutterValue = value + "";
+					if ("SLS" == g_shutterMode)
+					{
+						g_objShutter.innerHTML = g_shutterMode + g_SlowShutterValue + "F";
+						ShutterCtrl.SetAngleImage();
+					}
+			   		break;
+				case "Camera.Shutter.ECS.Enabled":
+					g_isECSEnable = value;
+					if (g_isECSEnable) {
+						g_shutterMode = "ECS";
+					}else
+					{
+                        g_shutterMode =g_GetListMode;
+                        if (!g_shutterEnable)
+                        {
+                            g_objShutter.innerHTML = "Off";
+                            g_objShutter.userData[1].SetSelect("Off");
+                        }
+                        else
+                        {
+							g_objShutter.innerHTML = g_strShutterValue;
+							g_objShutter.userData[1].SetSelect(g_strShutterValue);
+
+                        }
+					}
+			   		break;
+				case "Camera.Shutter.Mode":
+					//Shutter Mode切替の場合Shutter Dialogを閉じる
+					if (g_GetListMode != value)
+					{
+						g_objShutter.userData[1].ShowDialog(false);
+						g_OldObject = null;
+					}
+					g_GetListMode = value;
+					if (!g_IsSlowShutter && !g_isECSEnable) {
+						g_shutterMode = value;
+					}
+			   		break;
+				case "Camera.Shutter.Value":
+					g_strShutterValue = value;
+					if (g_shutterEnable)
+					{
+						if ("ECS" == g_shutterMode)
+						{
+							g_objShutter.innerHTML = g_strShutterValue + "Hz";
+							g_objShutter.userData[1].SetSubECSText(g_strShutterValue);
+						}
+						else if ("SLS"!= g_shutterMode)
+						{
+							g_objShutter.innerHTML = g_strShutterValue;
+							g_objShutter.userData[1].SetSelect(g_strShutterValue);
+							g_objShutter.userData[1].SetSelect(g_strShutterValue);
+						}
+						ShutterCtrl.SetAngleImage();
+					}
+			   		break;
+				case "P.Menu.pmw-f5x.Event.EventID":
+					if ((EVENT_PLAY_UPDATE == value)
+						|| (EVENT_THUMBNAIL_UPDATE == value)
+						|| (EVENT_RECORDE_UPDATE == value)
+						|| (EVENT_VIEW_UPDATE == value)
+						|| (AUTOSHUTTER_GRAYOUT_SHUTTERSPEED == value)
+						|| (SANDQ_GRAYOUT_SLOWSHUTTER == value)
+						|| (RPN_GRAYOUT_SHUTTER == value)
+						|| (ABB_GRAYOUT_SHUTTER == value)
+						|| (EVENT_AWB_MODE_DISPLAY == value)
+						|| (EVENTKIND_POOLFEED_REFRESH == value))
+					{
+						ShutterCtrl.GetStatus();
+					}
+					break;
+				default:
+			   		break;
+		   }
+		})
+	},
+	
+	NotifyShutterStatusData : function (objArrItem)
+	{
+		j.each(objArrItem,function(key,value){
+		   switch(key)
+		   {
+			   case "P.Control.Shutter.Value.Up":
+					ShutterCtrl.SetPMBtnGray("plus", value);
+					break;
+			   case "P.Control.Shutter.Value.Down":
+					ShutterCtrl.SetPMBtnGray("minus", value);
+					break;
+					case "Camera.Shutter.Enabled":
+                        ShutterCtrl.GetStatus();
+						break;
+				default:
+			   		break;
+		   }
+		})
+	},
+	
+	GetStatus: function()
+	{
+		var names = {"Camera.Shutter.Enabled":null};
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) 			{
+				var respStatus= JSON.stringify(resp.error || resp.result);
+				var statusData = JSON.parse(respStatus);
+				if (statusData == "timeout")
+				{
+					//TODO timeout
+				}
+				else
+				{
+					var strShutterLock = statusData["Camera.Shutter.Enabled"];
+					if(strShutterLock == "Locked" || g_IsSlowShutter)
+					{
+						g_bShutterGray = true;
+						
+						if (g_OldObject == g_objShutter)
+						{
+							g_objShutter.userData[1].ShowDialog(false);
+							g_OldObject = null;
+						}
+						$("ANGLE_IMAGE").style.opacity = 0.2;
+					}else 
+					{
+						g_bShutterGray = false;
+						$("ANGLE_IMAGE").style.opacity = 1;
+					}
+					g_objShutter.userData[0].SetDisable(g_bShutterGray);
+				}
+		}});
+	},
+	
+	GetShutterValueStatus: function()
+	{
+		var names = {"P.Control.Shutter.Value.Up": null, "P.Control.Shutter.Value.Down": null}
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) {
+				var resp_str = JSON.stringify(resp.error || resp.result);
+				var shutter_GetStatus = JSON.parse(resp_str);
+				var strMinusLock = shutter_GetStatus["P.Control.Shutter.Value.Down"];
+				var strPlusLock = shutter_GetStatus["P.Control.Shutter.Value.Up"];
+				ShutterCtrl.SetPMBtnGray("minus", strMinusLock);
+				ShutterCtrl.SetPMBtnGray("plus", strPlusLock);
+				},timeout:3000});
+	},
+	
+	SetPMBtnGray:function(strBtnName, strValue)
+	{
+		if("ECS" == g_shutterMode)
+		{
+			if(strValue == "Unlocked")
+			{
+				g_objShutter.userData[1].SetPlusOrMinisButtonEnabled(strBtnName, true);
+			}
+			else  if(strValue == "Locked")
+			{
+				g_objShutter.userData[1].SetPlusOrMinisButtonEnabled(strBtnName, false);	
+			}
+			else
+			{
+				//Todo nothing
+			}
+		}
+	},
+	
+	SetAngleImage : function()
+	{
+		if(g_IsSlowShutter == true || g_shutterEnable == false)
+		{
+			j("#ANGLE_IMAGE").hide();		//Off or SlS
+			j("#TEXT_SHUTTER").css({ "width" : "225px", "padding-left" : "5px"});
+		}
+		else
+		{
+			//not slowshutter
+			if(g_shutterMode == "Angle")
+			{
+				j("#ANGLE_IMAGE").show();
+				j("#TEXT_SHUTTER").css({ "width" : "195px", "padding-left" : "35px"});
+			}
+			else
+			{
+				j("#ANGLE_IMAGE").hide();
+				j("#TEXT_SHUTTER").css({ "width" : "225px", "padding-left" : "5px"});
+			}
+		}
+	}
+}

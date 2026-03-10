@@ -1,0 +1,58 @@
+// JavaScript Document
+SystemConfigCtrl = {
+
+    GetValue : function()
+    {
+        var names = {"System.Config":["*"]};
+        var that = this;
+        var id = client.property.GetValue({params: names, onresponse: function(resp) {
+            var respSystemConfig = JSON.stringify(resp.error || resp.result);
+            var systemConfigData = JSON.parse(respSystemConfig);
+            if (systemConfigData == "timeout")
+            {
+            }
+            else
+            {
+                j.each(systemConfigData, function(key, value) 
+                {
+                    if ("System.Config" == key) 
+                    {
+                        that.ProcessSystemConfigData(value);
+                    }
+                });
+            }
+        }, timeout : 3000});
+    },
+
+    NotifySystemConfigData : function(objArrItem)
+    {
+        var that = this;
+        j.each(objArrItem, function(key, value) {
+            if ("System.Config" == key) 
+            {
+                that.ProcessSystemConfigData(value);
+            }
+        });
+    },
+
+    ProcessSystemConfigData : function(objArrItem)
+    {
+        objArrItem = objArrItem || {};
+        var that = this;
+        j.each(objArrItem, function(key, value) {
+            if ("RemoteSetting" == key) 
+            {
+                that.SetGlobalMenuStatus(value);
+            }
+        });
+    },
+
+    SetGlobalMenuStatus : function(value)
+    {
+        var enabled = false;
+        if(j.isPlainObject(value)) {
+            enabled = value["enabled"];
+        }
+        g_objMenuSwitchBtn.userData.SetDisabled(!enabled);
+    }
+}

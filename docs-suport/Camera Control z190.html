@@ -1,0 +1,2149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0030)http://192.168.100.41/rmt.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>Camera Control</title>
+    <link rel="stylesheet" type="text/css" href="./Camera Control z190_files/common.css">
+    <script type="text/javascript" src="./Camera Control z190_files/jquery-1.8.3.min.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/savona.min.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/common.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/button.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/click.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/CommmonDefine.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/menuPageSelect_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/pageSelector_button.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/allLock_dialog.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/colorbars_dialog.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/autoBalance_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/IconButton.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/assign_dialog.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/ATW_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/AGC_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/AutoSutter_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/AutoND_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/switch_button.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/focusBack_slider.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/shutter_dialog.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/gamma_dialog.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/autoIris_dialog.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/gainlist_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/iris_slider.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/ND_slider.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/focus_slider.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/zoom_slider.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/SQFPS_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/rec_button.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/reclock_slider.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/record_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/AGC_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/AutoSutter_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/AutoND_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/audio_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/assign_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/mainfile_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/SQFPS_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/mainbttery_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/meidacard_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/shutter_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/white_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/gamma_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/gain_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/autoIris_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/ATW_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/colorBars_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/Iris_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/ND_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/Focus_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/Zoom_connection.js.download"></script>
+	<script type="text/javascript" src="./Camera Control z190_files/autoWhiteBalance_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/autoBlackBalance_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/ABStatusDlg.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/ClipInfo_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/rmt_mask_Msg.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/GrayedInfo_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/white_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/white_atw_dialog.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/clipname_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/assignbutton_define.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/LensMount_connection.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/systemconfig.js.download"></script>
+    <script type="text/javascript" src="./Camera Control z190_files/connection_checker.js.download"></script>
+</head>
+<body class="BODY" onselectstart="return false" oncontextmenu="return false">
+
+<div id="DIV_PAGE_SWITCH_MENU" class="DIV_PAGE_SWITCH_MENU" style="height:696px;"><div class="DIV_PAGE_SWITCH_MENU"><div id="DIV_SWITCH_MENU_TITLE" class="DIV_SWITCH_MENU_TITLE" style="display: none; top: 28px; left: 8px;">Global Menu</div><div class="DIV_SWITCH_MENU_SEPARATOR" style="display: none;"></div><div class="DIV_LIST_SEP_SHADOW" style="height: 694px;"></div><div id="0_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_SUBTITLE" style="top: 50px;">Remote Control</div><div id="1_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 90px; color: rgb(255, 170, 0); background: url(&quot;WebCommon/images/Parts_CR_T_GM_List_Selected.png&quot;) no-repeat;">Camera Control</div><div class="DIV_SWITCH_MENU_SEPARATOR" style="top: 136px;"></div><div id="2_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_SUBTITLE" style="top: 136px;">Monitoring</div><div id="3_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 176px;">Monitoring Settings</div><div class="DIV_SWITCH_MENU_SEPARATOR" style="top: 222px;"></div><div id="4_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_SUBTITLE" style="top: 222px;">File Transfer</div><div id="5_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 262px;">Slot A</div><div id="6_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 308px;">Slot B</div><div id="7_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 354px;">Slot SD/MS</div><div id="8_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 400px;">Job List</div><div id="9_DIV_MENU_SELECTOR_ITEM" class="DIV_GLOBAL_MENU_ITEM" style="top: 446px;">Upload Settings</div></div></div>
+<!-- SetMainLayout 1024*768-->
+<div id="DIV_MAIN_CONTAINER" class="DIV_MAIN_CONTAINER" style="left: 0px;">
+	<div id="1_DIV_MASKDIALOG" class="DIV_MASKDIALOG" style="opacity:0.3; z-index:4;" onmousedown="MaskMouseCallback(this)"></div>
+    <div id="DIV_CCAWB_MASKDIALOG" class="DIV_MASKDIALOG" style="opacity: 0.3; top: 0px; left: 0px; z-index: 4; display: none;" onclick="GrayByMessageShow()"></div>
+    <div id="DIV_UPPER_MASKDIALOG" class="DIV_UPPER_MASKDIALOG" style="opacity: 0.3; z-index: 3; display: none;" onclick="GrayByMessageShow()"></div>
+    <div id="DIV_MIDDLE_MASKDIALOG" class="DIV_MIDDLE_MASKDIALOG" style="opacity: 0.3; z-index: 3; display: none;" onclick="GrayByMessageShow()"></div>
+  <div id="DIV_LOWER_MASKDIALOG" class="DIV_LOWER_MASKDIALOG" style="opacity: 0.3; z-index: 3; display: none;" onclick="GrayByMessageShow()"></div>
+  <div id="DIV_MASKCLICK_DLG" class="DIV_MASKCLICK_DLG" style="top: 203px; display: none;"><div id="DIV_MESSAGE_DIALOG_TITLE" class="DIV_MESSAGE_DIALOG_TITLE" style="top: 14px;"></div><div id="DIV_MESSAGE_DIALOG_TEXTFIELD" class="DIV_MESSAGE_DIALOG_TEXTFIELD"></div><div class="DIV_DLG_SEPARATOR" style="top: 36px; left: 16px; width: 324px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 188px; left: 16px; width: 324px;"></div><div id="1_DIV_MESSAGE_DLG_SETTING_BUTTON" class="DIV_MESSAGE_DLG_OK_BUTTON" style="top: 188px; right: 8px;">OK</div></div> 
+<!--SetTitleLayout-->
+  <div id="DIV_HEADER_TITLE" class="DIV_HEADER_TITLE">
+  		<div id="DIV_PAGE_SWITCH_BTN" class="DIV_PAGE_SWITCH_BTN" style="opacity: 0.2;"></div>
+		<div id="DIV_PAGENAME" class="LBL_PAGENAME">Camera Control</div>
+		<div id="DIV_WIFI_STATUS_D" class="DIV_WIFI_STATUS_D" style="display: none;"></div>
+        <div id="DIV_WIFI_STATUS_C" class="DIV_WIFI_STATUS_C" style="display: block;"></div>
+        <div id="TEXT_WIFI_STATUS" class="TEXT_WIFI_STATUS">Connected</div>
+        <div id="DIV_ALL_LOCK" class="DIV_ALL_LOCK" style="display: block; background-image: url(&quot;WebCommon/images/Parts_CR_T_Hdr_Lock_Base_Static.png&quot;);"><div class="DIV_ALL_LOCK_BTN_SILDER" id="DIV_ALL_LOCK_BTN_SILDER" style="left: 0px; background-image: url(&quot;WebCommon/images/Parts_CR_T_Hdr_Lock_Base_Knob_Normal.png&quot;);"></div></div>
+	</div>
+	<!--SetSTATUSINFOLayout-->
+	<div id="DIV_STATUS_INFO" class="DIV_STATUS_INFO">
+        <div id="1_DIV_SEPARATOR_LINE" class="DIV_SEPARATOR_LINE" style="left:152px;"></div>
+        <div id="2_DIV_SEPARATOR_LINE" class="DIV_SEPARATOR_LINE" style="left:383px;"></div>
+        <div id="3_DIV_SEPARATOR_LINE" class="DIV_SEPARATOR_LINE" style="left:564px;"></div>
+        <div id="4_DIV_SEPARATOR_LINE" class="DIV_SEPARATOR_LINE" style="left:818px;"></div>
+        <div id="5_DIV_SEPARATOR_LINE" class="DIV_SEPARATOR_LINE" style="left:932px;"></div>
+    	<div class="DIV_STBY_TIMECODE">
+
+			<!--SetSTATUSLayout-->
+            <div id="LBL_STATUS_GROUP" class="LBL_STATUS_GROUP">
+                <!--<div id="DIV_STATUS_LIGHT" class="LBL_STATUS_IMAGE" style="top:24px; background-position:center"></div>-->
+                <div id="3_DIV_STATUS" class="LBL_STATUS_REC_TEXT" style="left:20px;top:10px;  text-align:center"></div>
+                <div id="DIV_STATUS_MEDIA_A_LIGHT" class="LBL_STATUS__CARD_IMAGE" style="left:-12px;top:43px; background-position:left"></div>
+                <div id="DIV_STATUS_LIGHT" class="LBL_STATUS_A_IMAGE" style="left:12px;top:43px; background-position:left"></div>
+                <div id="DIV_STATUS" class="LBL_STATUS_TEXT" style="left:32px;top:41px; text-align:left"></div>
+                <div id="2_DIV_STATUS" class="LBL_STATUS__CARD_IMAGE" style="left:32px;top:78px; text-align:left;"></div>
+                <div id="DIV_STATUS_B_LIGHT" class="LBL_STATUS_IMAGE" style="left:24px;top:80px; background-position:left"></div>
+                <div id="DIV_STATUS_MEDIA_B_LIGHT" class="LBL_STATUS__CARD_B_IMAGE" style="left:-12px;top:80px; background-position:left"></div>
+                <!--<div id="3_DIV_STATUS" class="LBL_STATUS_TEXT" style="top:44px; text-align:center;">TESET3</div>-->
+                <!--<div id="4_DIV_STATUS" class="LBL_STATUS_TEXT" style="top:44px; text-align:center;">TESET3</div>-->
+            </div>
+            <!--TIMECODE-->
+            <div id="1_TIMECODE" class="DIV_TIMECODE">
+                <div id="0_TCG_NAME" class="DIV_TCG_NAME">TCG</div>
+                <div id="0_EXT_LK_NAME" class="DIV_EXT_LK_NAME"></div>
+                <div id="1_TIMECODE_VALUE" class="DIV_TIMECODE_VALUE" style="font-size: 36px;">00:00:00.00</div>
+            </div>
+            <!--Add Main Battery-->
+            <div id="DIV_MAIN_BATTERY" class="DIV_MAIN_BATTERY">
+            	<div id="DIV_MAIN_BATTERY_STATUS" class="DIV_MAIN_BATTERY_STATUS">DC IN</div>
+                <div id="DIV_BATTERY_TIME" class="DIV_BATTERY_TIME">11.8V</div>
+            </div>
+            <!--Add  Card-->
+            <div id="DIV_MAIN_CARD" class="DIV_CARD_MAIN">
+                <!--card A-->
+                <div id="DIV_BC_A" class="DIV_CARD_BC" style="top:2px;"></div>
+                <div id="DIV_CARD_A" class="DIV_CARD_BUTTON" style="top:2px;"></div>
+                <div id="DIV_ACARD_INFO" class="DIV_CARD_TIME" style="top:2px;"></div>
+                <!-- card B-->
+                <div id="DIV_BC_B" class="DIV_CARD_BC" style="top:36px;"></div>
+                <div id="DIV_CARD_B" class="DIV_CARD_BUTTON" style="top:36px;"></div>
+                <div id="DIV_BCARD_INFO" class="DIV_CARD_TIME" style="top:36px;"></div>
+                <!--card C-->
+                <div id="DIV_BC_C" class="DIV_CARD_BC" style="top:72px;"></div>
+                <div id="DIV_CARD_C" class="DIV_CARD_BUTTON" style="top:72px;"></div>
+                <div id="DIV_CCARD_INFO" class="DIV_CARD_TIME" style="top:72px;"></div>
+            </div>
+            <!--Add Main File -->
+        	 <div id="DIV_MAINFILE_INFO" class="DIV_MAINFILE_MAIN"> 
+                <div id="FILE_INFO_NAME" class="DIV_FILE_INFO" style="top:1px; width:34px">Clip</div>
+                <div id="1_FILE_INFO_VALUE" class="DIV_FILE_VALUE" style="top:1px; left:35px; width:202px">&nbsp;</div>
+                <div id="11_FILE_INFO_VALUE" class="DIV_FILE_VALUE" style="top:0px; left:39px; visibility:hidden;">&nbsp;</div>
+                <div id="FILE_INFO_NAME" class="DIV_FILE_INFO" style="top:25px; width:227px">System Frequency</div>
+                <div id="2_FILE_INFO_VALUE" class="DIV_FILE_VALUE" style="top:25px; left:162px; width:64px">59.94i</div>
+                <div id="FILE_INFO_NAME" class="DIV_FILE_INFO" style="top:49px; width:110px">Picture Size</div>
+                <div id="3_FILE_INFO_VALUE" class="DIV_FILE_VALUE" style="top:49px; left:105px; width:123px">1920 x 1080</div>
+                <div id="FILE_INFO_NAME" class="DIV_FILE_INFO" style="top:73px; width:100px">Rec Format</div>
+                <div id="4_FILE_INFO_VALUE" class="DIV_FILE_VALUE" style="top:73px; left:106px; width:120px">XAVC-L50</div>
+            </div>
+            <!--Add Audio Display-->
+          <div id="DIV_AUDIO_DISPLAY" class="DIV_AUDIO_MAIN">
+                <div id="5_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 0px; left: 0px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Red_InActive.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="6_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 12px; left: 0px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="7_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 24px; left: 0px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="8_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 36px; left: 0px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                
+                <div id="9_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 0px; left: 36px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Red_InActive.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="10_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 12px; left: 36px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_InActive.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="11_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 24px; left: 36px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="12_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 36px; left: 36px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                
+                <div id="13_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 0px; left: 96px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Red_InActive.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="14_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 12px; left: 96px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="15_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 24px; left: 96px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="16_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 36px; left: 96px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                
+                <div id="17_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 0px; left: 132px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Red_InActive.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="18_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 12px; left: 132px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_InActive.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="19_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 24px; left: 132px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                <div id="20_DIV_AUDIO_BAR" class="DIV_AUDIO_BUTTON" ;="" style="top: 36px; left: 132px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Status_ALM_Bar_Active.png&quot;); background-repeat: no-repeat;"></div>
+                
+                <div id="17_DIV_AUDIO_VALUE" class="DIV_AUDIO_VALUE" ;="" style="top:0px;">0</div>
+                <div id="18_DIV_AUDIO_VALUE" class="DIV_AUDIO_VALUE" ;="" style="top:12px;">20</div>
+                <!--<span class="DIV_AUDIO_MINUS" style="top:17px;"></span>-->
+                <div id="19_DIV_AUDIO_VALUE" class="DIV_AUDIO_VALUE" ;="" style="top:24px;">40</div>
+                <!--<span class="DIV_AUDIO_MINUS" style="top:34px;"></span>-->
+                <div id="20_DIV_AUDIO_VALUE" class="DIV_AUDIO_VALUE" ;="" style="top:36px;">60</div>
+                <!--<span class="DIV_AUDIO_MINUS" style="top:51px;"></span>-->
+                <div id="22_DIV_AUDIO_BUTTONNUM" class="DIV_AUDIO_BUTTONNUM" ;="" style="left:0px;">1</div>
+                <div id="23_DIV_AUDIO_BUTTONNUM" class="DIV_AUDIO_BUTTONNUM" ;="" style="left:36px;">2</div>
+                <div id="24_DIV_AUDIO_BUTTONNUM" class="DIV_AUDIO_BUTTONNUM" ;="" style="left:96px;">3</div>
+                <div id="25_DIV_AUDIO_BUTTONNUM" class="DIV_AUDIO_BUTTONNUM" ;="" style="left:132px;">4</div>
+			</div>
+		</div>
+	</div>
+    
+    <!--setBIG_PARTING_LINE-->
+    <div id="DIV_BIG_PARTING_LINE" class="DIV_BIG_PARTING_LINE"></div>
+  
+    <!--setNORMAL_PARTING_LINE-->
+    <div id="010_DIV_NORMAL_PARTING_LINE" class="DIV_NORMAL_PARTING_LINE" style="background:url(WebCommon/images/Parts_CR_T_CC_Rec_Tab_Line.png); repeat-x;"></div>
+  
+    <!--setPageSELECTOR-->
+    <div id="DIV_FUNCTION_SELECTOR" class="DIV_FUNCTION_SELECTOR"><div class="DIV_PAGE_SILDER" id="DIV_PAGE_SILDER" style="left: 377px;"></div><div id="0_LBL_SELECT_PAGENAME" class="LBL_SELECT_PAGENAME" style="left: 241px; color: rgb(230, 230, 230);">Assign</div><div id="1_LBL_SELECT_PAGENAME" class="LBL_SELECT_PAGENAME" style="left: 377px; color: rgb(255, 170, 0);">Main</div><div id="2_LBL_SELECT_PAGENAME" class="LBL_SELECT_PAGENAME" style="left: 513px; color: rgb(230, 230, 230);">Playback</div><div id="3_LBL_SELECT_PAGENAME" class="LBL_SELECT_PAGENAME" style="left: 649px; color: rgb(230, 230, 230);">Cursor</div></div>
+    
+    <div id="DIV_SEPRATE_LINE" class="DIV_SEPRATE_LINE"></div>
+  
+  
+    <!--setFUNCTION_CTRL, contains 4 parts: assign, recording, playBack, general-->
+    <div id="DIV_FUNCTION_CTRL" class="DIV_FUNCTION_CTRL">
+        <!--Add ASSIGN_CTRL Layout-->
+        <div id="DIV_ASSIGN_CTRL" class="DIV_ASSIGN_CTRL">
+            <div id="DIV_ASSIGN_BUTTONS" class="DIV_ASSIGN_SWITCHS">
+            	<div id="1_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_1" style="left:0; top:9px;">
+					<div id="BUTTON_CONTROL_BUTTON_1" class="DIV_SWITCH_1" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">1</div>
+            		<div class="DIV_ASSIGN_BTN_VALUE" id="1_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Zebra</div>
+            	<div class="DIV_DLG_MAIN" style="left: 232px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING1" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING1_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING1" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING1" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING1" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING1" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING1" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING1" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING1" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING1" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING1" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING1" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING1" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING1" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING1" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING1" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING1" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING1" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING1" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING1" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING1" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING1" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING1" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING1" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING1_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING1" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING1_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING1_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING1_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+          		<div id="2_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_2" style="left:240px; top:9px;">
+            		<div id="BUTTON_CONTROL_BUTTON_2" class="DIV_SWITCH_2" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Normal.png&quot;);">2</div>
+            		<div class="DIV_ASSIGN_BTN_VALUE" id="2_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Peaking</div>
+          		<div class="DIV_DLG_MAIN" style="left: 232px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING2" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING2_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING2" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING2" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING2" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING2" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING2" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING2" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING2" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING2" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING2" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING2" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING2" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING2" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING2" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING2" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING2" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING2" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING2" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING2" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING2" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING2" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING2" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING2" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING2_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING2" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING2_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING2_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING2_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+          		<div id="3_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_3" style="left:480px; top:9px;">
+					<div id="BUTTON_CONTROL_BUTTON_3" class="DIV_SWITCH_3" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">3</div>
+					<div class="DIV_ASSIGN_BTN_VALUE" id="3_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Signal Monitor</div>
+          		<div class="DIV_DLG_MAIN" style="left: -302px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_RIGHT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING3" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING3_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING3" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING3" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING3" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING3" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING3" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING3" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING3" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING3" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING3" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING3" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING3" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING3" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING3" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING3" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING3" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING3" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING3" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING3" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING3" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING3" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING3" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING3" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING3_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING3" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING3_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING3_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING3_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+          		<div id="4_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_4" style="left:720px; top:9px;">
+					<div id="BUTTON_CONTROL_BUTTON_4" class="DIV_SWITCH_4" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">4</div>
+					<div class="DIV_ASSIGN_BTN_VALUE" id="4_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Steady Shot</div>
+          		<div class="DIV_DLG_MAIN" style="left: -302px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_RIGHT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING4" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING4_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING4" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING4" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING4" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING4" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING4" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING4" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING4" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING4" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING4" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING4" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING4" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING4" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING4" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING4" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING4" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING4" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING4" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING4" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING4" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING4" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING4" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING4" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING4_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING4" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING4_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING4_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING4_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+				<div id="5_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_5" style="left:0px; top:93px;">
+					<div id="BUTTON_CONTROL_BUTTON_5" class="DIV_SWITCH_5" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">5</div>
+					<div class="DIV_ASSIGN_BTN_VALUE" id="5_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Display</div>
+				<div class="DIV_DLG_MAIN" style="left: 232px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING5" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING5_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING5" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING5" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING5" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING5" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING5" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING5" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING5" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING5" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING5" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING5" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING5" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING5" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING5" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING5" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING5" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING5" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING5" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING5" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING5" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING5" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING5" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING5" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING5_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING5" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING5_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING5_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING5_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+                <div id="6_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_6" style="left:240px; top:93px;">
+                    <div id="BUTTON_CONTROL_BUTTON_6" class="DIV_SWITCH_6" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">6</div>
+                    <div class="DIV_ASSIGN_BTN_VALUE" id="6_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Off</div>
+                <div class="DIV_DLG_MAIN" style="left: 232px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING6" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING6_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING6" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING6" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING6" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING6" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING6" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING6" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING6" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING6" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING6" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING6" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING6" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING6" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING6" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING6" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING6" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING6" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING6" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING6" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING6" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING6" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING6" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING6" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING6_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING6" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING6_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING6_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING6_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+                <div id="7_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_7" style="left:480px; top:93px;">
+                    <div id="BUTTON_CONTROL_BUTTON_7" class="DIV_SWITCH_7" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Normal.png&quot;);">7</div>
+                    <div class="DIV_ASSIGN_BTN_VALUE" id="7_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Peaking</div>
+                <div class="DIV_DLG_MAIN" style="left: -302px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_RIGHT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING7" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING7_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING7" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING7" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING7" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING7" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING7" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING7" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING7" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING7" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING7" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING7" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING7" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING7" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING7" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING7" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING7" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING7" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING7" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING7" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING7" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING7" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING7" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING7" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING7_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING7" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING7_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING7_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING7_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+                <div id="8_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_8" style="left:720px; top:93px;">
+                    <div id="BUTTON_CONTROL_BUTTON_8" class="DIV_SWITCH_8" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">8</div>
+                    <div class="DIV_ASSIGN_BTN_VALUE" id="8_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Focus Mag</div>
+                <div class="DIV_DLG_MAIN" style="left: -302px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_RIGHT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING8" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING8_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING8" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING8" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING8" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING8" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING8" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING8" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING8" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING8" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING8" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING8" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING8" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING8" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING8" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING8" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING8" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING8" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING8" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING8" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING8" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING8" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING8" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING8" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING8_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING8" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING8_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING8_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING8_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+                <div id="9_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_9" style="left:0px; top:177px; display:none;">
+                    <div id="BUTTON_CONTROL_BUTTON_9" class="DIV_SWITCH_9" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">9</div>
+                    <div class="DIV_ASSIGN_BTN_VALUE" id="9_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Off</div>
+                <div class="DIV_DLG_MAIN" style="left: 232px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING9" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING9_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING9" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING9" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING9" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING9" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING9" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING9" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING9" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING9" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING9" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING9" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING9" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING9" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING9" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING9" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING9" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING9" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING9" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING9" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING9" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING9" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING9" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING9" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING9_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING9" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING9_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING9_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING9_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+                <div id="10_ASSIGN_GROUP" class="DIV_ASSIGN_GROUP_10" style="left:240px; top:177px;display:none;">
+                    <div id="BUTTON_CONTROL_BUTTON_10" class="DIV_SWITCH_10" style="opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png&quot;);">10</div>
+                    <div class="DIV_ASSIGN_BTN_VALUE" id="10_CLICK_ASSIGN_LABEL" style="color: rgb(250, 170, 0); opacity: 1;">Push Auto Iris</div>
+                <div class="DIV_DLG_MAIN" style="left: 232px; top: -186px;"><div class="DIV_DLG_TITLE">Assign Setting</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_ITEM" id="0_ASSIGN_SETTING10" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="0_ASSIGN_SETTING10_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_ASSIGN_SETTING10" style="top: 48px;">Marker<div class="DIV_DLG_ITEM_ICON" id="1_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_ASSIGN_SETTING10" style="top: 96px; background-color: rgb(28, 28, 28);">Zebra<div class="DIV_DLG_ITEM_ICON" id="2_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_ASSIGN_SETTING10" style="top: 144px;">Peaking<div class="DIV_DLG_ITEM_ICON" id="3_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_ASSIGN_SETTING10" style="top: 192px; background-color: rgb(28, 28, 28);">Video Signal Monitor<div class="DIV_DLG_ITEM_ICON" id="4_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_ASSIGN_SETTING10" style="top: 240px;">Focus Magnifier<div class="DIV_DLG_ITEM_ICON" id="5_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_ASSIGN_SETTING10" style="top: 288px; background-color: rgb(28, 28, 28);">Focus Macro<div class="DIV_DLG_ITEM_ICON" id="6_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_ASSIGN_SETTING10" style="top: 336px;">VF Mode<div class="DIV_DLG_ITEM_ICON" id="7_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="8_ASSIGN_SETTING10" style="top: 384px; background-color: rgb(28, 28, 28);">Auto Exposure Level<div class="DIV_DLG_ITEM_ICON" id="8_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="9_ASSIGN_SETTING10" style="top: 432px;">Spotlight<div class="DIV_DLG_ITEM_ICON" id="9_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="10_ASSIGN_SETTING10" style="top: 480px; background-color: rgb(28, 28, 28);">Backlight<div class="DIV_DLG_ITEM_ICON" id="10_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="11_ASSIGN_SETTING10" style="top: 528px;">ATW<div class="DIV_DLG_ITEM_ICON" id="11_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="12_ASSIGN_SETTING10" style="top: 576px; background-color: rgb(28, 28, 28);">ATW Hold<div class="DIV_DLG_ITEM_ICON" id="12_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="13_ASSIGN_SETTING10" style="top: 624px;">SteadyShot<div class="DIV_DLG_ITEM_ICON" id="13_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="14_ASSIGN_SETTING10" style="top: 672px; background-color: rgb(28, 28, 28);">Color Bars<div class="DIV_DLG_ITEM_ICON" id="14_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="15_ASSIGN_SETTING10" style="top: 720px;">NFC<div class="DIV_DLG_ITEM_ICON" id="15_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="16_ASSIGN_SETTING10" style="top: 768px; background-color: rgb(28, 28, 28);">Rec Lamp<div class="DIV_DLG_ITEM_ICON" id="16_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="17_ASSIGN_SETTING10" style="top: 816px;">Rec Review<div class="DIV_DLG_ITEM_ICON" id="17_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="18_ASSIGN_SETTING10" style="top: 864px; background-color: rgb(28, 28, 28);">Thumbnail<div class="DIV_DLG_ITEM_ICON" id="18_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="19_ASSIGN_SETTING10" style="top: 912px;">Shot Mark1<div class="DIV_DLG_ITEM_ICON" id="19_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="20_ASSIGN_SETTING10" style="top: 960px; background-color: rgb(28, 28, 28);">Shot Mark2<div class="DIV_DLG_ITEM_ICON" id="20_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="21_ASSIGN_SETTING10" style="top: 1008px;">Clip Flag OK<div class="DIV_DLG_ITEM_ICON" id="21_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="22_ASSIGN_SETTING10" style="top: 1056px; background-color: rgb(28, 28, 28);">Clip Flag NG<div class="DIV_DLG_ITEM_ICON" id="22_ASSIGN_SETTING10_ICON"></div></div><div class="DIV_DLG_ITEM" id="23_ASSIGN_SETTING10" style="top: 1104px;">Clip Flag Keep<div class="DIV_DLG_ITEM_ICON" id="23_ASSIGN_SETTING10_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ASSIGN_SETTING10_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ASSIGN_SETTING10_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div></div>
+
+			</div>
+		</div>
+    
+        <!--Recording-->
+        <div id="DIV_FUNCTION_SCROLL" style="position:absolute; height:479px; width:1026px; left:0px; overflow-Y:scroll; top: 1px;	">
+        	<div id="DIV_RECORDING_AREA" class="DIV_RECORDING_AREA" style="display: block;">
+        		<div id="DIV_REC_CTRL" class="DIV_REC_CTRL">
+        			<div id="DIV_REC_CONTROL" class="DIV_BTN_REC">
+                   		<div id="DIV_REC_STOP" class="DIV_REC_STOP" style="background-image: url(&quot;WebCommon/images/Parts_PFXR_T_CC_Btn_RecStop_Normal.png&quot;); opacity: 1;"></div>
+                    	<div id="DIV_REC_START" class="DIV_REC_START" style="background-image: url(&quot;WebCommon/images/Parts_PFXR_T_CC_Btn_RecStart_Normal.png&quot;); opacity: 1;"></div>
+                    </div>
+        			<div id="DIV_LOCK_BTN" class="DIV_LOCK_BTN" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_UnLock_Normal.png&quot;);"><div class="DIV_LOCK_BTN_SILDER" id="DIV_LOCK_BTN_SILDER" style="left: 0px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Normal.png&quot;);"></div></div>
+        			<div id="DIV_LOCK_TEXT" class="DIV_LOCK_TEXT">Lock</div>
+        			<div id="DIV_LOCK_ARROW" class="DIV_LOCK_ARROW"></div>
+       			</div>
+      
+                <!--touch-->
+                <div id="DIV_SLIDER_CTRL" class="DIV_SLIDER_CTRL">
+                    <div id="1_DIV_MIDDLE_SEPARATOR_LIGHT" class="DIV_SEPARATOR_LIGHT" style="top:104px;"></div>
+                    <div id="2_DIV_MIDDLE_SEPARATOR_LIGHT" class="DIV_SEPARATOR_LIGHT" style="top:216px;"></div>
+                    <div id="0_DIV_SLIDER_ND" class="DIV_SLIDER_ND">
+                        <div id="DIV_ND_TITLE" class="DIV_ZOOM_TEXT" style="left:0; top:9px;">ND</div>
+                        <div id="DIV_ND_VALUE" class="DIV_ZOOM_NUM" style="top: 29px; color: rgb(255, 170, 0);">CLEAR</div>
+                        <div id="DIV_ND_DOTS" class="DIV_ND_DOTS"></div>
+                        <div class="DIV_TICK_ND_CONTAINER">
+                            <div class="DIV_TICK_TEXT" style="left:60px;">1/4</div>
+                            <div class="DIV_TICK_TEXT" style="left:149px;">1/8</div>
+                            <div class="DIV_TICK_TEXT" style="left:238px;">1/16</div>
+                            <div class="DIV_TICK_TEXT" style="left:327px;">1/32</div>
+                            <div class="DIV_TICK_TEXT" style="left:416px;">1/64</div>
+                            <div class="DIV_TICK_TEXT" style="left:506px;">1/128</div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                        </div>
+                        <div class="DIV_ND_SLIDER_GROOVE"></div>
+                        <div id="ND_SLIDER_HANDLE" class="DIV_SLIDER_ND_BUTTON" style="opacity: 0.2; left: 378px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png&quot;);"></div>
+                    </div>
+
+                    <div id="1_DIV_SLIDER_IRIS" class="DIV_SLIDER_IRIS">
+                    	<div id="DIV_IRIS_TITLE" class="DIV_ZOOM_TEXT" style="left:0; top:120px;">Iris</div>
+                    	<div id="DIV_IRIS_VALUE" class="DIV_ZOOM_NUM" style="top: 140px; color: rgb(255, 170, 0);">F1.8</div>
+						<div id="DIV_IRIS_DOTS" class="DIV_IRIS_DOTS"></div>
+						<div class="DIV_TICK_CONTAINER">
+                     		<div class="DIV_TICK_TEXT" style="left:60px;">1.6</div>
+                            <div class="DIV_TICK_TEXT" style="left:90px;">1.8</div>
+                            <div class="DIV_TICK_TEXT" style="left:218px;">4.0</div>
+                            <div class="DIV_TICK_TEXT" style="left:358px;">8.0</div>
+                            <div class="DIV_TICK_TEXT" style="left:488px;">11</div>
+                            <div class="DIV_TICK_TEXT" style="left:516px;">CLOSE</div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                            <div class="DIV_TICK_POINT"></div>
+                		</div>
+                  		<div class="DIV_SLIDER_GROOVE"></div>
+                  		<div id="IRIS_SLIDER_HANDLE" class="DIV_SLIDER_BUTTON" style="opacity: 1; left: 132px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png&quot;);"></div>
+		  			</div>
+              
+              		<div id="2_DIV_SLIDER_FOCUS" class="DIV_SLIDER_FOCUS">
+                  		<div id="DIV_FOCUS_TEXT" class="DIV_ZOOM_TEXT" ;="" style="top:0px; left:0px;">Focus</div>
+                  		<div id="DIV_FOCUS_NUM" class="DIV_ZOOM_NUM" ;="" style="color: rgb(255, 170, 0);">0.8m</div>
+                  		<div id="DIV_FOCUS_DOT" class="DIV_ZOOM_DOT" ;=""></div>
+                  		<div id="DIV_FOCUS_NEAR" class="DIV_ZOOM_TEXT" ;="" style="top:14px; left:162px; text-align:left;">Near</div>
+                  		<div id="DIV_FOCUS_FAR" class="DIV_ZOOM_TEXT" ;="" style="top:14px; left:498px; text-align:right;">Far</div>
+                  		<div id="FOCUS_SLIDER_HANDLE" class="DIV_FOCUS_SLIDER_HANDLE" style="opacity: 1;"></div>
+                  		<div id="FOCUS_SLIDER_BAR" style="position:absolute; top:30px; left:160px;"></div>
+						<div id="FOCUS_stick" class="DIV_ZOOM_TICK"></div>
+					</div>
+              
+              		<div id="3_DIV_SLIDER_ZOOM" class="DIV_SLIDER_ZOOM">
+                  		<div id="DIV_ZOOM_TEXT" class="DIV_ZOOM_TEXT" ;="" style="top:0px; left:0px;">Zoom</div>
+                  		<div id="DIV_ZOOM_NUM" class="DIV_ZOOM_NUM" style="color: rgb(255, 170, 0);">17</div>
+                  		<div id="DIV_ZOOM_DOT" class="DIV_ZOOM_DOT" ;="" style="left:162px; top:6px; width:456px; height:40px;"></div>
+                  		<div id="DIV_ZOOM_WIDE" class="DIV_ZOOM_TEXT" ;="" style="top:14px; left:162px; text-align:left;">Wide</div>
+                  		<div id="DIV_ZOOM_TELE" class="DIV_ZOOM_TEXT" ;="" style="top:14px; left:498px; text-align:right;">Tele</div>
+                  		<div id="ZOOM_SLIDER_HANDLE" class="DIV_ZOOM_SLIDER_HANDLE" style="opacity: 1;"></div>
+                  		<div id="DIV_ZOOM_BAR" class="DIV_ZOOM_BAR"></div>
+                  		<div id="DIV_ZOOM_STICK" class="DIV_ZOOM_TICK" style="top:44px;"></div>
+					</div>
+				</div>
+
+                <div class="DIV_NORMAL_PARTING_LINE" style="height:8px; left:0; top:421px; width:960px;"></div>
+                <div id="DIV_FUNCTRL_AREA" class="DIV_FUNCTRL_AREA">
+                    <div id="TEXT_DIV_SQFPS" class="LBL_FUNCTION_NAME" style="left:0px; top:4px;">S&amp;Q FPS</div>
+                    <div id="CLICK_DIV_SQFPS" class="DIV_FUN_TEXTFIELD" style="left: 0px; top: 26px; color: rgb(250, 170, 0); opacity: 0.2;">Off</div>
+                    <div id="LBL_SHUTTER" class="LBL_FUNCTION_NAME" style="left:242px; top:4px;">Shutter</div>
+                    <div id="TEXT_SHUTTER" class="DIV_FUN_TEXTFIELD" style="left: 242px; top: 26px; color: rgb(255, 170, 0); opacity: 1; width: 225px; padding-left: 5px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png&quot;);">1/60</div>
+                    <div id="ANGLE_IMAGE" class="DIV_ANGLE_IMAGE" style="background: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png&quot;); display: none; opacity: 1;"></div>
+                    <div id="LBL_PRESETWHITE" class="LBL_FUNCTION_NAME" style="left:484px; top:4px;">White</div>
+                    <div id="CLICK_WHITE" class="DIV_FUN_TEXTFIELD" style="left: 484px; top: 26px; color: rgb(255, 170, 0); opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png&quot;);">Memory A 4589K</div>
+                    <div id="LBL_GAMMA" class="LBL_FUNCTION_NAME" style="left:726px; top:4px;">Gamma</div>
+                    <div id="TEXT_GAMMA" class="DIV_FUN_TEXTFIELD" style="left: 726px; top: 26px; color: rgb(250, 170, 0); opacity: 1;">STD5 R709</div>
+                    <div id="LBL_DIV_AUTOIRIS" class="LBL_FUNCTION_NAME" style="left:0px; top:92px;">Auto Iris</div>
+                    <div id="TEXT_DIV_AUTOIRIS" class="DIV_FUN_TEXTFIELD" style="left: 0px; top: 114px; color: rgb(255, 170, 0); opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png&quot;);">Off</div>
+                    <div id="LBL_DIV_ASHUTTER" class="LBL_FUNCTION_NAME" style="left:242px; top:92px;">Auto Shutter</div>
+                    <div id="TEXT_DIV_ASHUTTER" class="DIV_FUN_TEXTFIELD" style="left: 242px; top: 114px; color: rgb(255, 170, 0); opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png&quot;);">Off</div>
+                    <div id="LBL_DIV_AGC" class="LBL_FUNCTION_NAME" style="left:484px; top:92px;">AGC</div>
+                    <div id="TEXT_DIV_AGC" class="DIV_FUN_TEXTFIELD" style="left: 484px; top: 114px; color: rgb(255, 170, 0); opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png&quot;);">Off</div>
+                    <div id="LBL_DIV_ADF" class="LBL_FUNCTION_NAME" style="left:726px; top:92px;">Auto ND Filter</div>
+                    <div id="TEXT_DIV_ADF" class="DIV_FUN_TEXTFIELD" style="left: 726px; top: 114px; color: rgb(250, 170, 0); opacity: 0.2;">Off</div>
+                    <div id="LBL_DIV_ATW" class="LBL_FUNCTION_NAME" style="left:0px; top:180px;">ATW</div>
+                    <div id="TEXT_DIV_ATW" class="DIV_FUN_TEXTFIELD" style="left: 0px; top: 202px; color: rgb(250, 170, 0); opacity: 1;">Off</div>
+                    <div id="LBL_DIV_AUTOSHUTTER" class="LBL_FUNCTION_NAME" style="left:242px; top:180px;">Gain</div>
+                    <div id="CLICK_DIV_GAIN" class="DIV_FUN_TEXTFIELD" style="left: 242px; top: 202px; color: rgb(255, 170, 0); opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png&quot;);">6dB</div>
+
+                    <div id="020_DIV_NORMAL_PARTING_LINE" class="DIV_NORMAL_PARTING_LINE" style="left:0px; top:270px; width:960px;"></div>
+                    <div id="LBL_COLORBARS" class="LBL_FUNCTION_NAME" style="left:0px; top:289px;">Color Bars</div>
+                    <div id="TEXT_COLORBARS" class="DIV_FUN_TEXTFIELD" style="left: 0px; top: 316px; color: rgb(250, 170, 0); opacity: 1;">Off</div>
+                    <div id="BUTTON_DIV_ABBBUTTON" class="DIV_BALANCE_BUTTON_AWB" style="left: 237px; top: 308px; opacity: 1;">Auto Black</div>
+                    <div id="BUTTON_DIV_AWBBUTTON" class="DIV_BALANCE_BUTTON" style="left: 237px; top: 308px; opacity: 1; color: rgb(51, 51, 51); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_AWB_Button_Normal.png&quot;);">Auto White</div>
+                <div class="DIV_DLG_MAIN" style="top: -164px; left: 228px; display: none;"><div class="DIV_DLG_TITLE">S&amp;Q FPS</div><div class="DIV_DLG_SEPARATOR" style="left: 16px; top: 37px;"></div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_ITEMAREA"><div class="DIV_DLG_ITEM" id="0_SQFPS_DLG_ITEM" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">On<div class="DIV_DLG_ITEM_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div><div id="20_DIV_DLG_FPS_CURRENT_DATA" class="DIV_DLG_FPS_CURRENT_DATA"></div><div id="21_DIV_DLG_SEC_PAGE_ARROW" class="DIV_DLG_SEC_PAGE_ARROW" style="color: rgb(153, 153, 153);">&gt;</div></div><div class="DIV_DLG_ITEM" id="1_SQFPS_DLG_ITEM" style="top: 48px;">Off<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_ITEM" id="0_SQFPS_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" id="1_SQFPS_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" id="2_SQFPS_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" id="3_SQFPS_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_BUTTON" id="0_DIV_SQFPS_DLG_BTN" style="left: -9px; top: 286px;">Cancel</div><div class="DIV_DLG_BUTTON" id="1_DIV_SQFPS_DLG_BTN" style="left: 176px; top: 286px;">OK</div></div><div class="DIV_DLG_SUB" style="display: none;"><div class="DIV_DLG_TEXT_FIELD" id="0_DIV_SQFPS_DLG_TEXTFIELD"></div><div id="4_DIV_SQFPS_DLG_BTN" class="DIV_DLG_MINUS_BTN"></div><div id="5_DIV_SQFPS_DLG_BTN" class="DIV_DLG_PLUS_BTN"></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BACK_BTN" id="6_DIV_SQFPS_DLG_BTN">Back</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 470px; top: -160px;"><div class="DIV_DLG_TITLE">Shutter</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SEPARATOR" style="left: 16px; top: 37px;"></div><div class="DIV_DLG_SUB" style="display: block;"><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: auto;"><div class="DIV_DLG_SHUTTER_ITEM" style="top: 240px;"></div><div class="DIV_DLG_SHUTTER_ITEM" id="0_SHUTTER_DLG_ITEM" style="top: 0px; background-color: rgb(28, 28, 28);">Off<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="1_SHUTTER_DLG_ITEM" style="top: 48px; color: rgb(230, 230, 230);">1/50<div class="DIV_DLG_ITEM_ICON" style=""></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="2_SHUTTER_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">1/60<div class="DIV_DLG_ITEM_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="3_SHUTTER_DLG_ITEM" style="top: 144px;">1/100<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="4_SHUTTER_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);">1/120<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="5_SHUTTER_DLG_ITEM" style="top: 240px;">1/125<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="6_SHUTTER_DLG_ITEM" style="top: 288px; background-color: rgb(28, 28, 28);">1/250<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="7_SHUTTER_DLG_ITEM" style="top: 336px;">1/500<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="8_SHUTTER_DLG_ITEM" style="top: 384px; background-color: rgb(28, 28, 28);">1/1000<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="9_SHUTTER_DLG_ITEM" style="top: 432px;">1/2000<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="10_SHUTTER_DLG_ITEM" style="top: 480px; background-color: rgb(28, 28, 28);">1/4000<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="11_SHUTTER_DLG_ITEM" style="top: 528px;">1/8000<div class="DIV_DLG_ITEM_ICON"></div></div><div class="DIV_DLG_SHUTTER_ITEM" id="12_SHUTTER_DLG_ITEM" style="top: 576px; background-color: rgb(28, 28, 28);">ECS<div class="DIV_DLG_ITEM_ICON"></div><div id="1_DIV_DLG_ECS_CURRENT_DATA" class="DIV_DLG_ECS_CURRENT_DATA"></div><div class="DIV_DLG_ARROW" id="11_SHUTTER_ARROW">&gt;</div></div></div><div class="DIV_DLG_BUTTON" id="1_DIV_SHUTTER_DLG_BTN" style="left: 176px; top: 287px;">OK</div></div><div class="DIV_DLG_SUB" style="display: none;"><div class="DIV_DLG_TEXT_FIELD" id="0_DIV_SHUTTER_DLG_TEXTFIELD" style="top: 76px;"></div><div id="4_DIV_SHUTTER_DLG_BTN" class="DIV_DLG_MINUS_BTN" style="top: 80px;"></div><div id="5_DIV_SHUTTER_DLG_BTN" class="DIV_DLG_PLUS_BTN" style="top: 80px;"></div><div class="LBL_PICKER_SPIRNG_SCALE_MIDDLE_DLG"></div><div class="DIV_PICKER_SPE_GROOVE_DLG" style="top: 200px;"></div><div id="DIV_PICKER_ZOOM_SLIDER_SHUTTER" class="DIV_PICKER_SPRING_SLIDER_DLG" style="top: 182px; left: 105px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BACK_BTN" id="2_DIV_SHUTTER_DLG_BTN" style="z-index: 2; top: 288px;">Back</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 186px; top: -160px;"><div class="DIV_DLG_TITLE">White</div><div class="DIV_DLG_RIGHT_ARROW"></div><div class="DIV_DLG_SEPARATOR" style="left: 16px; top: 37px;"></div><div class="DIV_DLG_SUB" style="display: none;"><div class="DIV_DLG_ITEMAREA"><div class="DIV_DLG_ITEM" id="0_WHITE" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(230, 230, 230);">Preset<div class="DIV_DLG_ITEM_ICON" style="background-repeat: no-repeat;"></div><div id="0DIV_DLG_WHITE_CURRENT_DATA" class="DIV_DLG_WHITE_CURRENT_DATA" style="color: rgb(230, 230, 230);">2500K</div></div><div class="DIV_DLG_ITEM" id="1_WHITE" style="top: 48px; color: rgb(255, 170, 0);">Memory A<div class="DIV_DLG_ITEM_ICON" style="background-repeat: no-repeat; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div><div id="1DIV_DLG_WHITE_CURRENT_DATA" class="DIV_DLG_WHITE_CURRENT_DATA" style="color: rgb(255, 170, 0);">4589K</div><div class="DIV_DLG_ARROW" id="1_WHITE_ARROW">&gt;</div></div><div class="DIV_DLG_ITEM" id="2_WHITE" style="top: 96px; background-color: rgb(28, 28, 28);">ATW<div class="DIV_DLG_ITEM_ICON"></div><div id="2DIV_DLG_WHITE_CURRENT_DATA" class="DIV_DLG_WHITE_CURRENT_DATA" style="display: none;">3200K</div><div class="DIV_DLG_ARROW" id="2_WHITE_ARROW" style="display: none;">&gt;</div></div><div class="DIV_DLG_ITEM" id="3_WHITE" style="top: 144px;"></div><div class="DIV_DLG_ITEM" id="4_WHITE" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" id="5_WHITE" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_WHITE_DLG_BTN" style="left: 176px; top: 286px;">OK</div></div><div class="DIV_DLG_SUB" style="display: block;"><div class="DIV_DLG_TEXT_FIELD" id="0_DIV_WHITE_DLG_TEXTFIELD" style="top: 76px;">4589K</div><div id="4_DIV_WHITE_DLG_BTN" class="DIV_DLG_MINUS_BTN" style="top: 80px; opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_Button_Minus_Normal.png&quot;); color: rgb(51, 51, 51);"></div><div id="5_DIV_WHITE_DLG_BTN" class="DIV_DLG_PLUS_BTN" style="top: 80px; opacity: 1; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_Button_Plus_Normal.png&quot;); color: rgb(51, 51, 51);"></div><div class="LBL_PICKER_SPIRNG_SCALE_MIDDLE_DLG"></div><div class="DIV_PICKER_SPE_GROOVE_DLG" style="top: 200px;"></div><div id="DIV_PICKER_ZOOM_SLIDER_WHITE" class="DIV_PICKER_SPRING_SLIDER_DLG" style="top: 182px; left: 105px; background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring.png&quot;);"></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BACK_BTN" id="2_DIV_WHITE_DLG_BTN" style="left: -9px; top: 286px;">Back</div><div class="DIV_DLG_BUTTON" id="3_DIV_WHITE_DLG_BTN" style="left: 176px; top: 286px;">OK</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 428px; top: -160px;"><div class="DIV_DLG_TITLE">Gamma</div><div class="DIV_DLG_RIGHT_ARROW"></div><div class="DIV_DLG_SEPARATOR" style="left: 16px; top: 37px;"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_ITEMAREA"><div class="DIV_DLG_ITEM" id="0_GAMMA_MAIN_DLG_ITEM" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">STD<div class="DIV_DLG_ITEM_ICON" id="0_GAMMA_MAIN_ITEM_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;); background-repeat: no-repeat;"></div><div id="0_DIV_DLG_GAMMA_CURRENT_DATA" class="DIV_DLG_GAMMA_CURRENT_DATA">STD5 R709</div><div class="DIV_DLG_ARROW" id="0_GAMMA_ARROW">&gt;</div></div><div class="DIV_DLG_ITEM" id="1_GAMMA_MAIN_DLG_ITEM" style="top: 48px;">HG<div class="DIV_DLG_ITEM_ICON" id="1_GAMMA_MAIN_ITEM_ICON"></div><div id="1_DIV_DLG_GAMMA_CURRENT_DATA" class="DIV_DLG_GAMMA_CURRENT_DATA"></div><div class="DIV_DLG_ARROW" id="1_GAMMA_ARROW">&gt;</div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_BUTTON" id="0_DIV_GAMMA_DLG_BTN" style="left: -9px; top: 286px;">Cancel</div><div class="DIV_DLG_BUTTON" id="1_DIV_GAMMA_DLG_BTN" style="left: 176px; top: 286px;">OK</div></div><div class="DIV_DLG_SUB" style="display: block;"><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_GAMMA_STD_ITEM" style="top: 0px; background-color: rgb(28, 28, 28); width: 252px; color: rgb(230, 230, 230);">STD1 DVW<div class="DIV_DLG_ITEM_ICON" id="0_GAMMA_STD_ITEM__ICON" style=""></div></div><div class="DIV_DLG_ITEM" id="1_GAMMA_STD_ITEM" style="top: 48px; width: 252px;">STD2 x4.5<div class="DIV_DLG_ITEM_ICON" id="1_GAMMA_STD_ITEM__ICON"></div></div><div class="DIV_DLG_ITEM" id="2_GAMMA_STD_ITEM" style="top: 96px; background-color: rgb(28, 28, 28); width: 252px;">STD3 x3.5<div class="DIV_DLG_ITEM_ICON" id="2_GAMMA_STD_ITEM__ICON"></div></div><div class="DIV_DLG_ITEM" id="3_GAMMA_STD_ITEM" style="top: 144px; width: 252px;">STD4 240M<div class="DIV_DLG_ITEM_ICON" id="3_GAMMA_STD_ITEM__ICON"></div></div><div class="DIV_DLG_ITEM" id="4_GAMMA_STD_ITEM" style="top: 192px; background-color: rgb(28, 28, 28); width: 252px; color: rgb(255, 170, 0);">STD5 R709<div class="DIV_DLG_ITEM_ICON" id="4_GAMMA_STD_ITEM__ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="5_GAMMA_STD_ITEM" style="top: 240px; width: 252px;">STD6 x5.0<div class="DIV_DLG_ITEM_ICON" id="5_GAMMA_STD_ITEM__ICON"></div></div></div><div class="DIV_DLG_BACK_BTN" id="7_DIV_GAMMA_DLG_BTN" style="z-index: 2; top: 288px;">Back</div></div><div class="DIV_DLG_SUB" style="display: block;"><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_GAMMA_HG_ITEM" style="top: 0px; background-color: rgb(28, 28, 28); width: 252px; color: rgb(255, 170, 0);">HG1 3250G36<div class="DIV_DLG_ITEM_ICON" id="0_GAMMA_HG_ITEM__ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_GAMMA_HG_ITEM" style="top: 48px; width: 252px;">HG2 4600G30<div class="DIV_DLG_ITEM_ICON" id="1_GAMMA_HG_ITEM__ICON"></div></div><div class="DIV_DLG_ITEM" id="2_GAMMA_HG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28); width: 252px;">HG3 3259G40<div class="DIV_DLG_ITEM_ICON" id="2_GAMMA_HG_ITEM__ICON"></div></div><div class="DIV_DLG_ITEM" id="3_GAMMA_HG_ITEM" style="top: 144px; width: 252px;">HG4 4609G33<div class="DIV_DLG_ITEM_ICON" id="3_GAMMA_HG_ITEM__ICON"></div></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_BACK_BTN" id="5_DIV_GAMMA_DLG_BTN" style="z-index: 2; top: 288px;">Back</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 228px; top: -72px;"><div class="DIV_DLG_TITLE">Auto Iris</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_AUTO_IRIS" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(230, 230, 230);">On<div class="DIV_DLG_ITEM_ICON" id="0_AUTO_IRIS_ICON" style=""></div></div><div class="DIV_DLG_ITEM" id="1_AUTO_IRIS" style="top: 48px; color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="1_AUTO_IRIS_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_AUTO_IRIS_DLG_BTN" style="left: 176px; top: 288px; color: rgb(230, 230, 230); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png&quot;);">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_AUTO_IRIS_DLG_BTN" style="left: -9px; top: 288px; color: rgb(230, 230, 230); background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png&quot;);">Cancel</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 186px; top: -72px;"><div class="DIV_DLG_SUB"><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_AGC" style="top: 0px; background-color: rgb(28, 28, 28);">On<div class="DIV_DLG_ITEM_ICON" id="0_AGC_ICON"></div></div><div class="DIV_DLG_ITEM" id="1_AGC" style="top: 48px; color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="1_AGC_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_AGC_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_AGC_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div><div class="DIV_DLG_TITLE">AGC</div><div class="DIV_DLG_RIGHT_ARROW"></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 470px; top: -72px;"><div class="DIV_DLG_SUB"><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_Auto_Shutter" style="top: 0px; background-color: rgb(28, 28, 28);">On<div class="DIV_DLG_ITEM_ICON" id="0_Auto_Shutter_ICON"></div></div><div class="DIV_DLG_ITEM" id="1_Auto_Shutter" style="top: 48px; color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="1_Auto_Shutter_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_Auto_Shutter_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_Auto_Shutter_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div><div class="DIV_DLG_TITLE">Auto Shutter</div><div class="DIV_DLG_LEFT_ARROW"></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 428px; top: -72px;"><div class="DIV_DLG_SUB"><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_Auto_ND_Filter" style="top: 0px; background-color: rgb(28, 28, 28);">On<div class="DIV_DLG_ITEM_ICON" id="0_Auto_ND_Filter_ICON"></div></div><div class="DIV_DLG_ITEM" id="1_Auto_ND_Filter" style="top: 48px; color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="1_Auto_ND_Filter_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_Auto_ND_Filter_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_Auto_ND_Filter_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div><div class="DIV_DLG_TITLE">Auto ND Filter</div><div class="DIV_DLG_RIGHT_ARROW"></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 470px; top: 16px;"><div class="DIV_DLG_TITLE">Gain</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: scroll;"><div class="DIV_DLG_ITEM" id="0_GAIN" style="top: 0px; background-color: rgb(28, 28, 28); color: rgb(255, 170, 0);">-3dB<div class="DIV_DLG_ITEM_ICON" id="0_GAIN_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" id="1_GAIN" style="top: 48px;">0dB<div class="DIV_DLG_ITEM_ICON" id="1_GAIN_ICON"></div></div><div class="DIV_DLG_ITEM" id="2_GAIN" style="top: 96px; background-color: rgb(28, 28, 28);">3dB<div class="DIV_DLG_ITEM_ICON" id="2_GAIN_ICON"></div></div><div class="DIV_DLG_ITEM" id="3_GAIN" style="top: 144px;">6dB<div class="DIV_DLG_ITEM_ICON" id="3_GAIN_ICON"></div></div><div class="DIV_DLG_ITEM" id="4_GAIN" style="top: 192px; background-color: rgb(28, 28, 28);">9dB<div class="DIV_DLG_ITEM_ICON" id="4_GAIN_ICON"></div></div><div class="DIV_DLG_ITEM" id="5_GAIN" style="top: 240px;">12dB<div class="DIV_DLG_ITEM_ICON" id="5_GAIN_ICON"></div></div><div class="DIV_DLG_ITEM" id="6_GAIN" style="top: 288px; background-color: rgb(28, 28, 28);">15dB<div class="DIV_DLG_ITEM_ICON" id="6_GAIN_ICON"></div></div><div class="DIV_DLG_ITEM" id="7_GAIN" style="top: 336px;">18dB<div class="DIV_DLG_ITEM_ICON" id="7_GAIN_ICON"></div></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_GAIN_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_GAIN_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: 228px; top: 16px;"><div class="DIV_DLG_TITLE">ATW</div><div class="DIV_DLG_LEFT_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_ATW" style="top: 0px; background-color: rgb(28, 28, 28);">On<div class="DIV_DLG_ITEM_ICON" id="0_ATW_ICON"></div></div><div class="DIV_DLG_ITEM" id="1_ATW" style="top: 48px; color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="1_ATW_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: 288px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_ATW_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_ATW_DLG_BTN" style="left: -9px; top: 288px;">Cancel</div></div></div><div class="DIV_DLG_MAIN" style="display: none; left: -32px; top: -74px;"><div class="DIV_DLG_TITLE">Color Bars</div><div class="DIV_DLG_BOTTOM_ARROW"></div><div class="DIV_DLG_SUB"><div class="DIV_DLG_SEPARATOR" style="top: -1px;"></div><div class="DIV_DLG_ITEMAREA" style="overflow-y: hidden;"><div class="DIV_DLG_ITEM" id="0_COLOR_BARS" style="top: 0px; background-color: rgb(28, 28, 28);">On<div class="DIV_DLG_ITEM_ICON" id="0_COLOR_BARS_ICON"></div></div><div class="DIV_DLG_ITEM" id="1_COLOR_BARS" style="top: 48px; color: rgb(255, 170, 0);">Off<div class="DIV_DLG_ITEM_ICON" id="1_COLOR_BARS_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png&quot;);"></div></div><div class="DIV_DLG_ITEM" style="top: 96px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 144px;"></div><div class="DIV_DLG_ITEM" style="top: 192px; background-color: rgb(28, 28, 28);"></div><div class="DIV_DLG_ITEM" style="top: 240px;"></div></div><div class="DIV_DLG_SEPARATOR" style="top: 289px;"></div><div class="DIV_DLG_BUTTON" id="1_DIV_COLOR_BARS_DLG_BTN" style="left: 176px; top: 288px;">OK</div><div class="DIV_DLG_BUTTON" id="0_DIV_COLOR_BARS_DLG_BTN" style="left: -8px; top: 288px;">Cancel</div></div></div></div>
+            </div>
+		</div>
+        
+        <!--PLAY_BUTTONGROUP-->
+        <div id="DIV_PLAY_BUTTONGROUP" class="DIV_PLAY_BUTTONGROUP">
+            <div id="DIV_PLAY_CLIP_GROUP" class="DIV_PLAY_CLIP_GROUP">
+                <div id="DIV_PLAY_CLIP" class="DIV_PLAY_CLIP">Clip</div>
+                <div id="DIV_PLAY_CLIP_VALUE" class="DIV_PLAY_CLIP_VALUE"></div>
+            </div>
+            <div id="1_DIV_PLAY_PREVBTN" class="DIV_PLAY_BUTTON" style="top: 184px; left: 289px; opacity: 1;">Prev<div class="DIV_PLAY_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Play_Button_Label_Prev_Normal.png&quot;);"></div></div>
+            <div id="2_DIV_PLAY_FREVBTN" class="DIV_PLAY_BUTTON" style="left: 289px; opacity: 1;">F Rev<div class="DIV_PLAY_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Play_Button_Label_FRev_Normal.png&quot;);"></div></div>
+            <div id="3_DIV_PLAY_PLAYBTN" class="DIV_PLAY_BUTTON" style="left: 425px; opacity: 1;">Play/Pause<div class="DIV_PLAY_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Play_Button_Label_PlayPause_Normal.png&quot;);"></div></div>
+            <div id="4_DIV_PLAY_STOPBTN" class="DIV_PLAY_BUTTON" style="top: 184px; left: 425px; opacity: 1;">Stop<div class="DIV_PLAY_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Play_Button_Label_Stop_Normal.png&quot;);"></div></div>
+            <div id="5_DIV_PLAY_FFWDBTN" class="DIV_PLAY_BUTTON" style="left: 561px; opacity: 1;">F Fwd<div class="DIV_PLAY_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Play_Button_Label_FFwd_Normal.png&quot;);"></div></div>
+            <div id="6_DIV_PLAY_NEXTBTN" class="DIV_PLAY_BUTTON" style="top: 184px; left: 561px; opacity: 1;">Next<div class="DIV_PLAY_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Play_Button_Label_Next_Normal.png&quot;);"></div></div>
+        </div>
+        
+        <!--DIV_CROSS_BUTTONGROUP-->
+        <div id="DIV_CROSS_BUTTONGROUP" class="DIV_CROSS_BUTTONGROUP">
+            <div id="7_DIV_CROSS_MENUBTN" class="DIV_CROSS_FUNCTION_BUTTON" style="left: 586px; top: -6px; opacity: 1;">Menu</div>
+            <div id="10_DIV_CROSS_STATUSBTN" class="DIV_CROSS_FUNCTION_BUTTON" style="left: 586px; top: 210px; opacity: 1;">Status</div>
+            <div id="11_DIV_CROSS_UPBTN" class="DIV_CROSS_DIRECTION_BUTTON" style="left: 186px; top: -6px; opacity: 1;"><div class="DIV_CROSS_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Gen_Button_Arrow_Label_Up_Normal.png&quot;);"></div></div>
+            <div id="12_DIV_CROSS_DNBTN" class="DIV_CROSS_DIRECTION_BUTTON" style="left: 186px; top: 196px; opacity: 1;"><div class="DIV_CROSS_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Gen_Button_Arrow_Label_Down_Normal.png&quot;);"></div></div>
+            <div id="13_DIV_CROSS_LFTBTN" class="DIV_CROSS_DIRECTION_BUTTON" style="left: 86px; top: 95px; opacity: 1;"><div class="DIV_CROSS_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Gen_Button_Arrow_Label_Left_Normal.png&quot;);"></div></div>
+            <div id="14_DIV_CROSS_RITBTN" class="DIV_CROSS_DIRECTION_BUTTON" style="left: 286px; top: 95px; opacity: 1;"><div class="DIV_CROSS_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Gen_Button_Arrow_Label_Right_Normal.png&quot;);"></div></div>
+            <div id="15_DIV_CROSS_SETBTN" class="DIV_CROSS_DIRECTION_BUTTON" style="left: 186px; top: 95px; opacity: 1;">Set<div class="DIV_CROSS_BUTTON_ICON" style="background-image: url(&quot;WebCommon/images/Parts_CR_T_CC_Gen_Button_Arrow_Label_Set_Normal.png&quot;);"></div></div>
+            <div id="16_DIV_CROSS_CANBACKBTN" class="DIV_CROSS_FUNCTION_BUTTON" style="left: 394px; top: 95px; opacity: 1;">Cancel/Back</div>
+            <div id="17_DIV_CROSS_THUMBNAILBTN" class="DIV_CROSS_FUNCTION_BUTTON" style="left: 586px; top: 102px; opacity: 1;">Thumbnail</div>
+        </div>
+	</div>
+    <div id="DIV_AWBAN_ALERT_DLG" class="AUTO_BAN_DIALOG" style="display: none;"><div id="AUTO_BAN_DIALOG_TITLE" class="AUTO_BAN_DIALOG_TITLE">Auto White</div><div id="1_AUTO_BAN_DIALOG_TEXTFIELD" class="AUTO_BAN_DIALOG_TEXTFIELD" style="padding: 0px;"><table style="height:100%;width:100%"><tbody><tr><td id="AUTO_BAN_DIALOG_TD" style="vertical-align:middle;line-height:3px;"><p id="AUTO_BAN_DIALOG_P_1">Auto White Balance</p><p id="AUTO_BAN_DIALOG_P_2"></p></td></tr></tbody></table></div><div class="DIV_DLG_SEPARATOR" style="top: 37px; left: 16px; width: 324px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 187px; left: 16px; width: 324px;"></div><div id="1_AUTO_BAN_DIALOG_BTN" class="DIV_DLG_SETTING_BTN" style="top: 188px; left: 245px;">Execute</div><div id="2_AUTO_BAN_DIALOG_BTN" class="DIV_DLG_SETTING_BTN" style="top: 188px; left: 8px;">Cancel</div></div>
+    <div id="DIV_ABBAN_ALERT_DLG" class="AUTO_BAN_DIALOG" style="display: none;"><div id="AUTO_BAN_DIALOG_TITLE" class="AUTO_BAN_DIALOG_TITLE">Auto Black</div><div id="1_AUTO_BAN_DIALOG_TEXTFIELD" class="AUTO_BAN_DIALOG_TEXTFIELD" style="padding: 0px;"><table style="height:100%;width:100%"><tbody><tr><td id="AUTO_BAN_DIALOG_TD" style="vertical-align:middle;line-height:3px;"><p id="AUTO_BAN_DIALOG_P_1">Auto Black Balance</p><p id="AUTO_BAN_DIALOG_P_2"></p></td></tr></tbody></table></div><div class="DIV_DLG_SEPARATOR" style="top: 37px; left: 16px; width: 324px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 187px; left: 16px; width: 324px;"></div><div id="1_AUTO_BAN_DIALOG_BTN" class="DIV_DLG_SETTING_BTN" style="top: 188px; left: 245px;">Execute</div><div id="2_AUTO_BAN_DIALOG_BTN" class="DIV_DLG_SETTING_BTN" style="top: 188px; left: 8px;">Cancel</div></div>
+	<div id="DIV_MASKDIALOG" class="DIV_MASKDIALOG" style="opacity: 0.5; z-index: 4; display: none;"></div>
+    <div id="DIV_BALANCE_STATUS_DLG" class="AUTO_BAN_DIALOG" style="display: none;"><div id="AUTO_BAN_DIALOG_TITLE" class="AUTO_BAN_DIALOG_TITLE"></div><div id="1_AUTO_BAN_DIALOG_TEXTFIELD" class="AUTO_BAN_DIALOG_TEXTFIELD" style="padding: 0px;"><table style="height:100%;width:100%"><tbody><tr><td id="AUTO_BAN_DIALOG_TD" style="vertical-align:middle;line-height:3px;"><p id="AUTO_BAN_DIALOG_P_3">Auto Black Balance NG</p><p id="AUTO_BAN_DIALOG_P_4"></p></td></tr></tbody></table></div><div class="DIV_DLG_SEPARATOR" style="top: 37px; left: 16px; width: 324px;"></div><div class="DIV_DLG_SEPARATOR" style="top: 187px; left: 16px; width: 324px;"></div><div id="1_AUTO_BAN_DIALOG_BTN" class="DIV_DLG_SETTING_BTN" style="top: 188px; left: 245px;">OK</div></div>
+    <div id="DIV_STATUS_MASKDIALOG" class="DIV_STATUS_MASKDIALOG" style="opacity:0.5;z-index:4;"></div>
+</div>
+
+<script type="text/javascript">
+var j = jQuery.noConflict();
+var client = new savona.client();
+var g_OldObject = null;
+var CameraStatus = "";
+var g_OldObjectBtn = null;
+var g_CurentScrollY = 0;
+var g_LockFlag = false;
+var g_RecLockFlag = false;	
+var g_ShowDialogClickItems = ["1_CLICK_ASSIGN_LABEL", "2_CLICK_ASSIGN_LABEL", "3_CLICK_ASSIGN_LABEL", "4_CLICK_ASSIGN_LABEL", "5_CLICK_ASSIGN_LABEL", "TEXT_SHUTTER", "CLICK_WHITE", "TEXT_GAMMA", "CLICK_DIV_SQFPS", "TEXT_DIV_AGC", "TEXT_DIV_ASHUTTER","TEXT_DIV_ADF","TEXT_DIV_AUTOIRIS", "CLICK_DIV_GAIN", "TEXT_DIV_ATW", "TEXT_COLORBARS"];
+
+var g_objPageSelector = $("DIV_PAGE_SWITCH_MENU");
+var g_objMenuSwitchBtn = $("DIV_PAGE_SWITCH_BTN");
+
+var g_objAllLockSlider = $("DIV_ALL_LOCK");
+var g_objMask = $("DIV_MASKDIALOG");
+//assign Button
+var g_arrAssignItems = ["Off","Marker","Zebra","Peaking","Video Signal Monitor", "Focus Magnifier","Focus Macro","VF Mode","Auto Exposure Level","Spotlight","Backlight","ATW","ATW Hold","SteadyShot","Color Bars", "NFC", "Rec Lamp", "Rec Review", "Thumbnail",  "Shot Mark1", "Shot Mark2", "Clip Flag OK", "Clip Flag NG", "Clip Flag Keep"];
+var g_objAssignLable_1 = $("1_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_2 = $("2_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_3 = $("3_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_4 = $("4_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_5 = $("5_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_6 = $("6_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_7 = $("7_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_8 = $("8_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_9 = $("9_CLICK_ASSIGN_LABEL");
+var g_objAssignLable_10 = $("10_CLICK_ASSIGN_LABEL");
+var g_arrAssignLableList = [g_objAssignLable_1, g_objAssignLable_2, g_objAssignLable_3, g_objAssignLable_4, g_objAssignLable_5, g_objAssignLable_6, g_objAssignLable_7, g_objAssignLable_8, g_objAssignLable_9, g_objAssignLable_10];
+	
+var g_objAssignButton_1 = $("BUTTON_CONTROL_BUTTON_1");
+var g_objAssignButton_2 = $("BUTTON_CONTROL_BUTTON_2");
+var g_objAssignButton_3 = $("BUTTON_CONTROL_BUTTON_3");
+var g_objAssignButton_4 = $("BUTTON_CONTROL_BUTTON_4");
+var g_objAssignButton_5 = $("BUTTON_CONTROL_BUTTON_5");
+var g_objAssignButton_6 = $("BUTTON_CONTROL_BUTTON_6");
+var g_objAssignButton_7 = $("BUTTON_CONTROL_BUTTON_7");
+var g_objAssignButton_8 = $("BUTTON_CONTROL_BUTTON_8");
+var g_objAssignButton_9 = $("BUTTON_CONTROL_BUTTON_9");
+var g_objAssignButton_10 = $("BUTTON_CONTROL_BUTTON_10");
+var g_arrAssignButton = [g_objAssignButton_1, g_objAssignButton_2, g_objAssignButton_3, g_objAssignButton_4, g_objAssignButton_5,g_objAssignButton_6,g_objAssignButton_7,g_objAssignButton_8,g_objAssignButton_9,g_objAssignButton_10];
+
+var g_clickAssignBtnIndex = 0;
+
+//Main
+var g_bIsPlayOn = true;
+var g_objSandQ = $("CLICK_DIV_SQFPS");
+var g_objShutter = $("TEXT_SHUTTER");
+var g_objWhite = $("CLICK_WHITE");
+var g_objGamma = $("TEXT_GAMMA");
+var g_objAutoIris = $("TEXT_DIV_AUTOIRIS");
+var g_objAGC = $("TEXT_DIV_AGC");
+var g_objAutoShutter=$("TEXT_DIV_ASHUTTER");
+var g_objAutoND=$("TEXT_DIV_ADF");
+var g_objGain = $("CLICK_DIV_GAIN");
+var g_objATW = $("TEXT_DIV_ATW");
+var g_objAWBButton = $("BUTTON_DIV_AWBBUTTON");	
+var g_objABBButton = $("BUTTON_DIV_ABBBUTTON");
+var g_objAWBDialog = $("DIV_AWBAN_ALERT_DLG");
+var g_objABBDialog = $("DIV_ABBAN_ALERT_DLG");
+var g_objABStatusDlg = $("DIV_BALANCE_STATUS_DLG");
+var g_ObjIrisButton = $("IRIS_SLIDER_HANDLE");
+var g_ObjNDButton = $("ND_SLIDER_HANDLE");
+var g_ObjFocusButton = $("FOCUS_SLIDER_HANDLE");
+var g_ObjZoomButton = $("ZOOM_SLIDER_HANDLE");
+var g_ObjIrisValue = $("DIV_IRIS_VALUE");
+var g_ObjNDValue= $("DIV_ND_VALUE");
+var g_ObjFocusValue = $("DIV_FOCUS_NUM");
+var g_ObjZoomValue = $("DIV_ZOOM_NUM");
+var g_objColorBars = $("TEXT_COLORBARS");
+var g_objRecLockSlider = $("DIV_LOCK_BTN");
+var g_objRecStop = $("DIV_REC_STOP");
+var g_objRecStart = $("DIV_REC_START");
+var g_objClipname = $("1_FILE_INFO_VALUE");
+var g_objFrameRate = $("2_FILE_INFO_VALUE");
+var g_objPictureSize = $("3_FILE_INFO_VALUE");
+var g_objRecFormat = $("4_FILE_INFO_VALUE");
+var g_objBattery = $("DIV_MAIN_BATTERY_STATUS");
+var g_objBatteryTime = $("DIV_BATTERY_TIME");
+var g_objACardStatus = $("DIV_BC_A");
+var g_objACardLable = $("DIV_CARD_A");
+var g_objACardLastTime = $("DIV_ACARD_INFO");
+var g_objBCardStatus = $("DIV_BC_B");
+var g_objBCardLable = $("DIV_CARD_B");
+var g_objBCardLastTime = $("DIV_BCARD_INFO");
+var g_objCCardStatus = $("DIV_BC_C");
+var g_objCCardLable = $("DIV_CARD_C");
+var g_objCCardLastTime = $("DIV_CCARD_INFO");
+var g_objPlayClip = $("DIV_PLAY_CLIP_VALUE");
+
+//use for setting LCD gray
+var g_SetSubLCDGray = 0;
+var arrDialogItems = [g_objSandQ, g_objShutter, g_objWhite, g_objGamma, g_objAutoIris, g_objGain, g_objATW, g_objColorBars, g_objAGC,g_objAutoShutter,g_objAutoND];
+var arrWBMsgItems = [g_objAWBDialog, g_objABBDialog];
+
+//clear List Timer
+var arrClearDialogTimer = [g_objShutter, g_objGain];
+
+//use for setting mask
+var g_objMaskClickDlg = $("DIV_MASKCLICK_DLG");
+var objUpperMask = $("DIV_UPPER_MASKDIALOG");
+var objMiddleMask = $("DIV_MIDDLE_MASKDIALOG");
+var objLowerMask = $("DIV_LOWER_MASKDIALOG");
+var objABMask = $("DIV_CCAWB_MASKDIALOG");
+var GotoCursor = false;
+var MenuGrayStatus = "";
+var screenOrientationEvt = "onorientationchange" in window ? "orientationchange" : "resize";
+var lastSelectPageIndex = 0;
+
+//use for Record Format Media Card Status
+var IsMediaAactive=0;
+var IsMediaBactive=0;
+
+var IsMediaAMount=0;
+var IsMediaBMount=0;
+var MediaStatus=2;
+
+var connectionChecker = new ConnectionChecker();
+
+window.onload = Init;
+window.addEventListener(screenOrientationEvt, function() {
+	location.reload();
+}, false);
+
+client.onconnect = client.ondisconnect = function(e) 
+{
+	if (e.type == "connected")
+	{
+		AlternateBasic()
+		.done(onConnected)
+		.fail(disconnect);
+	}
+	else
+	{
+		console.log('disconnected');
+		$("TEXT_WIFI_STATUS").innerHTML = "Disconnected";
+		$("DIV_WIFI_STATUS_C").style.display = "none";
+		$("DIV_WIFI_STATUS_D").style.display = "block";
+		ClearDialogTouchMoveTimer();
+		connectionChecker.stop();
+		setTimeout(connect, 1000);
+		if (g_OldObject)
+		{
+			g_OldObject.userData[1].ShowDialog(false);
+			g_OldObject = null;
+			return;
+		}
+	}
+};
+
+function connect()
+{
+	if (client.state() !== 'disconnected')
+	{
+		return;
+	}
+	console.log('connect');
+	client.connect();
+}
+
+function onConnected()
+{
+	console.log('connected');
+	$("TEXT_WIFI_STATUS").innerHTML = "Connected";
+	$("DIV_WIFI_STATUS_C").style.display = "block";
+	$("DIV_WIFI_STATUS_D").style.display = "none";
+	GetMessagePopupStatus();
+
+	// 接続状態を監視.
+	// 応答が得られなくなったら、切断を要求.
+	connectionChecker.start().fail(disconnect);
+
+	NotifySubscribe();
+	GetValue();
+	GetStatus();
+	SetPageLock();
+}
+
+function disconnect(reason)
+{
+	if (client.state() === 'disconnected')
+	{
+		return;
+	}
+	$("TEXT_WIFI_STATUS").innerHTML = "Disconnected";
+	$("DIV_WIFI_STATUS_C").style.display = "none";
+	$("DIV_WIFI_STATUS_D").style.display = "block";
+	console.log('disconnect ' + (reason || ''));
+	client.disconnect();
+}
+
+function AlternateBasic()
+{
+	var deferred = j.Deferred();
+	function get_cred() {
+		var cred = ["user","password"];
+		j.ajax({
+			async: false,
+			url: "/cgi-bin/getsavonacred.cgi",
+			dataType: "text",
+			success: function(msg) {
+				cred = msg.split(":");
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus + " " + errorThrown);
+			}
+		});
+		return cred;
+	};
+
+	function isAuthenticationFailed(error){
+		if( j.isArray(error) && 2 == error.length ){
+			if( 403 === error[0] ){
+				return true;
+			}
+		}
+		return false;
+	};
+
+	var cred = get_cred();
+	var id = client.alternate.authentication.Basic({
+		params: {username: cred[0], password: cred[1]},
+		onresponse: function(resp){
+			if( isAuthenticationFailed(resp.error) ){
+				// 認証の失敗.
+				deferred.reject(resp.error[1]);
+			}
+			else if( resp.error ){
+				// 上記以外のエラーがあったも接続してみる.
+				// 認証が通っていなければ, 別途、切断される.
+				console.log('Auth NG');
+				deferred.resolve();
+			}
+			else{
+				// 認証の成功.
+				deferred.resolve();
+			}
+		},
+		timeout: 1000	// msec.
+	});
+
+	return deferred.promise();
+}
+
+function NotifySubscribe()
+{
+	names = ["Notify.Properties", "Notify.Process", "Notify.Property"];
+	var id = client.notify.Subscribe({params: names, onresponse: function(resp){}});
+}
+
+client.onnotify = function(event) {
+	var jsonstring;
+	var objArrItems;
+	if (typeof JSON !== 'undefined') {
+		jsonstring = JSON.stringify(event.data);
+	} else { // sorry, IE does not have JSON.stringify
+		jsonstring = event.data;
+	}
+	if (event.name == "Notify.Property.Value.Changed")
+	{
+		objArrItems = JSON.parse(jsonstring)[0];
+        NotifyMessagePopupProperties(objArrItems);
+		ShutterCtrl.NotifySetShutterData(objArrItems);
+
+		AssignCtrl.NotifySetAssignData(objArrItems);
+		ColorBarsCtrl.NotifySetColorBarsData(objArrItems);
+		SQFPSCtrl.NotifySetSQFPSData(objArrItems);
+		WhiteCtrl.NotifySetClrTempData(objArrItems);
+		GammaCtrl.NotifySetGammaData(objArrItems);
+		SetCardNotifyData(objArrItems);//Card Notify
+		MainBtteryNotifyData(objArrItems);//MainBattery Notify
+		SetAudioNotifyData(objArrItems);//Audio
+		SetClipNotifyData(objArrItems);//Clip number
+		AutoIrisCtrl.NotifySetAutoIrisData(objArrItems);
+        RecordCtrl.NotifySetRecorderData(objArrItems);
+		ATWCtrl.NotifySetATWData(objArrItems);
+		AWBCtrl.NotifySetAWBData(objArrItems);
+		ABBCtrl.NotifySetABBData(objArrItems);
+		LensMountCtrl.NotifySetLensMountData(objArrItems);
+		FocusCtrl.NotifySetFocusData(objArrItems);
+		ZoomCtrl.NotifySetZoomData(objArrItems);
+		IrisCtrl.NotifySetIrisData(objArrItems);
+		MainFileNotifyData(objArrItems);//Main File
+		GainCtrl.NotifySetGainData(objArrItems);
+		ClipNameCtrl.NotifySetClipNameData(objArrItems);
+                NDCtrl.NotifySetNDFilterData(objArrItems);
+                AGCCtrl.NotifySetAGCData(objArrItems);
+                AutoShutterCtrl.NotifySetAutoShutterData(objArrItems);
+                AutoNDCtrl.NotifySetANDData(objArrItems);
+        SystemConfigCtrl.NotifySystemConfigData(objArrItems);
+	}
+	 else if (event.name == "Notify.Property.Status.Changed")
+	{
+		objArrItems = JSON.parse(jsonstring)[0];
+		
+        NDCtrl.NotifyNDFilterStatusData(objArrItems);
+        IrisCtrl.NotifyIrisStatusData(objArrItems);
+        FocusCtrl.NotifyFocusStatusData(objArrItems);
+        ZoomCtrl.NotifyZoomStatusData(objArrItems);
+        SQFPSCtrl.NotifySQFPSStatusData(objArrItems);
+        ShutterCtrl.NotifyShutterStatusData(objArrItems);
+        WhiteCtrl.NotifyWhiteStatusData(objArrItems);
+        GammaCtrl.NotifyGammaStatusData(objArrItems);
+        AutoIrisCtrl.NotifyAutoIrisStatusData(objArrItems);
+        AutoShutterCtrl.NotifyAutoShutterStatusData(objArrItems);
+        AGCCtrl.NotifyAGCStatusData(objArrItems);
+        AutoNDCtrl.NotifyAutoNDStatusData(objArrItems);
+        GainCtrl.NotifyGainStatusData(objArrItems);
+        ATWCtrl.NotifyATWStatusData(objArrItems);
+        ColorBarsCtrl.NotifyColorBarsStatusData(objArrItems);
+        AWBCtrl.NotifyAWBtatusData(objArrItems);
+	}
+	else if (event.name == "Notify.Process.ErrorOccurred")
+	{
+		objArrItems = JSON.parse(jsonstring)[0];
+		if(objArrItems == "Camera.WhiteBalance")
+		{
+			g_objABStatusDlg.userData.SetTitle("Auto White");
+			g_objABStatusDlg.userData.SetText("Auto White Balance", "NG");
+			g_objABStatusDlg.userData.ShowDialog();
+		}
+		if(objArrItems == "Camera.BlackBalance")
+		{
+			g_objABStatusDlg.userData.SetTitle("Auto Black");
+			g_objABStatusDlg.userData.SetText("Auto Black Balance", "NG");
+			g_objABStatusDlg.userData.ShowDialog();
+		}
+	} else if (event.name == "Notify.Process.Completed")
+	{
+		objArrItems = JSON.parse(jsonstring)[0];
+		if(objArrItems == "Camera.WhiteBalance")
+		{
+            //g_objABStatusDlg.userData.clearMessage();
+			g_objABStatusDlg.userData.SetTitle("Auto White");
+			g_objABStatusDlg.userData.SetText("Auto White Balance", "OK");
+			g_objABStatusDlg.userData.ShowDialog();
+		}
+		if(objArrItems == "Camera.BlackBalance")
+		{
+			g_objABStatusDlg.userData.SetTitle("Auto Black");
+			g_objABStatusDlg.userData.SetText("Auto Black Balance", "OK");
+			g_objABStatusDlg.userData.ShowDialog();
+		}
+	}
+	else if (event.name == "Notify.Process.Started")
+	{
+		closeAllShowingDialog();
+		objArrItems = JSON.parse(jsonstring)[0];
+		j.each(objArrItems,function(key,value){
+			if(key == "Camera.WhiteBalance")
+			{
+				g_objABStatusDlg.userData.ShowDialog(false);
+			}
+			if(key == "Camera.BlackBalance")
+			{
+				g_objABStatusDlg.userData.ShowDialog(false);
+			}		
+		});
+	}
+	else if (event.name == "Notify.Process.Aborted")
+	{
+
+		objArrItems = JSON.parse(jsonstring)[0];
+		j.each(objArrItems,function(key,value) {
+			if(key == "Camera.WhiteBalance")
+			{
+				g_objABStatusDlg.userData.SetTitle("Auto White");
+				g_objABStatusDlg.userData.SetText("Auto White Balance", "Cancelled");
+				g_objABStatusDlg.userData.ShowDialog();
+			}	
+			if(key == "Camera.BlackBalance")
+			{
+				g_objABStatusDlg.userData.SetTitle("Auto Black");
+				g_objABStatusDlg.userData.SetText("Auto Black Balance", "Cancelled");
+				g_objABStatusDlg.userData.ShowDialog();
+			}	
+		});
+	}
+};
+
+function Init()
+{
+	getInfoFromlocalStorage();
+	ResizeDom();			//resize the dom
+	InitData();				//initlize the widgets of page which package in js
+	CorrectTimeCodePosition();
+	connect();
+}
+
+function getInfoFromlocalStorage()
+{
+	var tmpLock = getUserData("LockStatus");
+	if (tmpLock == "true")
+	{
+		g_LockFlag = true;
+	}
+	else
+	{
+		g_LockFlag = false;
+	}
+	var tmpRecLock = getUserData("RecLockStatus");
+	if (tmpRecLock == "true")
+	{
+		g_RecLockFlag = true;
+	}
+	else
+	{
+		g_RecLockFlag = false;
+	}
+    lastSelectPageIndex = getUserData("LastPageIndex");
+    if (lastSelectPageIndex == null)
+    {
+        lastSelectPageIndex = 1;
+    }
+}
+
+function ResizeDom()
+{
+	var objMainContainer = $("DIV_MAIN_CONTAINER");
+	var mainRect = (document.documentElement || document.body);
+	if(mainRect.clientWidth < j(objMainContainer).width())
+	{
+		objMainContainer.style.left = "0px";
+	}
+	else 
+	{
+ 		objMainContainer.style.left = (mainRect.clientWidth- j(objMainContainer).width())/2 + "px";
+		$("DIV_PAGE_SWITCH_MENU").style.left = (mainRect.clientWidth- j(objMainContainer).width())/2 + "px";
+	}
+}
+
+function CorrectTimeCodePosition()
+{
+	var userAgent = navigator.userAgent.toLowerCase();
+	
+	if (userAgent.indexOf("ipad") > -1 || userAgent.indexOf("iphone") > -1)
+	{
+	//	alert("ipad");
+		$("1_TIMECODE_VALUE").style.left = 0 + "px";
+		$("0_EXT_LK_NAME").style.left = 136 + "px";
+	}
+	else if(userAgent.indexOf("android") > -1 && userAgent.indexOf("mobile") == -1)
+	{
+	//	alert("Sony pad");
+		$("1_TIMECODE_VALUE").style.left = 0 + "px";
+		$("0_EXT_LK_NAME").style.left = 136 + "px";
+		//$("0_TCG_NAME").style.left = 21 + "px";
+	}
+}
+
+function InitData()
+{
+	initData_PageSelecteButton();
+	//Lock
+	g_objAllLockSlider.userdata = new LockSlider(g_objAllLockSlider, CBLockFunction);
+	g_objAllLockSlider.userdata.SetAllLockStatus(g_LockFlag);
+	
+	InitData_PlayArea();
+	InitData_CrossArea();
+	//page select
+	var objPageSelector = $("DIV_FUNCTION_SELECTOR");
+	var arrPageItems = ["Assign","Main", "Playback", "Cursor"];
+	objPageSelector.userData = new PageSeletor(objPageSelector, arrPageItems, 1, CBPageSelector);
+	
+	InitAssignButton();
+	InitMainData();
+    var selectPage = lastSelectPageIndex + "_LBL_SELECT_PAGENAME";
+    document.getElementById(selectPage).click();
+}
+function initData_PageSelecteButton()
+{
+	var arrPageItems = ["Remote Control", "Camera Control", "Monitoring", "Monitoring Settings", "File Transfer", "Slot A", "Slot B", "Slot SD/MS", "Job List", "Upload Settings"];
+	g_objPageSelector.userData = new Array();
+	g_objPageSelector.userData[0] =  new menuPageSelector(g_objPageSelector, arrPageItems, "MENU_SELECTOR", 1, MenuSelectCallback, 694);
+	g_objPageSelector.userData[0].SetTitle("Global Menu");
+	
+	var arrMenuSwitchImages = ["Parts_CR_T_Hdr_Button_GlobalMenu_Normal","Parts_CR_T_Hdr_Button_GlobalMenu_Pressed","Parts_CR_T_Hdr_Button_GlobalMenu_Normal","Parts_CR_T_Hdr_Button_GlobalMenu_Normal","Parts_CR_T_Hdr_Button_GlobalMenu_Normal"];
+	g_objMenuSwitchBtn.userData = new ButtonCtrl(g_objMenuSwitchBtn, arrMenuSwitchImages, SwitchMenuCB);
+	g_objMenuSwitchBtn.userData.SetDisabled(true);
+}
+
+function InitData_PlayArea()
+{
+	var objPlayPREVBtn = $("1_DIV_PLAY_PREVBTN");
+	var arrPFREVIconImgs = ["Parts_CR_T_CC_Play_Button_Label_Prev_Normal", "Parts_CR_T_CC_Play_Button_Label_Prev_Pressed", "Parts_CR_T_CC_Play_Button_Label_Prev_Normal", "Parts_CR_T_CC_Play_Button_Label_Prev_Normal", ""];
+	objPlayPREVBtn.userData = new IconButtonCtrl(objPlayPREVBtn, arrPFREVIconImgs, 0, CBButtonClick);
+	
+	var objPlayFREVBtn = $("2_DIV_PLAY_FREVBTN");
+	var arrPPREVIconImgs = ["Parts_CR_T_CC_Play_Button_Label_FRev_Normal", "Parts_CR_T_CC_Play_Button_Label_FRev_Pressed", "Parts_CR_T_CC_Play_Button_Label_FRev_Normal", "Parts_CR_T_CC_Play_Button_Label_FRev_Normal", ""];
+	objPlayFREVBtn.userData = new IconButtonCtrl(objPlayFREVBtn, arrPPREVIconImgs, 0, CBButtonClick);
+	
+	var objPlayPLAYBtn = $("3_DIV_PLAY_PLAYBTN");
+	var arrPPLAYIconImgs = ["Parts_CR_T_CC_Play_Button_Label_PlayPause_Normal", "Parts_CR_T_CC_Play_Button_Label_PlayPause_Pressed", "Parts_CR_T_CC_Play_Button_Label_PlayPause_Normal", "Parts_CR_T_CC_Play_Button_Label_PlayPause_Normal", ""];
+	objPlayPLAYBtn.userData = new IconButtonCtrl(objPlayPLAYBtn, arrPPLAYIconImgs, 0, CBButtonClick);
+	
+	var objPlaySTOPBtn = $("4_DIV_PLAY_STOPBTN");
+	var arrPSTOPIconImgs = ["Parts_CR_T_CC_Play_Button_Label_Stop_Normal", "Parts_CR_T_CC_Play_Button_Label_Stop_Pressed", "Parts_CR_T_CC_Play_Button_Label_Stop_Normal", "Parts_CR_T_CC_Play_Button_Label_Stop_Normal", ""];
+	objPlaySTOPBtn.userData = new IconButtonCtrl(objPlaySTOPBtn, arrPSTOPIconImgs, 0, CBButtonClick);
+	
+	var objPlayFFWDBtn = $("5_DIV_PLAY_FFWDBTN");
+	var arrPFFWDIconImgs = ["Parts_CR_T_CC_Play_Button_Label_FFwd_Normal", "Parts_CR_T_CC_Play_Button_Label_FFwd_Pressed", "Parts_CR_T_CC_Play_Button_Label_FFwd_Normal", "Parts_CR_T_CC_Play_Button_Label_FFwd_Normal", ""];
+	objPlayFFWDBtn.userData = new IconButtonCtrl(objPlayFFWDBtn, arrPFFWDIconImgs, 0, CBButtonClick);
+	
+	var objPlayNEXTBtn = $("6_DIV_PLAY_NEXTBTN");
+	var arrPNEXTIconImgs = ["Parts_CR_T_CC_Play_Button_Label_Next_Normal", "Parts_CR_T_CC_Play_Button_Label_Next_Pressed", "Parts_CR_T_CC_Play_Button_Label_Next_Normal", "Parts_CR_T_CC_Play_Button_Label_Next_Normal", ""];
+	objPlayNEXTBtn.userData = new IconButtonCtrl(objPlayNEXTBtn, arrPNEXTIconImgs, 0, CBButtonClick);
+}
+
+function InitData_CrossArea()
+{
+	// crossArea buttons
+	var objCrossMenuBtn = $("7_DIV_CROSS_MENUBTN");
+	var arrCMenuBtnImgs = ["Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Pressed", "Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Normal", ""];
+	objCrossMenuBtn.userData = new ButtonCtrl(objCrossMenuBtn, arrCMenuBtnImgs, CBButtonClick);
+	
+	var objCrossStatusBtn = $("10_DIV_CROSS_STATUSBTN");
+	var arrCStatusBtnImgs = ["Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Pressed", "Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Normal", ""];
+	objCrossStatusBtn.userData = new ButtonCtrl(objCrossStatusBtn, arrCStatusBtnImgs, CBButtonClick);
+	
+	var objCrossSetBtn = $("15_DIV_CROSS_SETBTN");
+	var arrCSetIconImgs = ["Parts_CR_T_CC_Gen_Button_Arrow_Label_Set_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Set_Pressed", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Set_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Set_Normal", ""];
+	objCrossSetBtn.userData = new IconButtonCtrl(objCrossSetBtn, arrCSetIconImgs, 1, CBButtonClick);
+
+	var objCrossUpBtn = $("11_DIV_CROSS_UPBTN");
+	var arrCUpIconImgs = ["Parts_CR_T_CC_Gen_Button_Arrow_Label_Up_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Up_Pressed", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Up_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Up_Normal", ""];
+	objCrossUpBtn.userData = new IconButtonCtrl(objCrossUpBtn, arrCUpIconImgs, 1, CBButtonClick);
+	
+	var objCrossDownBtn = $("12_DIV_CROSS_DNBTN");
+	var arrCDownIconImgs = ["Parts_CR_T_CC_Gen_Button_Arrow_Label_Down_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Down_Pressed", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Down_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Down_Normal", ""];
+	objCrossDownBtn.userData = new IconButtonCtrl(objCrossDownBtn, arrCDownIconImgs, 1, CBButtonClick);
+	
+	var objCrossLeftBtn = $("13_DIV_CROSS_LFTBTN");
+	var arrCLeftIconImgs = ["Parts_CR_T_CC_Gen_Button_Arrow_Label_Left_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Left_Pressed", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Left_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Left_Normal", ""];
+	objCrossLeftBtn.userData = new IconButtonCtrl(objCrossLeftBtn, arrCLeftIconImgs, 1, CBButtonClick);
+	
+	var objCrossRightBtn = $("14_DIV_CROSS_RITBTN");
+	var arrCRightIconImgs = ["Parts_CR_T_CC_Gen_Button_Arrow_Label_Right_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Right_Pressed", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Right_Normal", "Parts_CR_T_CC_Gen_Button_Arrow_Label_Right_Normal", ""];
+	objCrossRightBtn.userData = new IconButtonCtrl(objCrossRightBtn, arrCRightIconImgs, 1, CBButtonClick);
+	
+	var objCrossCabBackBtn = $("16_DIV_CROSS_CANBACKBTN");
+	var arrCCBackBtnImgs = ["Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Pressed", "Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Normal", ""];
+	objCrossCabBackBtn.userData = new ButtonCtrl(objCrossCabBackBtn, arrCCBackBtnImgs, CBButtonClick);
+	
+	var objCrossThumbnialBtn = $("17_DIV_CROSS_THUMBNAILBTN");
+	var arrCMenuBtnImgs = ["Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Pressed", "Parts_CR_T_CC_Gen_Button_Normal", "Parts_CR_T_CC_Gen_Button_Normal", ""];
+	objCrossThumbnialBtn.userData = new ButtonCtrl(objCrossThumbnialBtn, arrCMenuBtnImgs, CBButtonClick);
+
+}
+
+function InitAssignButton()
+{
+	for (var i = 1; i <= 10 ; i++)
+	{
+		g_arrAssignLableList[i - 1].userData = new Array();
+		g_arrAssignLableList[i - 1].userData[0] = new ClickCtrl(g_arrAssignLableList[i - 1], CBAssignValueClick);
+		g_arrAssignLableList[i - 1].userData[1] = new AssignDialog(g_arrAssignLableList[i - 1], g_arrAssignItems, g_arrAssignItems[0], AssignSettingCallback, "ASSIGN_SETTING" + i);
+		g_arrAssignLableList[i - 1].userData[1].SetTitle("Assign Setting");
+	}
+	
+	for (var i = 1; i <= 10; i++)
+	{
+		g_arrAssignButton[i - 1].userData = new SwitchButtonCtrl(g_arrAssignButton[i - 1], CBAssignButtonClick, i);
+	}
+};
+
+function InitMainData()
+{
+	g_objSandQ.userData = new Array();
+	g_objSandQ.userData[0] = new ClickCtrl(g_objSandQ, CBMainPageFunClick);
+	var arrItems = ["1", "2", "3"];
+	g_objSandQ.userData[1] = new SQFPSDialog(g_objSandQ, arrItems, arrItems[0], 0, CBMainPageDialogFunc, "SQFPS");
+	g_objSandQ.userData[1].SetTitle("S&Q FPS");
+	//g_objSandQ.userData[1].SetTextValue("2");
+	
+	g_objShutter.userData = new Array();
+	g_objShutter.userData[0] = new ClickCtrl(g_objShutter, CBMainPageFunClick);
+	g_objShutter.userData[1] = new ShutterDialog(g_objShutter, CBMainPageDialogFunc, "SHUTTER", CBShutterECSButtonFunc, CBShtterECSSliderFunc); 
+	g_objShutter.userData[1].SetTitle("Shutter");
+	
+	g_objWhite.userData = new Array();
+	g_objWhite.userData[0] = new ClickCtrl(g_objWhite, CBMainPageFunClick);
+	g_objWhite.userData[1] = new WhiteDialog(g_objWhite, 0, PreWhiteDialogCallBack, "WHITE");
+	g_objWhite.userData[1].SetTitle("White");
+	
+	g_objGamma.userData = new Array();
+	g_objGamma.userData[0] = new ClickCtrl(g_objGamma, CBMainPageFunClick);
+	g_objGamma.userData[1] = new GammaDialog(g_objGamma, 0, GammaCallBack, "GAMMA");
+	g_objGamma.userData[1].SetTitle("Gamma");
+	
+	g_objAutoIris.userData = new Array();
+	g_objAutoIris.userData[0] = new ClickCtrl(g_objAutoIris, CBMainPageFunClick);
+	g_objAutoIris.userData[1] = new AutoIrisDialog(g_objAutoIris, "Off", CBMainPageDialogFunc, "AUTO_IRIS");
+	g_objAutoIris.userData[1].SetTitle("Auto Iris");
+
+    g_objAGC.userData = new Array();
+    g_objAGC.userData[0] = new ClickCtrl(g_objAGC, CBMainPageFunClick);
+    g_objAGC.userData[1] = new AGCDialog(g_objAGC, "Off", CBMainPageDialogFunc, "AGC");
+    g_objAGC.userData[1].SetTitle("AGC");
+
+
+    g_objAutoShutter.userData = new Array();
+    g_objAutoShutter.userData[0] = new ClickCtrl(g_objAutoShutter, CBMainPageFunClick);
+    g_objAutoShutter.userData[1] = new AutoShutterDialog(g_objAutoShutter, "Off", CBMainPageDialogFunc, "Auto_Shutter");
+    g_objAutoShutter.userData[1].SetTitle("Auto Shutter");
+
+    g_objAutoND.userData = new Array();
+    g_objAutoND.userData[0] = new ClickCtrl(g_objAutoND, CBMainPageFunClick);
+    g_objAutoND.userData[1] = new AutoNDDialog(g_objAutoND, "Off", CBMainPageDialogFunc, "Auto_ND_Filter");
+    g_objAutoND.userData[1].SetTitle("Auto ND Filter");
+
+	g_objGain.userData = new Array();
+	g_objGain.userData[0] = new ClickCtrl(g_objGain, CBMainPageFunClick);
+	var arrGainItems = ["-3dB", "0dB", "3dB", "6dB", "9dB", "12dB", "15dB","18dB"];
+	g_objGain.userData[1] = new GainListDialog(g_objGain, "-3dB", arrGainItems, CBMainPageSyncDialogFunc, "GAIN");
+	g_objGain.userData[1].SetTitle("Gain");
+	
+	g_objATW.userData = new Array();
+	g_objATW.userData[0] = new ClickCtrl(g_objATW, CBMainPageFunClick);
+	g_objATW.userData[1] = new ATWDialog(g_objATW, "Off", CBMainPageDialogFunc, "ATW");
+	g_objATW.userData[1].SetTitle("ATW");
+	
+	g_objColorBars.userData = new Array();
+	g_objColorBars.userData[0] = new ClickCtrl(g_objColorBars, CBMainPageFunClick);
+	g_objColorBars.userData[1] = new ColorBarsDialog(g_objColorBars, true, CBMainPageDialogFunc, "COLOR_BARS");
+	g_objColorBars.userData[1].SetTitle("Color Bars");	
+	
+	var arrBalanceBtnImage = new Array("Parts_CR_T_CC_Rec_AWB_Button_Normal","Parts_CR_T_CC_Rec_AWB_Button_Pressed", "Parts_CR_T_CC_Rec_AWB_Button_Normal", "Parts_CR_T_CC_Rec_AWB_Button_Normal", "");
+	g_objAWBButton.userData = new ButtonCtrl(g_objAWBButton, arrBalanceBtnImage, CBBalanceButtonClick);
+	
+	g_objABBButton.userData = new ButtonCtrl(g_objABBButton, arrBalanceBtnImage, CBBalanceButtonClick);
+	
+	var AlertText = "Auto Black Balance";
+    g_objABBDialog.userData = new AutoBalanceDialog(g_objABBDialog, AlertText, CBABBDialog);
+	g_objABBDialog.userData.SetTitle("Auto Black");
+	
+	var AlertText = "Auto White Balance";
+    g_objAWBDialog.userData = new AutoBalanceDialog(g_objAWBDialog, AlertText, CBAWBDialog);
+	g_objAWBDialog.userData.SetTitle("Auto White");
+	
+	
+	var AlertText = "Auto Black Balance NG";
+	g_objABStatusDlg.userData = new ABalanceStatusDlg(g_objABStatusDlg, AlertText);
+    //ND Slider
+    g_ObjNDButton.userData = new Array();
+    g_ObjNDButton.userData[0] = new NDSlider(g_ObjNDButton, NDSliderCallBack);
+	//Iris Slider
+	g_ObjIrisButton.userData = new Array();
+	g_ObjIrisButton.userData[0] = new IrisSlider(g_ObjIrisButton, irisSliderCallBack);
+	//Focus Slider
+	g_ObjFocusButton.userData = new Array();
+	g_ObjFocusButton.userData[0] = new FocusSlider(g_ObjFocusButton, focusSliderCallBack);
+	//Zoom Slider
+	g_ObjZoomButton.userData = new Array();
+	g_ObjZoomButton.userData[0] = new ZoomSlider(g_ObjZoomButton, zoomSliderCallBack);
+	
+	//Lock_Slider
+	g_objRecLockSlider.userdata = new RecLockSlider(g_objRecLockSlider, CBRecLockFunction);
+	g_objRecLockSlider.userdata.SetRecLockStatus(g_RecLockFlag);
+	//Rec Button   
+	g_objRecStop.userData = new RecButtonCtrl(g_objRecStop, CBButtonClickRec, "URL(WebCommon/images/Parts_PFXR_T_CC_Btn_RecStop_Pressed.png)", "URL(WebCommon/images/Parts_PFXR_T_CC_Btn_RecStop_Normal.png)");
+	g_objRecStart.userData = new RecButtonCtrl(g_objRecStart, CBButtonClickRec, "URL(WebCommon/images/Parts_PFXR_T_CC_Btn_RecStart_Pressed.png)", "URL(WebCommon/images/Parts_PFXR_T_CC_Btn_RecStart_Normal.png)");
+	
+	//show message while touching when there is a mask 
+	g_objMaskClickDlg.userData = new MenuMaskMsg(g_objMaskClickDlg,  "", CBWarningFun);
+	
+}
+
+function GetValue()
+{
+	
+	//Assign
+	AssignCtrl.GetValue();
+	//Main
+	SQFPSCtrl.GetValue();
+	ShutterCtrl.GetValue();
+	WhiteCtrl.GetValue();
+	GammaCtrl.GetValue();
+	AutoIrisCtrl.GetValue();
+    AGCCtrl.GetValue();
+    AutoShutterCtrl.GetValue();
+    AutoNDCtrl.GetValue();
+    NDCtrl.GetValue();
+	ATWCtrl.GetValue();
+	ColorBarsCtrl.GetValue();
+
+	GetAudioValue();
+	GetClipProperties()
+	GetMainFileValue();
+	GetCardValue();
+
+	GetMainBtteryValue();
+	LensMountCtrl.GetValue();
+	IrisCtrl.GetValue();
+	FocusCtrl.GetValue();
+	ZoomCtrl.GetValue();
+	GainCtrl.GetValue();
+	ClipNameCtrl.GetValue();
+    RecordCtrl.GetValue();
+
+    SystemConfigCtrl.GetValue();
+}
+
+function GetStatus()
+{
+	//Main
+	SQFPSCtrl.GetStatus();
+	ShutterCtrl.GetStatus();
+	WhiteCtrl.GetStatus();
+	GammaCtrl.GetStatus();
+	AutoIrisCtrl.GetStatus();
+	ATWCtrl.GetStatus();
+	ColorBarsCtrl.GetStatus();
+	AWBCtrl.GetStatus();
+	ABBCtrl.GetStatus();
+	IrisCtrl.GetStatus();
+	ZoomCtrl.GetStatus();
+	FocusCtrl.GetStatus();
+	ShutterCtrl.GetShutterValueStatus();
+	GainCtrl.GetStatus();
+	AssignCtrl.GetStatus();
+    AutoNDCtrl.GetStatus();
+    AGCCtrl.GetStatus();
+    AutoShutterCtrl.GetStatus();
+    NDCtrl.GetStatus();
+
+}
+
+
+function MenuSelectCallback(GotoIndex)
+{
+	switch (GotoIndex) {
+	case 1:
+		self.location = "rmt.html";
+		break;
+	case 3:
+		self.location = "http://" + window.location.hostname + ":8080/#MonSetRoot";
+		break;
+	case 5:
+		self.location = "http://" + window.location.hostname + ":8080/#SlotA";
+		break;
+	case 6:
+		self.location = "http://" + window.location.hostname + ":8080/#SlotB";
+		break;
+	case 7:
+		self.location = "http://" + window.location.hostname + ":8080/#SDCard";
+		break;
+	case 8:
+		self.location = "http://" + window.location.hostname + ":8080/#JobList";
+		break;
+	case 9:
+		self.location = "http://" + window.location.hostname + ":8080/#UploadSetRoot";
+		break;
+	default:
+		break;
+	}
+};
+
+function SwitchMenuCB()
+{
+	var mainRect = (document.documentElement || document.body);
+	var objMainContainer = $("DIV_MAIN_CONTAINER");
+	j("#DIV_PAGE_SWITCH_MENU, #DIV_PAGE_SWITCH_MENU div").animate({width:"320px"}, 200).show();
+	j(".DIV_SWITCH_MENU_ITEM").animate({width:"308px"}, 10).show();
+	j("#DIV_MAIN_CONTAINER").animate({left: (mainRect.clientWidth - j(objMainContainer).width())/2+320+ "px"}, 300);
+	j("#1_DIV_MASKDIALOG").animate({left:"0px"}, 300).fadeIn(50);
+};
+
+function MaskMouseCallback(objSrc)
+{
+	var mainRect = (document.documentElement || document.body);
+	var objMainContainer = $("DIV_MAIN_CONTAINER");
+	j("#DIV_PAGE_SWITCH_MENU, #DIV_PAGE_SWITCH_MENU div").animate({width:"320px"}, 100).fadeOut(100);
+	j("#DIV_MAIN_CONTAINER").animate({left: (mainRect.clientWidth- j(objMainContainer).width())/2 + "px"}, 300);
+	j(objSrc).hide();
+}
+
+function CBLockFunction(bIslock)
+{
+	g_LockFlag=bIslock;
+	try {
+		setUserData("LockStatus", bIslock);
+	} catch(e) {
+		console.log("You are currently browsing in incognito mode, Can't Save User Data!")
+	} 
+	  SetPageLock();
+}
+
+function SetPageLock()
+{
+	g_objAssignLable_1.userData[0].SetAssignalbeDisable();
+	g_objAssignLable_2.userData[0].SetAssignalbeDisable();
+	g_objAssignLable_3.userData[0].SetAssignalbeDisable();
+	g_objAssignLable_4.userData[0].SetAssignalbeDisable();
+	g_objAssignLable_5.userData[0].SetAssignalbeDisable();
+    g_objAssignLable_6.userData[0].SetAssignalbeDisable();
+    g_objAssignLable_7.userData[0].SetAssignalbeDisable();
+    g_objAssignLable_8.userData[0].SetAssignalbeDisable();
+    g_objAssignLable_9.userData[0].SetAssignalbeDisable();
+    g_objAssignLable_10.userData[0].SetAssignalbeDisable();
+
+
+	g_objAssignButton_1.userData.SetDisabled(g_LockFlag);
+	g_objAssignButton_2.userData.SetDisabled(g_LockFlag);
+	g_objAssignButton_3.userData.SetDisabled(g_LockFlag);
+	g_objAssignButton_4.userData.SetDisabled(g_LockFlag);
+	g_objAssignButton_5.userData.SetDisabled(g_LockFlag);
+    g_objAssignButton_6.userData.SetDisabled(g_LockFlag);
+    g_objAssignButton_7.userData.SetDisabled(g_LockFlag);
+    g_objAssignButton_8.userData.SetDisabled(g_LockFlag);
+    g_objAssignButton_9.userData.SetDisabled(g_LockFlag);
+    g_objAssignButton_10.userData.SetDisabled(g_LockFlag);
+
+    if( !g_LockFlag ){
+        AssignCtrl.GetValue();
+    }
+
+    NDGrayFunction(g_bNDFliterGray, g_LockFlag);
+	//g_ObjIrisButton.userData[0].SetDisabled(g_bIrisGray || g_LockFlag);
+	IrisGrayFunction(g_bIrisGray, g_LockFlag);
+	//g_ObjFocusButton.userData[0].SetDisabled(g_bFocusGray || g_LockFlag);
+	FocusGrayFunction(g_bFocusGray, g_LockFlag);
+	//g_ObjZoomButton.userData[0].SetDisabled(g_bZoomGray || g_LockFlag);
+	ZoomGrayFunction(g_bZoomGray, g_LockFlag);
+
+	g_objSandQ.userData[0].SetDisable(g_bSAndQGray);
+	g_objShutter.userData[0].SetDisable(g_bShutterGray);		
+	g_objWhite.userData[0].SetDisable(g_bWhiteGray);
+	g_objGamma.userData[0].SetDisable(g_bGammaGray);
+	g_objAutoIris.userData[0].SetDisable(g_bAutoIrisGray);
+	g_objGain.userData[0].SetDisable(g_bGainGray);
+	g_objATW.userData[0].SetDisable(g_bATWGray);
+    g_objAutoND.userData[0].SetDisable(g_bAutoNDGray);
+    g_objAutoShutter.userData[0].SetDisable(g_bAutoShutterGray);
+    g_objAGC.userData[0].SetDisable(g_bAGCGray);
+	g_objColorBars.userData[0].SetDisable(g_bColorBarsGray);
+	g_objAWBButton.userData.SetDisabled(g_bAWBGray || g_LockFlag);
+	g_objABBButton.userData.SetDisabled(g_bABBGray || g_LockFlag);
+
+	$("1_DIV_PLAY_PREVBTN").userData.SetDisabled(g_LockFlag);
+	$("2_DIV_PLAY_FREVBTN").userData.SetDisabled(g_LockFlag);
+	$("3_DIV_PLAY_PLAYBTN").userData.SetDisabled(g_LockFlag);
+	$("4_DIV_PLAY_STOPBTN").userData.SetDisabled(g_LockFlag);
+	$("5_DIV_PLAY_FFWDBTN").userData.SetDisabled(g_LockFlag);
+	$("6_DIV_PLAY_NEXTBTN").userData.SetDisabled(g_LockFlag);
+	$("7_DIV_CROSS_MENUBTN").userData.SetDisabled(g_LockFlag);
+	$("10_DIV_CROSS_STATUSBTN").userData.SetDisabled(g_LockFlag);
+	$("11_DIV_CROSS_UPBTN").userData.SetDisabled(g_LockFlag);
+	$("12_DIV_CROSS_DNBTN").userData.SetDisabled(g_LockFlag);
+	$("13_DIV_CROSS_LFTBTN").userData.SetDisabled(g_LockFlag);
+	$("14_DIV_CROSS_RITBTN").userData.SetDisabled(g_LockFlag);
+	$("15_DIV_CROSS_SETBTN").userData.SetDisabled(g_LockFlag);
+	$("16_DIV_CROSS_CANBACKBTN").userData.SetDisabled(g_LockFlag);
+	$("17_DIV_CROSS_THUMBNAILBTN").userData.SetDisabled(g_LockFlag);
+	g_objRecLockSlider.userdata.SetDisabled(g_LockFlag);
+	g_objRecStop.userData.SetDisabled(g_RecLockFlag || g_LockFlag);
+	g_objRecStart.userData.SetDisabled(g_RecLockFlag || g_LockFlag);
+	if (g_LockFlag)
+	{
+		closeAllShowingDialog();
+        g_ObjNDValue.style.color = "rgb(230, 230, 230)";
+		g_ObjIrisValue.style.color = "rgb(230, 230, 230)";
+		g_ObjFocusValue.style.color = "rgb(230, 230, 230)";
+		g_ObjZoomValue.style.color = "rgb(230, 230, 230)";
+		j("#ANGLE_IMAGE").css({background :"URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Std.png)"});
+	}
+	else
+	{
+        g_ObjNDValue.style.color = "rgb(255, 170, 0)";
+		g_ObjIrisValue.style.color = "rgb(255, 170, 0)";
+		g_ObjFocusValue.style.color = "rgb(255, 170, 0)";
+		g_ObjZoomValue.style.color = "rgb(255, 170, 0)";
+		j("#ANGLE_IMAGE").css({background :"URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png)"});
+	}
+}
+
+function CBAssignValueClick(objSrc)
+{
+	g_clickAssignBtnIndex = parseInt(objSrc.id);
+	AssignCtrl.GetCapability();
+};
+
+function AssignSettingCallback(objSrcIndex, strValue, strType)
+{
+
+	if (strType == "Cancel")
+	{
+		g_OldObject = null;
+		return;
+	}
+	g_OldObject = null;
+	AssignCtrl.SetValue(objSrcIndex, strValue);
+};
+
+function CBAssignButtonClick(objSrc)
+{
+	var params;
+	switch (objSrc.id)
+	{
+		case "BUTTON_CONTROL_BUTTON_1":
+			//TODO;
+			params = ["Assignable.1"];
+			break;
+		case "BUTTON_CONTROL_BUTTON_2":
+			//TODO;
+			params = ["Assignable.2"];
+			break;
+		case "BUTTON_CONTROL_BUTTON_3":
+			//TODO;
+			params = ["Assignable.3"];
+			break;
+		case "BUTTON_CONTROL_BUTTON_4":
+			//TODO;
+			params = ["Assignable.4"];
+			break;
+		case "BUTTON_CONTROL_BUTTON_5":
+			//TODO;
+			params = ["Assignable.5"];
+			break;
+		case "BUTTON_CONTROL_BUTTON_6":
+			//TODO;
+			params = ["Assignable.6"];
+			break;
+		case "BUTTON_CONTROL_BUTTON_7":
+			//TODO;
+			params = ["Assignable.7"];
+			break;
+        case "BUTTON_CONTROL_BUTTON_8":
+            //TODO;
+            params = ["Assignable.8"];
+            break;
+        case "BUTTON_CONTROL_BUTTON_9":
+            //TODO;
+            params = ["Assignable.9"];
+            break;
+        case "BUTTON_CONTROL_BUTTON_10":
+            //TODO;
+            params = ["Assignable.10"];
+			break;
+		default:
+			break;
+	}
+	var id = client.button.SendKeys({params: params, onresponse: function(resp) { }, timeout : 3000});
+};
+function ShutterECSCallBack(objSrc, value)
+{
+	switch(objSrc.id)
+	{
+		case "4_DIV_ShutterECS_DLG_BTN":
+			ShutterCtrl.UpdateValue(-1);
+			break;
+		case "5_DIV_ShutterECS_DLG_BTN":
+			ShutterCtrl.UpdateValue(1);
+			break;
+		case "DIV_PICKER_ZOOM_SLIDER_ShutterECS":
+			ShutterCtrl.SetSliderValue(value);
+			break;
+		case "1_DIV_ShutterECS_DLG_BTN":
+			g_OldObject = null;
+			break;
+		case "0_DIV_ShutterECS_DLG_BTN":
+			ShutterCtrl.SetValue(value);
+			g_OldObject = null;
+			break;
+		default:
+			break;
+	}
+}
+
+function PreWhiteDialogCallBack(objSrc, mode, value, strKey)
+{
+	switch(objSrc.id)
+	{
+		case "0_WHITE":
+			WhiteCtrl.SetValue(mode, value);
+			break;
+		case "1_WHITE":
+			WhiteCtrl.SetValue(mode, value);
+			break;
+		case "2_WHITE":
+			WhiteCtrl.SetValue(mode, value);
+			break;
+		case "0_WHITE_ATW":
+			WhiteCtrl.SetValue(mode, value);
+			break;
+		case "1_WHITE_ATW":
+			WhiteCtrl.SetValue(mode, value);
+			break;
+		case "2_WHITE_ATW":
+			WhiteCtrl.SetValue(mode, value);
+			break;
+		case "4_DIV_WHITE_DLG_BTN"://minis
+		case "4_DIV_WHITE_ATW_DLG_BTN"://minis
+			WhiteCtrl.UpdateValue(-1);
+			break;
+		case "5_DIV_WHITE_DLG_BTN"://plus
+		case "5_DIV_WHITE_ATW_DLG_BTN"://plus
+			WhiteCtrl.UpdateValue(1);
+			break;
+		case "DIV_PICKER_ZOOM_SLIDER_WHITE":
+		case "DIV_PICKER_ZOOM_SLIDER_WHITE_ATW":
+		    WhiteCtrl.SetSliderValue(value);
+			break;
+		case "0_DIV_WHITE_ATW_DLG_BTN":
+		case "1_DIV_WHITE_DLG_BTN":
+		case "1_DIV_WHITE_ATW_DLG_BTN":
+		case "3_DIV_WHITE_DLG_BTN":
+		case "3_DIV_WHITE_ATW_DLG_BTN":
+			g_OldObject = null;
+			break;
+		case "0_DIV_WHITE_DLG_BTN":
+			WhiteCtrl.SetValue(mode, value);
+                        WhiteCtrl.UpdateValue(value);
+			g_OldObject = null;
+			break;
+		default:
+			break;
+	}
+}
+
+function GammaCallBack(objSrc, strMode, strValue)
+{
+	switch(objSrc.id)
+	{
+		case "1_DIV_GAMMA_DLG_BTN":
+		    g_OldObject = null;
+			//GammaCtrl.SetValue(strMode, strValue);
+			break;
+		case "0_DIV_GAMMA_DLG_BTN":
+			g_OldObject = null;
+			GammaCtrl.SetValue(strMode, strValue);
+			break;
+		default:
+			GammaCtrl.SetValue(strMode, strValue);
+			break;
+	}
+
+}
+
+function MainScrollPanelTouchEnd(objEvent)
+{
+	g_CurentScrollY = $("DIV_FUNCTION_SCROLL").scrollTop;
+}
+
+function CBMainPageFunClick(objSrc)
+{
+	switch (objSrc.id)
+	{
+		case "CLICK_DIV_SQFPS":
+			SQFPSCtrl.GetCapabilities();
+			//ShowMainPageDialog(objSrc);
+			break;
+		case  "TEXT_SHUTTER":
+			ShutterCtrl.GetCapabilities();
+			//ShowShutterDialog(objSrc);
+			break;
+		case  "CLICK_WHITE":
+			WhiteCtrl.SetSliderValue(-100);
+			WhiteCtrl.GetCapabilities();
+			//ShowMainPageDialog(objSrc);
+			break;
+		default:
+			ShowMainPageDialog(objSrc);
+			break;
+	}
+}
+function ShowShutterDialog(objSrc)
+{
+	if("Speed" == g_shutterMode)
+	{
+		ShutterCtrl.GetCapabilities();
+	}else 
+	{
+		ShowMainPageDialog(objSrc);
+	}
+}
+
+function ShowMainPageDialog(objSrc)
+{
+	if (g_OldObject != null)
+	{
+		g_OldObject.userData[1].ShowDialog(false);	
+		if (g_OldObject == objSrc)
+		{
+			g_OldObject = null;
+			return;
+		}
+	}
+	
+	if (g_OldObjectBtn != null)
+	{
+		g_OldObjectBtn.userData.ShowDialog(false);
+		if (g_OldObjectBtn == objSrc)
+		{
+			g_OldObjectBtn = null;
+			return;
+		}
+	}
+	
+	objSrc.userData[1].ShowDialog();	
+	g_OldObject = objSrc;
+	j("#DIV_FUNCTION_SCROLL").scrollTop(310);
+	if (objSrc.id == "TEXT_DIV_AUTOIRIS"
+        ||objSrc.id == "TEXT_DIV_AGC"
+        ||objSrc.id == "TEXT_DIV_ASHUTTER"
+        ||objSrc.id == "TEXT_DIV_ADF"
+    )
+	{
+		j(".BODY").scrollTop(64);
+	}else if(objSrc.id == "CLICK_DIV_GAIN"
+        || objSrc.id == "TEXT_DIV_ATW"
+        ||objSrc.id == "TEXT_COLORBARS"
+    ){
+        j("#DIV_FUNCTION_SCROLL").scrollTop(410);
+    }
+}
+
+
+function CBButtonClickRec(objSrc)
+{
+	if ("DIV_REC_STOP" == objSrc.id)
+	{
+		RecordCtrl.RecorderStopRecord();
+	}
+	if ("DIV_REC_START" == objSrc.id)
+	{
+		RecordCtrl.RecorderStartRecord();
+	}
+	
+}
+
+function CBAWBDialog()
+{
+	var params = ["Camera.WhiteBalance"];
+	var id = client.process.execute.AutomaticAdjustment({params: params, onresponse:function(resp) {}});
+}
+
+function CBABBDialog()
+{
+	var params = ["Camera.BlackBalance"];
+	var id = client.process.execute.AutomaticAdjustment({params: params, onresponse:function(resp) {}});
+}
+
+function CBMainPageSyncDialogFunc(objSrc, value, strValue)
+{
+	if (strValue == "Ok")
+	{
+		g_OldObject = null;
+		return;
+	}
+	
+	if (strValue == "Cancel")
+	{
+		g_OldObject = null;
+	}
+	
+	switch (objSrc.id)
+	{
+		case "CLICK_DIV_GAIN":
+			GainCtrl.SetValue(value);
+			break;
+		default:
+			break;
+	}
+}
+
+function CBMainPageDialogFunc(objSrc, itemIndex ,strValue)
+{
+	if (strValue == "Cancel" || (itemIndex == -1 && strValue == "Ok"))
+	{
+		g_OldObject = null;
+		return;
+	}
+	
+	if (strValue == "ShutterCancel")
+	{
+		if ("ECS" == itemIndex)
+		{
+			g_OldObject = null;
+			ShutterCtrl.SetECSCancelValue(g_OldECSValue);
+			return;
+		}
+		g_OldObject = null;
+	}
+	
+	switch (objSrc.id)
+	{
+		case "CLICK_DIV_SQFPS":
+			SQFPSCtrl.SetValue(objSrc, itemIndex, strValue);
+                        g_OldObject = null;
+			break;
+		case "0_SQFPS_DLG_ITEM":
+			SQFPSCtrl.SetValue(objSrc, itemIndex, strValue);
+			break;
+		case "1_SQFPS_DLG_ITEM":
+			SQFPSCtrl.SetValue(objSrc, itemIndex, strValue);
+			break;
+		case "4_DIV_SQFPS_DLG_BTN":
+			SQFPSCtrl.SetValue(objSrc, itemIndex, strValue);
+			break;
+		case "5_DIV_SQFPS_DLG_BTN":
+			SQFPSCtrl.SetValue(objSrc, itemIndex, strValue);
+			break;
+		case "TEXT_SHUTTER":
+			ShutterCtrl.SetValue(itemIndex);
+			//g_OldObject = null;
+			break;
+		case "TEXT_DIV_AUTOIRIS":
+			AutoIrisCtrl.SetValue(objSrc, itemIndex);
+            if(strValue != "MainItemClick")
+            {
+                g_OldObject = null;
+            }
+			break;
+		case "TEXT_DIV_AGC":
+			AGCCtrl.SetValue(objSrc, itemIndex);
+            if(strValue != "MainItemClick")
+            {
+                g_OldObject = null;
+            }
+			break;
+		case "TEXT_DIV_ATW":
+			ATWCtrl.SetValue(objSrc, itemIndex);
+            if(strValue != "MainItemClick")
+            {
+                g_OldObject = null;
+            }
+			break;
+		case "TEXT_COLORBARS":
+			ColorBarsCtrl.SetValue(objSrc, itemIndex);
+            if(strValue != "MainItemClick")
+            {
+                g_OldObject = null;
+            }
+			break;
+        case "TEXT_DIV_ASHUTTER":
+            AutoShutterCtrl.SetValue(objSrc, itemIndex);
+            if(strValue != "MainItemClick")
+            {
+                g_OldObject = null;
+            }
+            break;
+        case "TEXT_DIV_ADF":
+            AutoNDCtrl.SetValue(objSrc, itemIndex);
+            if(strValue != "MainItemClick")
+            {
+                g_OldObject = null;
+            }
+            break;
+		default:
+			break;
+	}
+};
+
+function CBButtonClick(objSrc)
+{
+	var params = "";
+	switch(parseInt(objSrc.id))
+	{
+		case 1:
+		params = ["Prev"];
+		break;
+		case 2:
+		params = ["Rewind"];
+		break;
+		case 3:
+		if(g_bIsPlayOn) {
+			params = ["Play"];
+		} else {
+			params = ["Pause"];
+		}
+		g_bIsPlayOn = !g_bIsPlayOn;
+		break;
+		case 4:
+		params = ["Stop"];
+		break;
+		case 5:
+		params = ["Forward"];
+		break;
+		case 6:
+		params = ["Next"];
+		break;
+		case 7:
+		params = ["Menu"];
+		break;
+		case 10:
+		params = ["Status"];
+		break;
+		case 11:
+		params = ["UpArrow"];
+		break;
+		case 12:
+		params = ["DownArrow"];
+		break;
+		case 13:
+		params = ["LeftArrow"];
+		break;
+		case 14:
+		params = ["RightArrow"];
+		break;
+		case 15:
+		params = ["Set"];
+		break;
+		case 16:
+		params = ["Cancel"];
+		break;
+		case 17:
+		params = ["Thumbnail"];
+		break;
+		case 18:
+		params = ["Option"];
+		break;
+		default:
+		break;
+	}
+	var id = client.button.SendKeys({params: params, onresponse: function(resp) {} });
+}
+
+function CBBalanceButtonClick(objSrc)
+{
+	if (g_OldObject != null)
+	{
+		g_OldObject.userData[1].ShowDialog(false);	
+		if (g_OldObject == objSrc)
+		{
+			g_OldObject = null;
+			return;
+		}
+	}
+	
+	if (g_OldObjectBtn != null)
+	{
+		g_OldObjectBtn.userData.ShowDialog(false);
+		if (g_OldObjectBtn == objSrc)
+		{
+			g_OldObjectBtn = null;
+			return;
+		}
+	}
+	
+	switch(objSrc.id)
+	{
+		case "BUTTON_DIV_AWBBUTTON":
+		g_objAWBDialog.userData.ShowDialog();
+		g_OldObjectBtn = g_objAWBDialog;
+		break;
+		case "BUTTON_DIV_ABBBUTTON":
+		g_objABBDialog.userData.ShowDialog();
+		g_OldObjectBtn = g_objABBDialog;
+		break;
+		default:
+		break;
+	}
+}
+
+function CBPageSelector(oldObj, currentObj)
+{	
+	var mainPanelContent = ["DIV_ASSIGN_CTRL","DIV_RECORDING_AREA", "DIV_PLAY_BUTTONGROUP", "DIV_CROSS_BUTTONGROUP"];
+	j("#" + mainPanelContent[parseInt(oldObj.id)]).hide();
+	j("#" + mainPanelContent[parseInt(currentObj.id)]).show();
+	if ("DIV_RECORDING_AREA" == mainPanelContent[parseInt(currentObj.id)])
+	{
+		$("DIV_FUNCTION_SCROLL").scrollTop = g_CurentScrollY;
+	}
+	
+	GotoCursor = false;
+	if (parseInt(currentObj.id) == 3)
+	{
+		GotoCursor = true;
+	}
+
+	//MenuGrayStatus = "Locked";
+
+	if(GotoCursor == true) 
+	{
+		if (MenuGrayStatus == false)
+		{
+			objUpperMask.style.display = "block";
+			objMiddleMask.style.display = "block";
+			objLowerMask.style.display = "none";
+			g_objMaskClickDlg.userData.ShowDialog(false); 
+		}
+		else
+		{
+			objUpperMask.style.display = "none";
+			objMiddleMask.style.display = "none";
+			objLowerMask.style.display = "none";
+			g_objMaskClickDlg.userData.ShowDialog(false); 
+			
+		}
+	}
+	else
+	{
+		if (MenuGrayStatus == false)
+		{
+			objUpperMask.style.display = "block";
+			objMiddleMask.style.display = "block";
+			objLowerMask.style.display = "block";
+			g_objMaskClickDlg.userData.ShowDialog(false); 
+		}
+		else
+		{
+			objUpperMask.style.display = "none";
+			objMiddleMask.style.display = "none";
+			objLowerMask.style.display = "none";
+			g_objMaskClickDlg.userData.ShowDialog(false);
+		}
+	}
+    setUserData("LastPageIndex", parseInt(currentObj.id));
+}
+
+
+function focusSliderCallBack(objSrc)
+{
+}
+
+function zoomSliderCallBack(objSrc)
+{
+}
+function NDSliderCallBack(objSrc)
+{
+}
+
+function irisSliderCallBack(objSrc)
+{
+}
+
+function CBRecLockFunction(bIsReclock)
+{
+	g_RecLockFlag = bIsReclock; 
+	try {
+		setUserData("RecLockStatus", bIsReclock);
+	} catch(e) {
+		console.log("You are currently browsing in incognito mode, Can't Save User Data!")
+	} 
+	g_objRecStop.userData.SetDisabled(g_RecLockFlag);
+	g_objRecStart.userData.SetDisabled(g_RecLockFlag);
+}
+
+function closeAllShowingDialog()
+{
+	g_objAWBDialog.userData.ShowDialog(false);
+	g_objABBDialog.userData.ShowDialog(false);
+	if (g_OldObject)
+	{
+		g_OldObject.userData[1].ShowDialog(false);
+		g_OldObject = null;
+	}
+}
+
+function NDGrayFunction(isGray, isLock)
+{
+    if (isGray || isLock)
+    {
+        if (g_ObjNDButton.userData[0] != undefined)
+        {
+            if (g_ObjNDButton.userData[0])
+            {
+                if (NDpre1 != NDnext1)
+                {
+                    g_ObjNDButton.userData[0].SetDisabled(true);
+                    j("#ND_SLIDER_HANDLE").css({left:NDReturn, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png)"});
+                    g_ObjNDButton.style.opacity = 0.2;
+                }
+                NDnext1 = NDpre1;
+                NDpre2 = 0;
+                NDnext2 = -1;
+            }
+        }
+    }
+    else
+    {
+        if (NDpre2 != NDnext2)
+        {
+            g_ObjNDButton.userData[0].SetDisabled(false);
+            g_ObjNDButton.style.opacity = 1;
+        }
+        NDnext2 = NDpre2;
+        NDpre1 = 0;
+        NDnext1 = -1;
+    }
+
+}
+
+//Iris Focus Zoom set Gray
+function IrisGrayFunction(isGray, isLock)
+{
+	if (isGray || isLock)
+	{
+		if (g_ObjIrisButton.userData[0] != undefined)
+		{
+			if (g_ObjIrisButton.userData[0])
+			{
+				if (Irispre1 != Irisnext1)
+				{
+					g_ObjIrisButton.userData[0].SetDisabled(true);
+					j("#IRIS_SLIDER_HANDLE").css({left:IrisReturn, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png)"});
+					g_ObjIrisButton.style.opacity = 0.2;
+				}
+				Irisnext1 = Irispre1;
+				Irispre2 = 0;
+				Irisnext2 = -1;
+			}
+		}
+	}
+	else
+	{
+		if (Irispre2 != Irisnext2)
+		{
+			g_ObjIrisButton.userData[0].SetDisabled(false);
+			g_ObjIrisButton.style.opacity = 1;
+		}
+		Irisnext2 = Irispre2;
+		Irispre1 = 0;
+		Irisnext1 = -1;
+	}
+	
+}
+
+function FocusGrayFunction(isGray, isLock)
+{
+	if (isGray || isLock)
+	{
+		if (g_ObjFocusButton.userData[0] != undefined)
+		{
+			if (g_ObjFocusButton.userData[0])
+			{
+				if (Focuspre1 != Focusnext1)
+				{
+					clearInterval(FoucsTouchstart);
+					clearInterval(FocusMousestart);
+					g_ObjFocusButton.userData[0].SetDisabled(true);
+					j("#FOCUS_SLIDER_HANDLE").css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png)"});
+					g_ObjFocusButton.style.opacity = 0.2;
+				}	
+			}
+			Focusnext1 = Focuspre1;
+			Focuspre2 = 0;
+			Focusnext2 = -1;
+		}
+	}
+	else
+	{
+		if (Focuspre2 != Focusnext2)
+		{
+			g_ObjFocusButton.userData[0].SetDisabled(false);
+			g_ObjFocusButton.style.opacity = 1;
+		}
+		Focusnext2 = Focuspre2;
+		Focuspre1 = 0;
+		Focusnext1 = -1;
+	}
+	
+}
+
+function ZoomGrayFunction(isGray, isLock)
+{
+	if (isGray || isLock)
+	{
+		if (g_ObjZoomButton.userData[0] != undefined)
+		{
+			if (g_ObjZoomButton.userData[0])
+			{
+				if (Zoompre1 != Zoomnext1)
+				{
+					clearInterval(ZoomTouchStart);
+					clearInterval(ZoomMouseStart);
+					
+					ZoomValue = 0;
+					if(Zoom_x > Zoom_defaultX)
+					{			
+						ZoomCtrl.IncrementProperties();	
+					}
+					if(Zoom_x < Zoom_defaultX)
+					{
+						ZoomCtrl.DecrementProperties();
+					}
+					
+					g_ObjZoomButton.userData[0].SetDisabled(true);
+					j("#ZOOM_SLIDER_HANDLE").css({left:Zoom_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png)"});
+					g_ObjZoomButton.style.opacity = 0.2;
+				}
+
+				Zoomnext1 = Zoompre1;
+				Zoompre2 = 0;
+				Zoomnext2 = -1;
+			}
+		}
+	}
+	else
+	{	
+		if (Zoompre2 != Zoomnext2)
+		{
+			g_ObjZoomButton.userData[0].SetDisabled(false);
+			g_ObjZoomButton.style.opacity = 1;
+		}
+		Zoomnext2 = Zoompre2;
+		Zoompre1 = 0;
+		Zoomnext1 = -1;
+	}
+	
+}
+
+j("div").mouseup(function(e){
+	e = e || window.event;
+	var obj = e.srcElement ? e.srcElement : e.target;
+	
+	//obj is dialog's item if obj's class name contains DLG,then do not hide dialog.
+	if (j(obj).filter("[class*=DLG]").size() > 0)
+	{
+		return;
+	}
+	
+	if (-1 == j.inArray(obj.id, g_ShowDialogClickItems))
+	{
+		if (g_OldObject)
+		{
+			g_OldObject.userData[1].ShowDialog(false);
+			g_OldObject = null;
+			return;
+		}
+	}
+})
+
+function SetSubLCDGray()
+{
+	var b_IsAnyDlgShow = false;
+	for(var i = 0; i < arrDialogItems.length; ++i)
+	{
+		if(arrDialogItems[i].userData[1].IsDialogShow())
+		{
+			b_IsAnyDlgShow = true;
+			break;
+		}
+	}
+	
+	for(var j = 0; j < arrWBMsgItems.length; ++j)
+	{
+		if(arrWBMsgItems[j].userData.IsDialogShow())
+		{
+			b_IsAnyDlgShow = true;
+			break;
+		}
+	}
+}
+
+function CBWarningFun()
+{
+	//empty function
+}
+
+function GrayByMessageShow()
+{
+	g_objMaskClickDlg.userData.SetText("Not Available<br>Camcorder is busy");
+	g_objMaskClickDlg.userData.ShowDialog();
+}
+
+function CBShutterECSButtonFunc(objSrc, strValue)
+{
+	switch(strValue)
+	{
+		case "Plus":
+			ShutterCtrl.SetSliderValue(-1);
+			break;
+		case "Minus":
+			ShutterCtrl.SetSliderValue(1);
+			break;
+		default:
+			break;	
+	}
+}
+
+function CBShtterECSSliderFunc(objSrc, value)
+{
+	ShutterCtrl.SetSliderValue(value);
+}
+
+function ClearDialogTouchMoveTimer()
+{
+	for(var i = 0; i < arrClearDialogTimer.length; i++)
+	{
+		arrClearDialogTimer[i].userData[1].ClearTimer();
+	}
+	
+	for (var i = 1; i <= 5 ; i++)
+	{
+		g_arrAssignLableList[i - 1].userData[1].ClearTimer();
+	}
+}
+function getCookie(c_name)
+{
+	if (document.cookie.length>0)
+	{
+		c_start=document.cookie.indexOf(c_name + "=");
+		if (c_start!=-1)
+		{
+			c_start=c_start + c_name.length+1;
+			c_end=document.cookie.indexOf(";",c_start);
+			if (c_end==-1) c_end=document.cookie.length;
+			return unescape(document.cookie.substring(c_start,c_end));
+		}
+	}
+	return "";
+}
+
+function setCookie(c_name,value,expiredays)
+{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate()+expiredays);
+	document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+}
+
+function setUserData(c_name,value)
+{
+	if(typeof localStorage == 'undefined')
+	{
+		setCookie(c_name,value);
+	}
+	else
+	{
+		try
+		{
+			localStorage.setItem(c_name,value);
+		}
+		catch(error)
+		{
+			//can't use localStorage ,probably because the WebBrowser's Private Browsing is on.
+		}
+	}
+}
+
+function getUserData(c_name)
+{
+	if(typeof localStorage == 'undefined')
+	{
+		return getCookie(c_name);
+	}
+	else
+	{
+		return localStorage.getItem(c_name);
+	}
+}
+</script>
+
+</body></html>

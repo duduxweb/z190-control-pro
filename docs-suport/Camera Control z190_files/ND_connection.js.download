@@ -1,0 +1,135 @@
+// JavaScript Document
+
+var NDValue = 4;
+var g_bNDFliterGray = false;
+var IsNDClose = false;
+var NDValue1 = 0;
+var NDpre1 = 0;
+var NDnext1 = -1;
+var NDpre2 = 0;
+var NDnext2 = -1;
+
+var NDCtrl = {
+
+	GetValue : function()
+	{
+		var  assignValueItems = new Array();
+		var names = {"Camera.NDFilter.Value":["*"],"Camera.NDFilter.Enabled":["*"]};
+		
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			
+			var respND = JSON.stringify(resp.error || resp.result);
+			var NDData = JSON.parse(respND);
+			
+			
+			if (NDData == "timeout")
+			{
+					
+			}
+			else
+			{
+				NDValue1 = NDData["Camera.NDFilter.Value"]["cam"];
+				
+				if (g_LensMountValue != "Disconnected")
+				{
+                    if(NDValue1 == 1){
+                        g_ObjNDValue.innerHTML ="CLEAR";
+                    }else{
+                        g_ObjNDValue.innerHTML =  "1"+"/"+NDValue1;
+					}
+				}
+				g_ObjNDButton.userData[0].UpdateNDSlider();
+			}
+	
+		}});
+
+	},
+	
+	SetValue : function()
+	{
+		var names = {"Camera.NDFilter.Value":{"cam":NDValue}};
+		var id = client.property.SetValue({params: names,
+		onresponse: function(resp) {
+											
+		}})
+	},
+	
+	GetStatus : function ()
+	{
+		var names = {"Camera.NDFilter.Value":null};
+		
+		var id = client.property.GetStatus({params: names,
+			onresponse: function(resp) {
+				var resp_str = JSON.stringify(resp.error || resp.result);
+				var respData = JSON.parse(resp_str);
+				if (respData == "timeout")
+				{		
+				}
+				else
+				{
+					var strNDLocked = respData["Camera.NDFilter.Value"];
+					
+					if(strNDLocked == "Locked" || g_LensMountValue == "Disconnected")
+					{
+						g_bNDFliterGray = true;	
+					}
+					else 
+					{
+						g_bNDFliterGray = false;
+					}
+					NDGrayFunction(g_bNDFliterGray, g_LockFlag);
+				}
+			},
+			timeout:3000});
+	},
+
+    NotifyNDFilterStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.NDFilter.Value":
+                    NDCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetNDFilterData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) 
+		{
+			if ("Camera.NDFilter.Enabled" == key)
+			{
+				IsNDClose = value;
+			}
+			
+			if ("Camera.NDFilter.Value" == key)
+			{
+				if (g_LensMountValue != "Disconnected")
+				{
+                    NDValue1 = value["cam"];
+					if (IsNDClose == "true" || IsNDClose == true)
+					{
+						g_ObjNDValue.innerHTML = "---";
+					}
+					else
+					{
+                        if(NDValue1 == 1){
+                            g_ObjNDValue.innerHTML ="CLEAR";
+                        }else {
+                            g_ObjNDValue.innerHTML = "1" + "/" + NDValue1;
+                        }
+					}
+					g_ObjNDButton.userData[0].UpdateNDSlider();
+				}
+			}
+			
+			
+		})
+
+	}
+}

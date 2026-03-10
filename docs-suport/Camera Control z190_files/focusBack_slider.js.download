@@ -1,0 +1,394 @@
+// JavaScript Document
+					//object ,callback  ,Array Position, Array muti, 
+function FocusBackSlider(objSrc, MutiArray, section, objCallback)
+{
+	this.Parent = GetParent(objSrc);
+	this.AttachSrc = objSrc;
+	this.Width = parseInt(objSrc.style.width);
+	this.CallbackFunc = objCallback;
+	var m_objSelf = null;
+	
+	var bSliderTouchDrag = false;
+	var bSliderMouseDrag = false;
+	
+	//use for get position
+	var Focus_x = 0;
+	var FocusMin_x = -8;
+	var FocusMax_x = 216;
+	var Focus_defaultX = 0;
+	var Focus_iCurrent_X = 0;
+	
+	//use for mark status
+	var FocusMouseDown = false;
+	var FocusTouchStart = false;
+	
+	//use for Timer 
+	var OneSecondTimerReturn = null;
+	var TimerReturn = null;
+	
+	//use for set currentMulti
+	var preMulti = 0;
+	var currentMulti = 0;
+	
+	var Focus_Array = new Array();
+	for (var i = 0; i < (section + 1); ++i)
+	{
+		var positionPoint = -8 + parseInt(i * (224 / section), 10);
+		Focus_Array.push(positionPoint);
+	}
+	Focus_Mul = MutiArray;
+	
+	Focus_defaultX = "105px";
+	Focus_x = Focus_defaultX;
+	Focus_iCurrent_X = "105px";
+	
+	
+	var iMousemove_PreviousX = -1;
+	var iMousemove_CurrentX = -1;
+	var blank = 0;
+	
+	this.Create = function()
+	{
+	
+		if (!m_objSelf)
+		{
+			m_objSelf = this;
+			
+			AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(this.AttachSrc, "mousemove", this.CallbackBtnMouseMove);
+			AddEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);
+			AddEvent(this.AttachSrc, "mouseout", this.CallbackBtnMouseOut);
+			AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			AddEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchCancel);
+		}
+		
+	};
+	
+	//Touch Event
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		FocusTouchStart = true;
+		bSliderTouchDrag = true;
+		objEvent.preventDefault();
+		var objSrc = GetEventSource(objEvent);
+		
+		var touch = objEvent.touches[0];
+	
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+	
+		Focus_iCurrent_X = parseInt(touch.screenX);
+		
+		blank = parseInt(Focus_iCurrent_X) - parseInt(Focus_defaultX);
+		
+		Focus_iCurrent_X -= blank;
+		
+		iMousemove_PreviousX = parseInt(touch.screenX);
+		
+		iCurrentLeft = parseInt(j(objSrc).css("left"));
+		
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring_Pressed.png)";      
+		return false;
+	  
+	};
+	
+	this.CallbackBtnTouchMove = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();	
+		var touch = objEvent.touches[0];
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if(!bSliderTouchDrag) 
+		{
+			return false;
+		}
+		
+		
+		iMousemove_CurrentX = parseInt(touch.screenX);
+
+		Focus_iCurrent_X += iMousemove_CurrentX - iMousemove_PreviousX;
+		
+		iMousemove_PreviousX = parseInt(touch.screenX);
+
+		//get slider current position
+		Focus_x = touch.screenX - blank;
+		
+		if (Focus_iCurrent_X < FocusMin_x)
+		{
+			Focus_iCurrent_X = FocusMin_x;
+		}
+		else if (Focus_iCurrent_X > FocusMax_x)
+		{
+			Focus_iCurrent_X = FocusMax_x;
+		}
+		
+
+		j(m_objSelf.AttachSrc).css({left: Focus_iCurrent_X + "px"});
+		
+		
+		for (i = 0; i < section; i++)
+		{
+			if (Focus_iCurrent_X > Focus_Array[i] && Focus_iCurrent_X <= Focus_Array[i + 1])
+			{
+				currentMulti = Focus_Mul[i];
+				
+			}
+		}
+		if (Focus_iCurrent_X == Focus_Array[0])
+		{
+			currentMulti = Focus_Mul[0];
+
+		}
+		
+		if (preMulti != currentMulti) 
+		{
+			m_objSelf.SetTimeOut();
+		}
+		
+		preMulti = currentMulti;	
+		
+		return false;
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		FocusTouchStart = false;
+		bSliderTouchDrag = false;
+		m_objSelf.StopTimer();
+		
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		j(m_objSelf.AttachSrc).css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring.png)"});
+		
+	};
+	
+	this.CallbackBtnTouchCancel = function(objEvent)
+	{
+		FocusTouchStart = false;
+		bSliderTouchDrag = false;
+		m_objSelf.StopTimer();
+		
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		j(m_objSelf.AttachSrc).css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring.png)"});
+		
+	};
+	
+	
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		FocusMouseDown = true;
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		Focus_iCurrent_X = parseInt(j(objSrc).position().left);
+		iMousemove_PreviousX = objEvent.pageX;
+		bSliderMouseDrag = true;
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring_Pressed.png)";       
+
+		return false;
+	};
+
+	this.CallbackBtnMouseMove = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if(!bSliderMouseDrag) 
+		{
+			return false;
+		}
+	
+		
+		iMousemove_CurrentX = parseInt(objEvent.pageX);
+		Focus_iCurrent_X += iMousemove_CurrentX - iMousemove_PreviousX;
+		iMousemove_PreviousX = objEvent.pageX;
+		
+		if (Focus_iCurrent_X < FocusMin_x) 
+		{
+			Focus_iCurrent_X = FocusMin_x;
+		}
+		else if (Focus_iCurrent_X > FocusMax_x) 
+		{
+			Focus_iCurrent_X = FocusMax_x;
+		}
+		else
+		{
+		}
+		
+		j(m_objSelf.AttachSrc).css({left: Focus_iCurrent_X});
+		
+		for (i = 0; i < section; i++)
+		{
+			if (Focus_iCurrent_X > Focus_Array[i] && Focus_iCurrent_X <= Focus_Array[i + 1])
+			{
+				currentMulti = Focus_Mul[i];
+				
+			}
+		}
+		if (Focus_iCurrent_X == Focus_Array[0])
+		{
+			currentMulti = Focus_Mul[0];
+
+		}
+		
+
+		if (preMulti != currentMulti) 
+		{
+			m_objSelf.SetTimeOut();
+		}
+		
+		preMulti = currentMulti;	
+		return false;
+		
+	};
+	
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		bSliderMouseDrag = false;
+		FocusMouseDown = false;
+		
+		m_objSelf.StopTimer();
+	
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (!bSliderMouseDrag)
+		{
+			j(m_objSelf.AttachSrc).css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring.png)"});	
+		}
+        return false;
+	};
+	
+	this.CallbackBtnMouseOut = function (objEvent)
+	{
+		m_objSelf.StopTimer();
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		bSliderMouseDrag = false;
+
+		j(m_objSelf.AttachSrc).css({left:Focus_defaultX, backgroundImage:"URL(WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring.png)"});
+        return false;
+	}
+	
+	this.SetDisabled = function(bDisabled)
+	{
+	
+		if (bDisabled)
+		{
+			if (FocusMouseDown)
+			{ 
+				this.CallbackBtnMouseUp();
+			}
+			if (FocusTouchStart)
+			{
+				this.CallbackBtnTouchEnd();
+			}
+			
+			RemoveEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			RemoveEvent(this.AttachSrc, "mousemove", this.CallbackBtnMouseMove);
+			RemoveEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);
+			RemoveEvent(this.AttachSrc, "mouseout", this.CallbackBtnMouseOut);
+			RemoveEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			RemoveEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			RemoveEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+		
+		
+		}
+		else
+		{	
+			AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(this.AttachSrc, "mousemove", this.CallbackBtnMouseMove);
+			AddEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);
+			AddEvent(this.AttachSrc, "mouseout", this.CallbackBtnMouseOut);
+			AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(this.AttachSrc, "touchmove", this.CallbackBtnTouchMove);	
+			AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			
+		}
+	}
+		
+	this.FocusMouseChangeValue = function()
+	{
+		
+		if (null != m_objSelf.CallbackFunc) 
+		{
+			if (currentMulti != 0)
+			{
+				m_objSelf.CallbackFunc(currentMulti);
+			}
+		}
+		
+	}
+	
+	//after 1s ,start 0.5s timer
+	this.SetTimeOut = function()
+	{
+		if (null != TimerReturn)
+		{
+			clearInterval(TimerReturn);
+			TimerReturn = null;
+		}
+		if (null != OneSecondTimerReturn)
+		{
+			clearTimeout(OneSecondTimerReturn);
+			OneSecondTimerReturn = null;
+		}
+	
+		OneSecondTimerReturn = setTimeout(m_objSelf.StartTimer, 500);
+		
+	}
+		
+	//start 0.5s timer
+	this.StartTimer = function()
+	{
+		m_objSelf.FocusMouseChangeValue();
+		TimerReturn = setInterval(m_objSelf.FocusMouseChangeValue, 500);
+	}
+	
+	this.StopTimer = function()
+	{
+		if (null != TimerReturn)
+		{
+			clearInterval(TimerReturn);
+			TimerReturn = null;
+		}
+		if (null != OneSecondTimerReturn)
+		{
+			clearTimeout(OneSecondTimerReturn);
+			OneSecondTimerReturn = null;
+		}
+	}
+
+	this.Create();
+}

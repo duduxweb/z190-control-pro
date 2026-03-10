@@ -1,0 +1,186 @@
+// JavaScript Document
+
+var g_WhiteMode = null;
+var g_WhiteValue = null;
+var g_WhitePreValue = null;
+var g_bWhiteGray = false;
+var WhiteCtrl = {
+	
+	GetValue : function()
+	{
+		var names = {"Camera.WhiteBalance.Mode":["*"],
+					 "Camera.WhiteBalance.ColorTemperature.MemoryValue":["*"]};
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			var respClrTemp = JSON.stringify(resp.error || resp.result);
+			var ClrTempData = JSON.parse(respClrTemp);
+			if (ClrTempData == "timeout")
+			{
+					
+			}
+			else
+			{
+				g_WhiteValue = ClrTempData["Camera.WhiteBalance.ColorTemperature.MemoryValue"];
+				g_WhiteMode = ClrTempData["Camera.WhiteBalance.Mode"];
+				
+				WhiteCtrl.ShowWhiteClickAreaText();
+			}
+		}});
+	},
+	
+	GetCapabilities : function()
+	{
+		var names = {"Camera.WhiteBalance.Mode":null,
+					 "Camera.WhiteBalance.ColorTemperature.MemoryValue":null};
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			var respClrTemp = JSON.stringify(resp.error || resp.result);
+			var ClrTempData = JSON.parse(respClrTemp);
+			if (ClrTempData == "timeout")
+			{
+					
+			}
+			else
+			{
+				g_WhiteValue = ClrTempData["Camera.WhiteBalance.ColorTemperature.MemoryValue"];
+				g_WhiteMode = ClrTempData["Camera.WhiteBalance.Mode"];
+				
+				g_objWhite.userData[1].ChangeDialogMode(g_WhiteValue);
+				g_objWhite.userData[1].SetWhiteMode(g_WhiteMode);
+				g_objWhite.userData[1].SetValue(g_WhiteValue);	
+				
+				ShowMainPageDialog(g_objWhite);
+			}
+		}});
+	},
+	
+	ShowWhiteClickAreaText : function()
+	{
+		//console.log(g_WhiteValue[g_WhiteMode]);
+		if (g_WhiteMode == "Preset")
+		{
+			g_objWhite.innerHTML = g_WhiteMode + " " + g_WhiteValue[g_WhiteMode] + "K";
+		}
+		else if (g_WhiteMode == "ATW")
+		{
+			g_objWhite.innerHTML = g_WhiteMode;
+		}
+		else if (g_WhiteMode == "Memory A")
+		{
+			g_objWhite.innerHTML = g_WhiteMode + " " + g_WhiteValue[g_WhiteMode] + "K";
+		}
+		else if (g_WhiteMode == "Memory B")
+		{
+			g_objWhite.innerHTML = g_WhiteMode + " " + g_WhiteValue[g_WhiteMode] + "K";
+		}
+		else if (g_WhiteMode == "Memory C")
+		{
+			g_objWhite.innerHTML = g_WhiteMode + " " + g_WhiteValue[g_WhiteMode] + "K";
+		}	
+	},
+	
+	SetValue : function(strMode, strValue)
+	{ 
+		var names = {"Camera.WhiteBalance.Mode": strMode};
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }});	
+	},
+	
+	SetSliderValue : function(iValue)
+	{ 
+		var names = {"P.Control.ColorTemperature.Slider": iValue};
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }});	
+	},
+	
+	UpdateValue : function(value)
+	{
+		var params = {"Camera.WhiteBalance.ColorTemperature.Value":value};
+		var id = client.property.UpdateValue({params: params, onresponse:function(resp) {	}});
+	},
+	
+	GetStatus: function()
+	{
+		var names = {"Camera.WhiteBalance.ColorTemperature.Value": null};
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) {
+				var respStatus= JSON.stringify(resp.error || resp.result);
+				var statusData = JSON.parse(respStatus);
+				if (statusData == "timeout")
+				{
+					//TODO timeout
+				}
+				else
+				{
+					var strWhiteLock = statusData["Camera.WhiteBalance.ColorTemperature.Value"];
+					
+					if(strWhiteLock == "Locked")
+					{
+						g_bWhiteGray = true;
+						if (g_OldObject == g_objWhite)
+						{
+							g_objWhite.userData[1].ShowDialog(false);
+							g_OldObject = null;
+						}
+					}
+					else 
+					{
+						g_bWhiteGray = false;
+					}
+					g_objWhite.userData[0].SetDisable(g_bWhiteGray);
+				}
+		}});
+	},
+
+    NotifyWhiteStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.WhiteBalance.ColorTemperature.Value":
+                    WhiteCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetClrTempData : function (objArrItem)
+	{
+		j.each(objArrItem,function(key,value)
+		{
+			switch(key)
+			{
+				case "Camera.WhiteBalance.Mode":
+					g_WhiteMode = value;
+					WhiteCtrl.ShowWhiteClickAreaText();
+					g_objWhite.userData[1].ChangeDialogMode(g_WhiteValue);
+					g_objWhite.userData[1].ShowSubPannel();
+					g_objWhite.userData[1].SetWhiteMode(g_WhiteMode);
+                    g_objWhite.userData[1].hideWhiteColorTemp(g_WhiteMode);
+                    g_objWhite.userData[1].SetValue(g_WhiteValue);
+					break;
+				case "Camera.WhiteBalance.ColorTemperature.MemoryValue":
+					g_WhiteValue = value;
+					WhiteCtrl.ShowWhiteClickAreaText();
+					g_objWhite.userData[1].ChangeDialogMode(g_WhiteValue);
+					g_objWhite.userData[1].SetValue(g_WhiteValue);
+					break;
+				case "P.Menu.pmw-f5x.Event.EventID":
+					if ((EVENT_PLAY_UPDATE == value)
+						|| (EVENT_THUMBNAIL_UPDATE == value)
+						|| (EVENT_RECORDE_UPDATE == value)
+						|| (EVENT_VIEW_UPDATE == value)
+						|| (EVENT_700P_CONNECTION_STATUS_REFRESH_WIFI == value)
+						|| (EVENT_AWB_MODE_DISPLAY == value)
+						|| (EVENT_ABB_EXECUTE_FOR_GREY_OUT == value)
+						|| (EVENTKIND_POOLFEED_REFRESH == value))
+					{
+						WhiteCtrl.GetStatus();
+					}	
+					break;
+				default:
+					break;
+			}
+		})
+	}
+	
+}

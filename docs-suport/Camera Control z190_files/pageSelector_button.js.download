@@ -1,0 +1,152 @@
+// JavaScript Document
+function PageSeletor(objSrc, arrItems, SelectedIndex, CBPageSelector)
+{
+	this.m_arrItems = arrItems;
+	this.m_objSrc = objSrc;
+	this.index = SelectedIndex;
+	this.PageSelectCB = CBPageSelector;
+
+    var m_selectItemId = SelectedIndex + "_LBL_SELECT_PAGENAME";
+	var pageName  = new Array();
+	var m_objSilder = null;
+	var objOld  = null;
+	
+	this.Create = function()
+	{
+		that = this;
+		var currentItem = null;
+		var pageNameL = new Array();
+		var index = -1;
+		var objSilder = document.createElement("DIV");	
+		objSilder.className = "DIV_PAGE_SILDER";
+		objSilder.id = "DIV_PAGE_SILDER";
+		m_objSilder = objSilder;
+		this.m_objSrc.appendChild(objSilder);
+
+		for(var i = 0; i < this.m_arrItems.length; ++i)
+		{
+			pageName[i] = document.createElement("DIV");
+			pageName[i].id = i + "_LBL_SELECT_PAGENAME";
+			pageName[i].className = "LBL_SELECT_PAGENAME";
+			pageName[i].innerHTML = this.m_arrItems[i];
+			FirstPLLeft = (1024 - 136 * this.m_arrItems.length)/2;
+			pageName[i].style.left = FirstPLLeft + 136 * i + 1 + "px";
+			
+			AddEvent(pageName[i], "mouseover", this.CallbackButtonMouseOver);
+			AddEvent(pageName[i], "mouseout", this.CallbackButtonMouseOut);
+			AddEvent(pageName[i], "mousedown", this.CallbackButtonMouseDown);
+			AddEvent(pageName[i], "mouseup", this.CallbackButtonMouseUp);
+			AddEvent(pageName[i], "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(pageName[i], "touchend", this.CallbackBtnTouchEnd);	
+			AddEvent(pageName[i], "touchcancel", this.CallbackBtnTouchEnd);
+			
+			this.m_objSrc.appendChild(pageName[i]);
+			j(pageName[i]).click(function(e) {
+				ResetStatus(pageName);
+				index = parseInt(e.target.id);
+				j(pageName[index]).css({ color:"rgb(255,170,0)"});
+				m_selectItemId = pageName[index].id;
+				objSilder.style.left = pageName[index].style.left;
+			   if (that.PageSelectCB != null) {
+					that.PageSelectCB(objOld, pageName[index]);
+					objOld = pageName[index];
+			    }
+			});
+		}
+		j(pageName[this.index]).css({ color:"rgb(255,170,0)"});
+		objOld = pageName[this.index];
+		objSilder.style.left = pageName[this.index].style.left;//(1024 - 136 * this.m_arrItems.length)/2 + 100 * this.index + "px";	
+	};
+	
+	ResetStatus = function(pageName)
+	{
+		for(var i = 0; i < arrItems.length; ++i)
+		{	
+			j(pageName[i]).css({color: "#e6e6e6"});
+		}
+	};
+	
+	 this.CallbackButtonMouseOver = function(objEvent)
+	 {
+		 var objSrc = GetEventSource(objEvent);
+		if(m_selectItemId == objSrc.id)
+		{
+			 objSrc.style.color = "rgb(255,170,0)";
+		}
+		else
+		{
+			 objSrc.style.color = "rgb(230,230,230)";
+		}
+		 objSrc.style.background = "transparent";
+	 };
+	 
+	 this.CallbackButtonMouseOut = function(objEvent)
+	 {
+		  var objSrc = GetEventSource(objEvent);
+		if(m_selectItemId == objSrc.id)
+		{
+			 objSrc.style.color = "rgb(255,170,0)";
+		}
+		else
+		{
+			 objSrc.style.color = "rgb(230,230,230)";
+		}
+		 objSrc.style.background = "transparent";
+	 };
+	 
+	this.CallbackButtonMouseDown = function(objEvent)
+	{
+		 var objSrc = GetEventSource(objEvent);
+		
+		 objSrc.style.color = "rgb(0,0,0)";
+		 objSrc.style.background = "rgb(255,170,0)";	
+	};
+	
+	this.CallbackButtonMouseUp = function(objEvent)
+	{
+		 var objSrc = GetEventSource(objEvent);
+		if(m_selectItemId == objSrc.id)
+		{
+			 objSrc.style.color = "rgb(255,170,0)";
+		}
+		else
+		{
+			 objSrc.style.color = "rgb(230,230,230)";
+		}
+		 objSrc.style.background = "transparent";
+	};
+	
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		 var objSrc = GetEventSource(objEvent);
+		 objEvent.preventDefault();
+		 objSrc.style.color = "rgb(0,0,0)";
+		 objSrc.style.background = "rgb(255,170,0)";	
+	}
+	
+	this.CallbackBtnTouchEnd = function (objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if(m_selectItemId == objSrc.id)
+		{
+			 objSrc.style.color = "rgb(255,170,0)";
+		}
+		else
+		{
+			 objSrc.style.color = "rgb(230,230,230)";
+		}
+		objSrc.style.background = "transparent";
+		ResetStatus(pageName);
+		var index = parseInt(objEvent.target.id);
+		j(pageName[index]).css({ color:"rgb(255,170,0)"});
+		m_selectItemId = pageName[index].id;
+		m_objSilder.style.left = pageName[index].style.left;
+		if (that.PageSelectCB != null) {
+			that.PageSelectCB(objOld, pageName[index]);
+			objOld = pageName[index];
+		}
+	};
+	
+	this.Create();
+};
+

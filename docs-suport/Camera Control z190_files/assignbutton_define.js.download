@@ -1,0 +1,623 @@
+// JavaScript Document
+
+var	__BUTTON_ASSIGN_FUNC_START__ = 0;
+var BUTTON_ASSIGN_FUNC_INVALID = 1;
+var BUTTON_ASSIGN_FUNC_NONE = 2;
+var BUTTON_ASSIGN_FUNC_MARKER = 3;
+var BUTTON_ASSIGN_FUNC_ZEBRA = 4;
+var BUTTON_ASSIGN_FUNC_PEAKING = 5;
+var BUTTON_ASSIGN_FUNC_RECORD = 6;
+var BUTTON_ASSIGN_FUNC_SnQ_FPS = 7;
+var BUTTON_ASSIGN_FUNC_VF_MODE = 8;
+var BUTTON_ASSIGN_FUNC_DISPLAY = 9;
+var BUTTON_ASSIGN_FUNC_FOCUS_MAGNIFIER = 10;
+var BUTTON_ASSIGN_FUNC_FOCUS_MACRO = 11;
+var BUTTON_ASSIGN_FUNC_AUTO_EXPOSURE_LEVEL = 12;
+var BUTTON_ASSIGN_FUNC_STEADY_SHOT = 13;
+var BUTTON_ASSIGN_FUNC_COLOR_BARS = 14;
+var BUTTON_ASSIGN_FUNC_REC_LAMP_F = 15;
+var BUTTON_ASSIGN_FUNC_REC_LAMP_R = 16;
+var BUTTON_ASSIGN_FUNC_THUMBNAIL = 17;
+var BUTTON_ASSIGN_FUNC_REC_REVIEW = 18;
+var BUTTON_ASSIGN_FUNC_VIDEO_SIGNAL_MONITOR = 19;
+var BUTTON_ASSIGN_FUNC_HIGH_LOW_KEY = 20;
+var BUTTON_ASSIGN_FUNC_PICTURE_CACHE = 21;
+var BUTTON_ASSIGN_FUNC_SPOTLIGHT = 22;
+var BUTTON_ASSIGN_FUNC_BACKLIGHT = 23;
+var BUTTON_ASSIGN_FUNC_ATW = 24;
+var BUTTON_ASSIGN_FUNC_ATW_HOLD = 25;
+var BUTTON_ASSIGN_FUNC_IRIS_RING_ROTATE = 26;
+var BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER = 27;
+var BUTTON_ASSIGN_FUNC_NFC = 28;
+var BUTTON_ASSIGN_FUNC_REC_LAMP = 29;
+var BUTTON_ASSIGN_FUNC_LAST_CLIP_DEL = 30;
+var BUTTON_ASSIGN_FUNC_SHOT_MARK1 = 31;
+var BUTTON_ASSIGN_FUNC_SHOT_MARK2 = 32;
+var BUTTON_ASSIGN_FUNC_CLIP_FLAG_OK = 33;
+var BUTTON_ASSIGN_FUNC_CLIP_FLAG_NG = 34;
+var BUTTON_ASSIGN_FUNC_CLIP_FLAG_KEEP = 35;
+var BUTTON_ASSIGN_FUNC_VF_HIGH_CONTRAST = 36;
+var BUTTON_ASSIGN_FUNC_FROMT_MIC = 37;
+var BUTTON_ASSIGN_FUNC_FREEZE_MIX = 38;
+var BUTTON_ASSIGN_FUNC_TURBO_GAIN = 39;
+var BUTTON_ASSIGN_FUNC_BRIGHTNESS_DISPLAY = 40;
+var BUTTON_ASSIGN_FUNC_ZOOM_TELE_WIDE = 41;
+var BUTTON_ASSIGN_FUNC_ZOOM_WIDE_TELE = 42;
+var BUTTON_ASSIGN_FUNC_LENS_INFO = 43;
+var BUTTON_ASSIGN_FUNC_LENS_RET = 44;
+var BUTTON_ASSIGN_FUNC_ELECTRICAL_CC = 45;
+var BUTTON_ASSIGN_FUNC_CC5600K = 46;
+var BUTTON_ASSIGN_FUNC_CLIP_CONTINUOUS_REC = 47;
+var BUTTON_ASSIGN_FUNC_RETURN_VIDEO = 48;
+var BUTTON_ASSIGN_FUNC_RETURN_VIDEO_2 = 49;
+var BUTTON_ASSIGN_FUNC_RETURN_VIDEO_3 = 50;
+var BUTTON_ASSIGN_FUNC_RETURN_VIDEO_4 = 51;
+var BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_3200K = 52;
+var BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_4300K = 53;
+var BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_5600K = 54;
+var BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_6300K = 55;
+var BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X2 = 56;
+var BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X3 = 57;
+var BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X4 = 58;
+var BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X2X3X4 = 59;
+var BUTTON_ASSIGN_FUNC_PUSH_AF_PUSH_MF=60;
+var BUTTON_ASSIGN_FUNC_FACE_DETECTION_AF=61;
+var BUTTON_ASSIGN_FUNC_ND_FILTER_POSITION=62;
+var BUTTON_ASSIGN_FUNC_AUTO_ND_FILTER=63;
+var BUTTON_ASSIGN_FUNC_PUSH_ND=64;
+var BUTTON_ASSIGN_FUNC_PUSH_AUTO_IRIS=65;
+var BUTTON_ASSIGN_FUNC_AGC=66;
+var BUTTON_ASSIGN_FUNC_SHUTTER=67;
+var BUTTON_ASSIGN_FUNC_AUTO_EXPOSURE_LEVEL=68;
+var BUTTON_ASSIGN_FUNC_HANDLER_ZOOM=69;
+var BUTTON_ASSIGN_FUNC_PRESET_WHITE_SELECT=70;
+var BUTTON_ASSIGN_FUNC_LCD_VF_ADJUST=71;
+var BUTTON_ASSIGN_FUNC_GAMMA_DISPLAY_ASSIST=72;
+var BUTTON_ASSIGN_FUNC_DIRECT_MENU=73;
+var BUTTON_ASSIGN_FUNC_USER_MENU=74;
+var BUTTON_ASSIGN_FUNC_MENU=75;
+var BUTTON_ASSIGN_FUNC_INTERCOM_LEVEL=76;
+var BUTTON_ASSIGN_FUNC_ZOOM_IRIS_RING_DISABLE=77;
+var BUTTON_ASSIGN_FUNC_STEADY_SHOT_ACTIVE=78;
+var BUTTON_ASSIGN_FUNC_STEADY_SHOT_STANDARD=79;
+var __BUTTON_ASSIGN_FUNC_END__ = 80;         // don't use this definition
+
+
+var g_boolMap = {"On":true, "Off":false};
+
+var g_arrAssignItemMap = {	"Off":BUTTON_ASSIGN_FUNC_NONE,
+							"Marker":BUTTON_ASSIGN_FUNC_MARKER,
+							"Zebra":BUTTON_ASSIGN_FUNC_ZEBRA,
+							"Peaking":BUTTON_ASSIGN_FUNC_PEAKING,
+							"Rec":BUTTON_ASSIGN_FUNC_RECORD,
+							"S&Q Motion":BUTTON_ASSIGN_FUNC_SnQ_FPS,
+							"VF Mode":BUTTON_ASSIGN_FUNC_VF_MODE,
+							"Display":BUTTON_ASSIGN_FUNC_DISPLAY,
+							"Focus Magnifier":BUTTON_ASSIGN_FUNC_FOCUS_MAGNIFIER,
+							"Focus Macro":BUTTON_ASSIGN_FUNC_FOCUS_MACRO,
+							"Auto Exposure Level":BUTTON_ASSIGN_FUNC_AUTO_EXPOSURE_LEVEL,
+							"Steady Shot":BUTTON_ASSIGN_FUNC_STEADY_SHOT,
+							"Color Bars":BUTTON_ASSIGN_FUNC_COLOR_BARS,
+							"Rec lamp F":BUTTON_ASSIGN_FUNC_REC_LAMP_F,
+							"Rec lamp R":BUTTON_ASSIGN_FUNC_REC_LAMP_R,
+							"Thumbnail":BUTTON_ASSIGN_FUNC_THUMBNAIL,
+							"Rec Review":BUTTON_ASSIGN_FUNC_REC_REVIEW,
+							"Video Signal Monitor":BUTTON_ASSIGN_FUNC_VIDEO_SIGNAL_MONITOR,
+							"High Low Key":BUTTON_ASSIGN_FUNC_HIGH_LOW_KEY,
+							"Picture Cache Rec":BUTTON_ASSIGN_FUNC_PICTURE_CACHE,
+							"Spotlight":BUTTON_ASSIGN_FUNC_SPOTLIGHT,
+							"Backlight":BUTTON_ASSIGN_FUNC_BACKLIGHT,
+							"ATW":BUTTON_ASSIGN_FUNC_ATW,
+							"ATW Hold":BUTTON_ASSIGN_FUNC_ATW_HOLD,
+							"Iris Ring Rotate":BUTTON_ASSIGN_FUNC_IRIS_RING_ROTATE,
+							"Digital Extender":BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER,
+							"NFC":BUTTON_ASSIGN_FUNC_NFC,
+							"Rec lamp":BUTTON_ASSIGN_FUNC_REC_LAMP,
+							"Last Clip Delete":BUTTON_ASSIGN_FUNC_LAST_CLIP_DEL,
+							"Shot Mark1":BUTTON_ASSIGN_FUNC_SHOT_MARK1,
+							"Shot Mark2":BUTTON_ASSIGN_FUNC_SHOT_MARK2,
+
+							"Clip Flag OK":BUTTON_ASSIGN_FUNC_CLIP_FLAG_OK,
+							"Clip Flag NG":BUTTON_ASSIGN_FUNC_CLIP_FLAG_NG,
+							"Clip Flag Keep":BUTTON_ASSIGN_FUNC_CLIP_FLAG_KEEP,
+							"VF High Contrast":BUTTON_ASSIGN_FUNC_VF_HIGH_CONTRAST,
+							"Front Mic":BUTTON_ASSIGN_FUNC_FROMT_MIC,
+							"Freeze Mix":BUTTON_ASSIGN_FUNC_FREEZE_MIX,
+							"Turbo Gain":BUTTON_ASSIGN_FUNC_TURBO_GAIN,
+							"Brightness Display":BUTTON_ASSIGN_FUNC_BRIGHTNESS_DISPLAY,
+							"Zoom Tele/Wide":BUTTON_ASSIGN_FUNC_ZOOM_TELE_WIDE,
+							"Zoom Wide/Tele":BUTTON_ASSIGN_FUNC_ZOOM_WIDE_TELE,
+							"Lens Info":BUTTON_ASSIGN_FUNC_LENS_INFO,
+							"Lens RET":BUTTON_ASSIGN_FUNC_LENS_RET,
+							"Electrical CC":BUTTON_ASSIGN_FUNC_ELECTRICAL_CC,
+							"CC5600K":BUTTON_ASSIGN_FUNC_CC5600K,
+							"Clip Continuous Rec":BUTTON_ASSIGN_FUNC_CLIP_CONTINUOUS_REC,
+							"Return Video":BUTTON_ASSIGN_FUNC_RETURN_VIDEO,
+							"Return Video2":BUTTON_ASSIGN_FUNC_RETURN_VIDEO_2,
+							"Return Video3":BUTTON_ASSIGN_FUNC_RETURN_VIDEO_3,
+							"Return Video4":BUTTON_ASSIGN_FUNC_RETURN_VIDEO_4,
+							"Color Temp��SW 3200K":BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_3200K,
+							"Color Temp��SW 4300K":BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_4300K,
+							"Color Temp��SW 5600":BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_5600K,
+							"Color Temp��SW 6300K":BUTTON_ASSIGN_FUNC_COLOR_TEMP_SW_6300K,
+							"Digital Extender ��2":BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X2,
+							"Digital Extender ��3":BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X3,
+							"Digital Extender ��4":BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X4,
+							"Digital Extender��2��3��4":BUTTON_ASSIGN_FUNC_DIGITAL_EXTENDER_X2X3X4,
+							"PushAF/PushMF":BUTTON_ASSIGN_FUNC_PUSH_AF_PUSH_MF,
+							"FaceDetectionAF":BUTTON_ASSIGN_FUNC_FACE_DETECTION_AF,
+							"NDFilterPosition":BUTTON_ASSIGN_FUNC_ND_FILTER_POSITION,
+							"AutoNDFilter":BUTTON_ASSIGN_FUNC_AUTO_ND_FILTER,
+							"AutoNDFilter(Push)":BUTTON_ASSIGN_FUNC_PUSH_ND,
+							"PushAutoIris":BUTTON_ASSIGN_FUNC_PUSH_AUTO_IRIS,
+							"AutoGain":BUTTON_ASSIGN_FUNC_AGC,
+							"Shutter":BUTTON_ASSIGN_FUNC_SHUTTER,
+							"AutoExposureLevel":BUTTON_ASSIGN_FUNC_AUTO_EXPOSURE_LEVEL,
+							"HandleZoom":BUTTON_ASSIGN_FUNC_HANDLER_ZOOM,
+							"PresetWhiteSelect":BUTTON_ASSIGN_FUNC_PRESET_WHITE_SELECT,
+							"LCD/VFAdjust":BUTTON_ASSIGN_FUNC_LCD_VF_ADJUST,
+							"GammaDisplayAssist":BUTTON_ASSIGN_FUNC_GAMMA_DISPLAY_ASSIST,
+							"DirectMenu":BUTTON_ASSIGN_FUNC_DIRECT_MENU,
+							"UserMenu":BUTTON_ASSIGN_FUNC_USER_MENU,
+							"Menu":BUTTON_ASSIGN_FUNC_MENU,
+							"Intercom Level":BUTTON_ASSIGN_FUNC_INTERCOM_LEVEL,
+							"Zoom/Iris Ring Disable":BUTTON_ASSIGN_FUNC_ZOOM_IRIS_RING_DISABLE,
+							"SteadyShot Active":BUTTON_ASSIGN_FUNC_STEADY_SHOT_ACTIVE,
+							"SteadyShot Standard":BUTTON_ASSIGN_FUNC_STEADY_SHOT_STANDARD};
+							
+var g_arrSetAssignItemMap = {	"Off":"None",
+								"Marker":"Marker",
+								"Zebra":"Zebra",
+								"Peaking":"Peaking",
+								"Rec":"Rec",
+								"S&Q Motion":"SlowAndQuickMotion",
+								"VF Mode":"ViewFinderColorMode",
+								"Display":"Display",
+								"Focus Magnifier":"FocusMagnifier",
+								"Focus Macro":"FocusMacro",
+								"AE Level":"AutoExposureLevel",
+								"Steady Shot":"SteadyShot",
+								"Color Bars":"ColorBar",
+								"Rec lamp F":"ReclampF",
+								"Rec lamp R":"ReclampR",
+								"Thumbnail":"Thumbnail",
+								"Rec Review":"RecReview",
+								"Video Signal Monitor":"VideoSignalMonitor",
+								"High/Low Key":"HighLowKey",
+								"Picture Cache Rec":"PictureCache",
+								"Spotlight":"Spotlight",
+								"Backlight":"Blacklight",
+								"ATW":"ATW",
+								"ATW Hold":"ATWHold",
+								"Iris Ring Rotate":"IrisRingRotate",
+								"Digital Extender":"DigitalExtender",
+								"NFC":"NFCStandby",
+								"Slot Select":"SlotSelect",
+								"Rec lamp":"Reclamp",
+								"Last Clip Del.":"DeleteLastClip",
+								"Shot Mark1":"ShotMark1",
+								"Shot Mark2":"ShotMark2",
+								"Clip Flag OK":"ClipFlagOK",
+								"Clip Flag NG":"ClipFlagNG",
+								"Clip Flag Keep":"ClipFlagKeep",
+								"VF High Contrast":"VFHighContrast",
+								"Front Mic":"FrontMic",
+								"Freeze Mix":"FreezeMix",
+								"Turbo Gain":"TurboGain",
+								"Brightness Display":"BrightnessDisplay",
+								"Zoom T/W":"ZoomTele/Wide",
+								"Zoom W/T":"ZoomWide/Tele",
+								"Lens Info":"LensInfo",
+								"Lens RET":"LensRET",
+								"Electrical CC":"ElectricalCC",
+								"CC5600K":"CC5600K",
+								"Clip Continuous Rec":"ClipContinuousRec",
+								"Return Video":"ReturnVideo",
+								"Return Video2":"ReturnVideo-2",
+								"Return Video3":"ReturnVideo-3",
+								"Return Video4":"ReturnVideo-4",
+								"C. Temp 3200K":"ColorTempSw-3200K",
+								"C. Temp 4300K":"ColorTempSw-4300K",
+								"C. Temp 5600K":"ColorTempSw-5600K",
+								"C. Temp 6300K":"ColorTempSw-6300K",
+								"Digital Extender ×2":"DigitalExtender-x2",
+								"D. Extender x3":"DigitalExtender-x3",
+								"D. Extender x4":"DigitalExtender-x4",
+								"D. Ext. x2x3x4":"DigitalExtender-x2x3x4",
+								"Network Client Mode":"NetworkClientMode",
+								"Streaming":"LiveStreaming",
+								"Auto Upload(Proxy)":"ProxyAutoUpload",
+								"Proxy Rec Start/Stop":"ProxyRecStartStop",
+								"Flash Band Reduce":"FlashBandReduce",
+								"Manual Focus Assist":"ManualFocusAssist",
+								"Push AF/Push MF":"PushAF/PushMF",
+								"Face Detection AF":"FaceDetectionAF",
+								"ND Filter Position":"NDFilterPosition",
+								"Auto ND Filter":"AutoNDFilter",
+								"Push Auto ND":"AutoNDFilter(Push)",
+								"Push Auto Iris":"PushAutoIris",
+								"AGC":"AutoGain",
+								"Shutter":"Shutter",
+								"Auto Exposure Level":"AutoExposureLevel",
+								"Handle Zoom":"HandleZoom",
+								"Preset White Select":"PresetWhiteSelect",
+								"LCD/VF Adjust":"LCD/VFAdjust",
+								"GD Assist":"GammaDisplayAssist",
+								"Direct Menu":"DirectMenu",
+								"User Menu":"UserMenu",
+								"Menu":"Menu",
+								"Intercom Level":"IntercomLevel",
+								"Zm/Iris Ring Disable":"ZoomIrisRingDisable",
+								"SteadyShot Active":"SteadyShotActive",
+								"SteadyShot Std":"SteadyShotStandard"};
+var g_arrGetAssignItemMap = {	"None":"Off",
+								"Marker":"Marker",
+								"Zebra":"Zebra",
+								"Peaking":"Peaking",
+								"Rec":"Rec",
+								"SlowAndQuickMotion":"S&Q Motion",
+								"ViewFinderColorMode":"VF Mode",
+								"Display":"Display",
+								"FocusMagnifier":"Focus Magnifier",
+								"FocusMacro":"Focus Macro",
+								"AutoExposureLevel":"AE Level",
+								"SteadyShot":"Steady Shot",
+								"ColorBar":"Color Bars",
+								"ReclampF":"Rec lamp F",
+								"ReclampR":"Rec lamp R",
+								"Thumbnail":"Thumbnail",
+								"RecReview":"Rec Review",
+								"VideoSignalMonitor":"Video Signal Monitor",
+								"HighLowKey":"High/Low Key",
+								"PictureCache":"Picture Cache Rec",
+								"Spotlight":"Spotlight",
+								"Blacklight":"Backlight",
+								"ATW":"ATW",
+								"ATWHold":"ATW Hold",
+								"IrisRingRotate":"Iris Ring Rotate",
+								"DigitalExtender":"Digital Extender",
+								"NFCStandby":"NFC",
+								"SlotSelect":"Slot Select",
+								"Reclamp":"Rec lamp",
+								"DeleteLastClip":"Last Clip Del.",
+								"ShotMark1":"Shot Mark1",
+								"ShotMark2":"Shot Mark2",
+								"ClipFlagOK":"Clip Flag OK",
+								"ClipFlagNG":"Clip Flag NG",
+								"ClipFlagKeep":"Clip Flag Keep",
+								"VFHighContrast":"VF High Contrast",
+								"FrontMic":"Front Mic",
+								"FreezeMix":"Freeze Mix",
+								"TurboGain":"Turbo Gain",
+								"BrightnessDisplay":"Brightness Display",
+								"ZoomTele/Wide":"Zoom T/W",
+								"ZoomWide/Tele":"Zoom W/T",
+								"LensInfo":"Lens Info",
+								"LensRET":"Lens RET",
+								"ElectricalCC":"Electrical CC",
+								"CC5600K":"CC5600K",
+								"ClipContinuousRec":"Clip Continuous Rec",
+								"ReturnVideo":"Return Video",
+								"ReturnVideo-2":"Return Video2",
+								"ReturnVideo-3":"Return Video3",
+								"ReturnVideo-4":"Return Video4",
+								"ColorTempSw-3200K":"C. Temp 3200K",
+								"ColorTempSw-4300K":"C. Temp 4300K",
+								"ColorTempSw-5600K":"C. Temp 5600K",
+								"ColorTempSw-6300K":"C. Temp 6300K",
+								"DigitalExtender-x2":"Digital Extender ×2",
+								"DigitalExtender-x3":"D. Extender x3",
+								"DigitalExtender-x4":"D. Extender x4",
+								"DigitalExtender-x2x3x4":"D. Ext. x2x3x4",
+								"NetworkClientMode":"Network Client Mode",
+								"LiveStreaming":"Streaming",
+								"ProxyAutoUpload":"Auto Upload(Proxy)",
+								"ProxyRecStartStop":"Proxy Rec Start/Stop",
+								"FlashBandReduce":"Flash Band Reduce",
+								"ManualFocusAssist":"Manual Focus Assist"		,
+								"PushAF/PushMF":"Push AF/Push MF",
+								"FaceDetectionAF":"Face Detection AF",
+								"NDFilterPosition":"ND Filter Position",
+								"AutoNDFilter":"Auto ND Filter",
+								"AutoNDFilter(Push)":"Push Auto ND",
+								"PushAutoIris":"Push Auto Iris",
+								"AutoGain":"AGC",
+								"Shutter":"Shutter",
+								"AutoExposureLevel":"Auto Exposure Level",
+								"HandleZoom":"Handle Zoom",
+								"PresetWhiteSelect":"Preset White Select",
+								"LCD/VFAdjust":"LCD/VF Adjust",
+								"GammaDisplayAssist":"GD Assist",
+								"DirectMenu":"Direct Menu",
+								"UserMenu":"User Menu",
+								"Menu":"Menu",
+								"IntercomLevel":"Intercom Level",
+								"ZoomIrisRingDisable":"Zm/Iris Ring Disable",
+								"SteadyShotActive":"SteadyShot Active",
+								"SteadyShotStandard":"SteadyShot Std"};
+var g_arrGetAssignKeyMap = [	"None",
+								"Marker",
+								"Zebra",
+								"Peaking",
+								"Rec",
+								"SlowAndQuickMotion",
+								"ViewFinderColorMode",
+								"Display",
+								"FocusMagnifier",
+								"FocusMacro",
+								"AutoExposureLevel",
+								"SteadyShot",
+								"ColorBar",
+								"ReclampF",
+								"ReclampR",
+								"Thumbnail",
+								"RecReview",
+								"VideoSignalMonitor",
+								"HighLowKey",
+								"PictureCache",
+								"Spotlight",
+								"Blacklight",
+								"ATW",
+								"ATWHold",
+								"IrisRingRotate",
+								"DigitalExtender",
+								"NFCStandby",
+								"SlotSelect",
+								"Reclamp",
+								"DeleteLastClip",
+								"ShotMark1",
+								"ShotMark2",
+								"ClipFlagOK",
+								"ClipFlagNG",
+								"ClipFlagKeep",
+								"VFHighContrast",
+								"FrontMic",
+								"FreezeMix",
+								"TurboGain",
+								"BrightnessDisplay",
+								"ZoomTele/Wide",
+								"ZoomWide/Tele",
+								"LensInfo",
+								"LensRET",
+								"ElectricalCC",
+								"CC5600K",
+								"ClipContinuousRec",
+								"ReturnVideo",
+								"ReturnVideo-2",
+								"ReturnVideo-3",
+								"ReturnVideo-4",
+								"ColorTempSw-3200K",
+								"ColorTempSw-4300K",
+								"ColorTempSw-5600K",
+								"ColorTempSw-6300K",
+								"DigitalExtender-x2",
+								"DigitalExtender-x3",
+								"DigitalExtender-x4",
+								"DigitalExtender-x2x3x4",
+								"NetworkClientMode",
+								"LiveStreaming",
+								"ProxyAutoUpload",
+								"ProxyRecStartStop",
+								"FlashBandReduce",
+								"ManualFocusAssist",
+								"PushAF/PushMF",
+								"FaceDetectionAF",
+								"NDFilterPosition",
+								"AutoNDFilter",
+								"AutoNDFilter(Push)",
+								"PushAutoIris",
+								"AutoGain",
+								"Shutter",
+								"AutoExposureLevel",
+								"HandleZoom",
+								"PresetWhiteSelect",
+								"LCD/VFAdjust",
+								"GammaDisplayAssist",
+								"DirectMenu",
+								"UserMenu",
+								"Menu",
+								"IntercomLevel",
+								"ZoomIrisRingDisable",
+								"SteadyShotActive",
+								"SteadyShotStandard"];
+
+
+function SetAssignBtnProperties (assignValueItems)
+{
+	var isAssign5LableDisabled = false;
+	j.each(assignValueItems, function(key, value){
+		var assignBtnIndex = key.substr(11, 1);
+		if ((assignBtnIndex >= 0) && (assignBtnIndex <= 10))
+		{
+// 			if (assignBtnIndex > 2)
+// 			{
+// 				if ("None" == value[0])
+// 				{
+// 					g_arrAssignButton[assignBtnIndex - 1].userData.SetStatus(false);
+// 				}
+// 				else
+// 				{
+// 					g_arrAssignButton[assignBtnIndex - 1].userData.SetStatus(g_boolMap[value[1]]);
+// 				}
+//
+// 				SetAssignLabelTextForSpecialItems(g_arrGetAssignItemMap[value[0]], assignBtnIndex - 1);
+// //				if (g_arrGetAssignItemMap[value[0]] == "Clip Continuous Rec")
+// //				{
+// //					g_arrAssignLableList[assignBtnIndex - 1].innerHTML = "Cont Rec";
+// //				}
+// //				else if (g_arrGetAssignItemMap[value[0]] == "Picture Cache Rec")
+// //				{
+// //					g_arrAssignLableList[assignBtnIndex - 1].innerHTML = "Cache Rec";
+// //				}
+// //				else
+// //				{
+// //					g_arrAssignLableList[assignBtnIndex - 1].innerHTML = g_arrGetAssignItemMap[value[0]];
+// //				}
+// 			}
+// 			else
+// 			{
+				if ("None" == value[0]) 
+				{
+					g_arrAssignButton[assignBtnIndex].userData.SetStatus(false);
+				}
+				else
+				{
+					g_arrAssignButton[assignBtnIndex].userData.SetStatus(g_boolMap[value[1]]); 
+				}
+				
+				SetAssignLabelTextForSpecialItems(g_arrGetAssignItemMap[value[0]], assignBtnIndex);
+//				if (g_arrGetAssignItemMap[value[0]] == "Clip Continuous Rec")
+//				{
+//					g_arrAssignLableList[assignBtnIndex].innerHTML = "Cont Rec";
+//				}
+//				else if (g_arrGetAssignItemMap[value[0]] == "Picture Cache Rec")
+//				{
+//					g_arrAssignLableList[assignBtnIndex].innerHTML = "Cache Rec";
+//				}
+//				else
+//				{
+//					g_arrAssignLableList[assignBtnIndex].innerHTML = g_arrGetAssignItemMap[value[0]];
+//				}
+// 			}
+			
+			if("ProxyRecStartStop" == value[0] && g_boolMap[value[1]] == true)
+			{
+				// if(assignBtnIndex > 2)
+				// {
+				// 	g_arrAssignLableList[assignBtnIndex - 1].userData[0].SetDisable(true);
+				// 	if(assignBtnIndex == 5)
+				// 	{
+				// 		isAssign5LableDisabled = true;
+				// 	}
+				// }
+				// else
+				// {
+					 g_arrAssignLableList[assignBtnIndex].userData[0].SetDisable(true);
+				// }
+			}
+			else
+			{
+				// if(assignBtnIndex > 2)
+				// {
+				// 	g_arrAssignLableList[assignBtnIndex - 1].userData[0].SetDisable(false);
+				// }
+				// else
+				// {
+					 g_arrAssignLableList[assignBtnIndex].userData[0].SetDisable(false);
+				// }
+			}
+		}
+	})
+	
+	// if (g_objAssignLable_5.innerHTML == "Zoom W/T"
+	// 	|| g_objAssignLable_5.innerHTML == "Zoom T/W"
+	// 	|| isAssign5LableDisabled)
+	// {
+	// 	//g_objAssignButton_5.userData.SetDisabled(true);
+	// 	g_objAssignLable_5.userData[0].SetDisable(true);
+	// 	var IsShow = g_objAssignLable_5.userData[1].IsDialogShow();
+	// 	if (IsShow)
+	// 	{
+	// 		g_objAssignLable_5.userData[1].ShowDialog(false);
+	// 		g_OldObject = null;
+	// 	}
+	// }
+	// else
+	// {
+	// 	g_objAssignButton_5.userData.SetDisabled(false);
+	// 	g_objAssignLable_5.userData[0].SetDisable(false);
+	// }
+}
+
+function SetAssignBtnList (assignValueItems, assignIndex)
+{
+	j.each(assignValueItems, function(key, value){
+		var assignBtnIndex = key.substr(11, 1);
+		if ((assignBtnIndex >= 0) && (assignBtnIndex <= 10))
+		{	
+			if (assignIndex != assignBtnIndex)
+			{
+				return;
+			}
+			var listItem = new Array();
+			for (var i = 0; i < value[2].length; i++)
+			{
+				for (var m = 0; m < g_arrGetAssignKeyMap.length; m++)
+				{
+					if (value[2][i] == g_arrGetAssignKeyMap[m] && 
+							(g_arrGetAssignKeyMap[m] != "ProxyRecStartStop"
+							|| (g_arrGetAssignKeyMap[m] == "ProxyRecStartStop" && g_isAssignProxyRecVisable)))
+					{
+						listItem.push(g_arrGetAssignItemMap[g_arrGetAssignKeyMap[m]]);
+						break;
+					}
+				}
+			}
+			
+			g_arrAssignLableList[assignBtnIndex].userData[1].ChangeDlgItems(listItem);
+		}
+	})
+}
+
+function SetAssignLabelTextForSpecialItems(value, index)
+{
+	switch (value)
+	{
+		case "Clip Continuous Rec":
+			g_arrAssignLableList[index].innerHTML = "Cont Rec";
+			break;
+		case "Focus Magnifier":
+			g_arrAssignLableList[index].innerHTML = "Focus Mag";
+			break;
+		case "Picture Cache Rec":
+			g_arrAssignLableList[index].innerHTML = "Cache Rec";
+			break;
+		case "Network Client Mode":
+			g_arrAssignLableList[index].innerHTML = "NW Client";
+			break;
+		case "Auto Upload(Proxy)":
+			g_arrAssignLableList[index].innerHTML = "Auto Up";
+			break;
+		case "XAVC Proxy Rec Start":
+			g_arrAssignLableList[index].innerHTML = "Proxy Rec";
+			break;
+		case "Video Signal Monitor":
+			g_arrAssignLableList[index].innerHTML = "Signal Monitor";
+			break;
+		default:
+			g_arrAssignLableList[index].innerHTML = value;
+			break;
+	}
+}
+
+function SetAssignListSelsctForSpecialItems(value, index)
+{
+	switch (value)
+	{
+		case "Cont Rec":
+			g_arrAssignLableList[index].userData[1].SetSelect("Clip Continuous Rec");
+			break;
+		case "Focus Mag":
+			g_arrAssignLableList[index].userData[1].SetSelect("Focus Magnifier");
+			break;
+		case "Cache Rec":
+			g_arrAssignLableList[index].userData[1].SetSelect("Picture Cache Rec");
+			break;
+		case "NW Client":
+			g_arrAssignLableList[index].userData[1].SetSelect("Network Client Mode");
+			break;
+		case "Auto Up":
+			g_arrAssignLableList[index].userData[1].SetSelect("Auto Upload(Proxy)");
+			break;
+		case "Proxy Rec":
+			g_arrAssignLableList[index].userData[1].SetSelect("XAVC Proxy Rec Start");
+			break;
+		case "Signal Monitor":
+			g_arrAssignLableList[index].userData[1].SetSelect("Video Signal Monitor");
+			break;
+		default:
+			g_arrAssignLableList[index].userData[1].SetSelect(value);
+			break;
+	}
+}
+

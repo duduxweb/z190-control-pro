@@ -1,0 +1,1037 @@
+// JavaScript Document
+
+function ShutterDialog(objAttachSrc, funcCallback, objName, funcButtonCallBack, funcSliderCallBack)
+{
+	this.AttachSrc = objAttachSrc;
+	this.Items =  ["1/100","1/200","1/300"];
+	this.SelectedIndex = 0;
+	this.CallbackFunc = funcCallback;
+	this.CallBackButtonFunc = funcButtonCallBack;
+	this.CallBackSliderFunc = funcSliderCallBack;
+	this.NameID = objName;
+	
+	var m_objSelf = this;
+	var m_Object = null;
+	var m_objCurrentItem = null;
+	var m_objOldItem = null;
+	var m_ObjTitle = null;
+	var m_IsTouchMoving = false;
+	var m_ObjItemArea = null;
+	var m_MainSelectArea = null;
+	var m_SubSelectArea = null;
+	var m_ObjText = null;
+	var m_objMinusBtn = null;
+	var m_objPlusBtn = null;
+	var m_Slider = null;
+	var m_CurrentECSData = null;
+	var m_ShutterMode = "Speed";
+	var m_OldShutterMode = "Speed";
+	var m_TouchMoveValue = 0;
+	var m_ShutterTouchMoveTime = 0;
+	
+	var mutil = [-15, -5, -1, 0, 1, 5, 15];
+	var mutilNum = 7;
+	
+	
+	this.Create = function()
+	{
+		var divMainContainer = document.createElement("DIV");
+		divMainContainer.className = "DIV_DLG_MAIN";
+		GetParent(this.AttachSrc).appendChild(divMainContainer);
+		divMainContainer.style.display = "none";
+		m_Object = divMainContainer;
+	
+		var divTitle = document.createElement("DIV");
+		divTitle.className = "DIV_DLG_TITLE";
+		divMainContainer.appendChild(divTitle);
+		m_ObjTitle = divTitle;
+		
+		var divArrow = document.createElement("DIV");
+		divArrow.className = "DIV_DLG_LEFT_ARROW";
+		divMainContainer.appendChild(divArrow);
+		
+		var divTopSeparator = document.createElement("DIV");
+		divTopSeparator.className = "DIV_DLG_SEPARATOR";
+		divTopSeparator.style.left= "16px";
+		divTopSeparator.style.top = "37px";
+		divMainContainer.appendChild(divTopSeparator);
+		
+		var divSubSelect = document.createElement("DIV");
+		divSubSelect.className = "DIV_DLG_SUB";
+		m_MainSelectArea = divSubSelect;
+		divMainContainer.appendChild(divSubSelect);
+		
+		var divMainBottomSeparator = document.createElement("DIV");
+		divMainBottomSeparator.className = "DIV_DLG_SEPARATOR";
+		divMainBottomSeparator.style.top = "288px";
+		divSubSelect.appendChild(divMainBottomSeparator);
+		
+		var divSelectArea = document.createElement("DIV");
+		divSelectArea.className = "DIV_DLG_ITEMAREA";
+		divSubSelect.appendChild(divSelectArea);
+		m_ObjItemArea = divSelectArea;
+		//add own scroll event
+     	AddEvent(divSelectArea, "touchstart", this.CallbackTouchStart);
+		AddEvent(divSelectArea, "touchmove", this.CallbackMainItemTouchMove);
+		AddEvent(divSelectArea, "touchend", this.CallbackItemClick);
+		divSelectArea.style.overflowY = "auto";
+		
+		//Off
+		var divItem = document.createElement("DIV");
+		divItem.className = "DIV_DLG_SHUTTER_ITEM";
+		divItem.style.top = 0 + "px";
+		divItem.innerHTML = "Off";
+		divItem.id = 0 + "_" + this.NameID + "_DLG_ITEM";
+		j(divItem).css("background-color","rgb(28,28,28)");
+		
+		AddEvent(divItem, "click", this.CallbackItemClick);
+		AddEvent(divItem, "mousedown", this.CallbackItemMouseDown);
+		AddEvent(divItem, "mouseup", this.CallbackItemMouseUp);
+		AddEvent(divItem, "touchstart", this.CallbackItemTouchStart);	
+		AddEvent(divItem, "touchend", this.CallbackItemTouchEnd);
+		AddEvent(divItem, "touchcancel", this.CallbackItemTouchEnd);
+			
+		var divItemIcon = document.createElement("DIV");
+		divItemIcon.className = "DIV_DLG_ITEM_ICON";
+
+		m_objCurrentItem = divItem;
+		m_objOldItem = m_objCurrentItem;
+		divItemIcon.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+			
+		divItem.appendChild(divItemIcon);
+		divSelectArea.appendChild(divItem);
+		
+		//List
+		for (var i = 0; i < this.Items.length; i++)
+		{
+			var divItem = document.createElement("DIV");
+			divItem.className = "DIV_DLG_SHUTTER_ITEM";
+			divItem.style.top = ((i + 1) * 48) + "px";
+			divItem.innerHTML = this.Items[i];
+			divItem.id = i + 1 + "_" + this.NameID + "_DLG_ITEM";
+			if ((i + 1) % 2 == 0)
+			{
+				j(divItem).css("background-color","rgb(28,28,28)");
+			}
+			
+			AddEvent(divItem, "click", this.CallbackItemClick);
+			AddEvent(divItem, "mousedown", this.CallbackItemMouseDown);
+			AddEvent(divItem, "mouseup", this.CallbackItemMouseUp);
+			AddEvent(divItem, "touchstart", this.CallbackItemTouchStart);	
+			AddEvent(divItem, "touchend", this.CallbackItemTouchEnd);
+			AddEvent(divItem, "touchcancel", this.CallbackItemTouchEnd);
+			
+			var divItemIcon = document.createElement("DIV");
+			divItemIcon.className = "DIV_DLG_ITEM_ICON";
+			divItem.appendChild(divItemIcon);
+			divSelectArea.appendChild(divItem);
+		}
+		
+		//ECS
+		var divItem = document.createElement("DIV");
+		divItem.className = "DIV_DLG_SHUTTER_ITEM";
+		divItem.style.top = (this.Items.length + 1) * 48 + "px";
+		divItem.innerHTML = "ECS";
+		divItem.id = (this.Items.length + 1) + "_" + this.NameID + "_DLG_ITEM";
+		if ((this.Items.length + 1) % 2 == 0)
+		{
+			j(divItem).css("background-color","rgb(28,28,28)");
+		}
+		
+		AddEvent(divItem, "click", this.CallbackItemClick);
+		AddEvent(divItem, "mousedown", this.CallbackItemMouseDown);
+		AddEvent(divItem, "mouseup", this.CallbackItemMouseUp);
+		AddEvent(divItem, "touchstart", this.CallbackItemTouchStart);	
+		AddEvent(divItem, "touchend", this.CallbackItemTouchEnd);
+		AddEvent(divItem, "touchcancel", this.CallbackItemTouchEnd);
+			
+		var divItemIcon = document.createElement("DIV");
+		divItemIcon.className = "DIV_DLG_ITEM_ICON";	
+		divItem.appendChild(divItemIcon);
+		
+		var divCurrentData = document.createElement("DIV");
+		divCurrentData.id =  1 + "_DIV_DLG_ECS_CURRENT_DATA";
+		divCurrentData.className = "DIV_DLG_ECS_CURRENT_DATA";
+		m_CurrentECSData = divCurrentData;
+		divItem.appendChild(divCurrentData);
+			
+		var divShutterArrow = document.createElement("DIV");
+		divShutterArrow.className = "DIV_DLG_ARROW";
+		divShutterArrow.innerHTML = ">";
+		divShutterArrow.id = i + "_SHUTTER_ARROW";
+		divItem.appendChild(divShutterArrow);
+		divSelectArea.appendChild(divItem);
+		
+		if ((m_objSelf.Items.length + 2 ) < 6)
+		{
+			for (var i = m_objSelf.Items.length + 2; i < 6; i++)
+			{
+				var divItem = document.createElement("DIV");
+				divItem.className = "DIV_DLG_SHUTTER_ITEM";
+				divItem.style.top = (i * 48) + "px";
+			
+				if (i % 2 == 0)
+				{
+					j(divItem).css("background-color","rgb(28,28,28)");
+				}
+			
+				m_ObjItemArea.appendChild(divItem);
+			}
+		}
+		
+		// var divStepCancelButton = document.createElement("DIV");
+		// divStepCancelButton.className = "DIV_DLG_BUTTON";
+		// divStepCancelButton.id = "0_DIV_" + this.NameID + "_DLG_BTN";
+		// divStepCancelButton.innerHTML = "Cancel";
+		// divStepCancelButton.style.left = -9 + "px";
+		// divStepCancelButton.style.top = 287 + "px";
+		//
+		// AddEvent(divStepCancelButton, "click", this.CallbackButtonClick);
+		// AddEvent(divStepCancelButton, "mousedown", this.CallbackButtonMouseDown);
+		// AddEvent(divStepCancelButton, "mouseup", this.CallbackButtonMouseUp);
+		// AddEvent(divStepCancelButton, "touchstart", this.CallbackBtnTouchStart);
+		// AddEvent(divStepCancelButton, "touchend", this.CallbackBtnTouchEnd);
+		// AddEvent(divStepCancelButton, "touchcancel", this.CallbackBtnTouchEnd);
+		// divSubSelect.appendChild(divStepCancelButton);
+		
+		var divStepOKButton = document.createElement("DIV");
+		divStepOKButton.className = "DIV_DLG_BUTTON";
+		divStepOKButton.id = "1_DIV_" + this.NameID + "_DLG_BTN";
+		divStepOKButton.innerHTML = "OK";
+		divStepOKButton.style.left = 176 + "px";
+		divStepOKButton.style.top = 287 + "px";
+		
+		AddEvent(divStepOKButton, "click", this.CallbackButtonClick);
+		AddEvent(divStepOKButton, "mousedown", this.CallbackButtonMouseDown);
+		AddEvent(divStepOKButton, "mouseup", this.CallbackButtonMouseUp);	
+		AddEvent(divStepOKButton, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divStepOKButton, "touchend", this.CallbackBtnTouchEnd);
+		AddEvent(divStepOKButton, "touchcancel", this.CallbackBtnTouchEnd);
+		divSubSelect.appendChild(divStepOKButton);
+		
+		//Sub Select Area
+		var divSubSelectArea = document.createElement("DIV");
+		divSubSelectArea.className = "DIV_DLG_SUB";
+		divSubSelectArea.style.display = "none";
+		m_SubSelectArea = divSubSelectArea;
+		divMainContainer.appendChild(divSubSelectArea);
+		
+		var divTextField= document.createElement("DIV");
+		divTextField.className = "DIV_DLG_TEXT_FIELD";
+		divTextField.id = "0_DIV_" + this.NameID + "_DLG_TEXTFIELD";
+		divTextField.style.top = "76px";
+		divSubSelectArea.appendChild(divTextField);
+		m_ObjText = divTextField;
+		
+		var divMinusBtn = document.createElement("DIV");
+		divMinusBtn.id = "4_DIV_" + this.NameID + "_DLG_BTN";
+		divMinusBtn.className = "DIV_DLG_MINUS_BTN";
+		divMinusBtn.style.top = "80px";
+		divSubSelectArea.appendChild(divMinusBtn);
+		var arrMinusBtnImgs = ["Parts_CR_T_CC_Spinner_Button_Minus_Normal", "Parts_CR_T_CC_Spinner_Button_Minus_Pressed", "Parts_CR_T_CC_Spinner_Button_Minus_Normal", "Parts_CR_T_CC_Spinner_Button_Minus_Normal", ""];
+		divMinusBtn.userData = new ButtonCtrl(divMinusBtn, arrMinusBtnImgs, this.PlusOrMinisButtonClick);
+		m_objMinusBtn = divMinusBtn;
+			
+		var divPlusBtn = document.createElement("DIV");
+		divPlusBtn.id = "5_DIV_" + this.NameID + "_DLG_BTN";
+		divPlusBtn.className = "DIV_DLG_PLUS_BTN";
+		divPlusBtn.style.top = "80px";
+		divSubSelectArea.appendChild(divPlusBtn);
+		var arrPlusBtnImgs = ["Parts_CR_T_CC_Spinner_Button_Plus_Normal", "Parts_CR_T_CC_Spinner_Button_Plus_Pressed", "Parts_CR_T_CC_Spinner_Button_Plus_Normal", "Parts_CR_T_CC_Spinner_Button_Plus_Normal", ""];
+		divPlusBtn.userData = new ButtonCtrl(divPlusBtn, arrPlusBtnImgs, this.PlusOrMinisButtonClick);
+		m_objPlusBtn = divPlusBtn;
+		
+		var lblMiddlePic = document.createElement("DIV");
+		lblMiddlePic.className = "LBL_PICKER_SPIRNG_SCALE_MIDDLE_DLG";
+		divSubSelectArea.appendChild(lblMiddlePic);
+	
+		//slider
+		var divSliderGroove = document.createElement("DIV");
+		divSliderGroove.className = "DIV_PICKER_SPE_GROOVE_DLG";
+		divSliderGroove.style.top = "200px";
+		divSubSelectArea.appendChild(divSliderGroove);
+		
+		var divSlider = document.createElement("DIV");
+		divSlider.id = "DIV_PICKER_ZOOM_SLIDER_" + this.NameID;
+		divSlider.className = "DIV_PICKER_SPRING_SLIDER_DLG";
+		divSlider.style.top = "182px";
+		divSlider.style.left = "105px";
+		divSubSelectArea.appendChild(divSlider);
+		m_Slider = divSlider;
+		
+		divSlider.userData = new Array();
+		divSlider.userData[0] = new FocusBackSlider(divSlider, mutil, mutilNum, this.sliderCallBack);
+		
+		var divMainBottomSeparator = document.createElement("DIV");
+		divMainBottomSeparator.className = "DIV_DLG_SEPARATOR";
+		divMainBottomSeparator.style.top = "288px";
+		divSubSelectArea.appendChild(divMainBottomSeparator);
+		
+		var divBackButton = document.createElement("DIV");
+		divBackButton.className = "DIV_DLG_BACK_BTN";
+		divBackButton.innerHTML = "Back";
+		divBackButton.style.zIndex = 2;
+		divBackButton.id = 2 +"_DIV_" + this.NameID + "_DLG_BTN";
+		divBackButton.style.top = 288 + "px";
+		AddEvent(divBackButton, "click", this.CallbackButtonClick);
+		AddEvent(divBackButton, "mousedown", this.CallbackButtonMouseDown);
+		AddEvent(divBackButton, "mouseup", this.CallbackButtonMouseUp);
+		AddEvent(divBackButton, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divBackButton, "touchend", this.CallbackBtnTouchEnd);	
+		AddEvent(divBackButton, "touchcancel", this.CallbackBtnTouchEnd);
+		divSubSelectArea.appendChild(divBackButton);
+		
+		divMainContainer.style.left = parseInt(this.AttachSrc.style.left) + 228 + "px";
+		divMainContainer.style.top = parseInt(this.AttachSrc.style.top) - 186 + "px";
+	}
+	
+	this.ShowDialog = function()
+	{
+		clearInterval(m_ShutterTouchMoveTime);
+		m_ShutterTouchMoveTime = 0;
+		if ((arguments.length != 0) && (false == arguments[0]))
+		{
+			m_Object.style.display = "none";
+			return;
+		}
+		
+		if (m_Object.style.display == "block")
+		{
+			m_Object.style.display = "none";
+		}
+		else
+		{
+			m_Object.style.display = "block";
+			m_MainSelectArea.style.display = "block";
+			m_SubSelectArea.style.display = "none";
+		}
+		var objSelectedItem = $(m_objSelf.SelectedIndex + "_" + this.NameID + "_DLG_ITEM");
+		if (m_objCurrentItem)
+		{
+			m_objCurrentItem.children[0].style.backgroundImage = "";
+			m_objCurrentItem.style.color = "rgb(230,230,230)";
+			if (m_objCurrentItem.childNodes.length == 4)
+		  	{
+				m_objCurrentItem.childNodes.item(2).style.color = "rgb(230, 230, 230)";
+			}
+			if (m_objCurrentItem.childNodes.length == 3)
+			{
+				m_objCurrentItem.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Std.png)";
+			}
+		}
+		if (objSelectedItem)
+		{
+			objSelectedItem.children[0].style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+			objSelectedItem.style.color = "rgb(255,170,0)";
+			if (objSelectedItem.childNodes.length == 4)
+		  	{
+				objSelectedItem.childNodes.item(2).style.color = "rgb(255,170,0)";
+			}
+			if (objSelectedItem.childNodes.length == 3)
+			{
+				objSelectedItem.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png)";
+			}
+			m_objCurrentItem = objSelectedItem;
+			m_objOldItem = m_objCurrentItem;
+			if (parseInt(m_objOldItem.id) == m_objSelf.Items.length + 1)
+			{
+				g_OldECSValue = g_strShutterValue;
+			}
+		}
+		
+		var iItemNum = parseInt(m_objCurrentItem.id);
+		var iItemHeight = j(m_objCurrentItem).height();
+		var iScrollLength = iItemHeight*iItemNum;
+		j('.DIV_DLG_ITEMAREA').scrollTop(iScrollLength); 
+	}
+	
+	this.CallbackItemTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);	
+		objEvent.preventDefault();
+		if (!objSrc.hasChildNodes() 
+			|| objSrc.className == "DIV_DLG_ECS_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW"
+			|| objSrc.className == "DIV_DLG_ANGLE_IMAGE")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+		objSrc.style.backgroundColor = "rgb(255,170,0)";	
+		
+		if (objSrc.childNodes.length == 3)
+		{
+			objSrc.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Pressed.png)";
+		}
+		if (objSrc.childNodes.length == 4)
+		{
+			objSrc.childNodes.item(2).style.color = "rgb(0,0,0)";
+		}
+		if(m_ShutterTouchMoveTime == 0) {
+			m_ShutterTouchMoveTime = setInterval(m_objSelf.JudgeTouchMoveEvent, 150);
+		}
+	};
+	
+	this.CallbackItemTouchEnd = function(objEvent)
+	{
+		clearInterval(m_ShutterTouchMoveTime);
+		m_ShutterTouchMoveTime = 0;
+		var objSrc = GetEventSource(objEvent);	
+		if (!objSrc.hasChildNodes() 
+			|| objSrc.className == "DIV_DLG_ECS_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW"
+			|| objSrc.className == "DIV_DLG_ANGLE_IMAGE")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (objSrc == m_objCurrentItem)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+			if (objSrc.childNodes.length == 4)
+			{
+				objSrc.childNodes.item(2).style.color = "rgb(255,170,0)";
+			}
+			if (objSrc.childNodes.length == 3)
+			{
+				objSrc.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png)";
+			}
+		}
+		else
+		{
+			objSrc.style.color = "rgb(230,230,230)";
+			if (objSrc.childNodes.length == 4)
+			{
+				objSrc.childNodes.item(2).style.color = "rgb(230,230,230)";
+			}
+			if (objSrc.childNodes.length == 3)
+			{
+				objSrc.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Std.png)";
+			}
+		}
+		
+		if (parseInt(objSrc.id) % 2 == 0)
+		{
+			objSrc.style.backgroundColor = "rgb(28,28,28)";
+		}
+		else
+		{
+			objSrc.style.backgroundColor = "";
+		}	
+	};
+		
+	this.CallbackItemClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ((objSrc.id == "") || (m_IsTouchMoving == true))
+		{
+			return;//select nothing, return is safe.
+		}
+		
+		if (objSrc.style.opacity == "0.2")
+		{
+			return;
+		}
+		
+		if (objSrc.className == "DIV_DLG_ARROW"
+			|| objSrc.className == "DIV_DLG_ECS_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ANGLE_IMAGE")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		m_objCurrentItem.children[0].style.backgroundImage = "";
+		m_objCurrentItem.style.color = "rgb(230, 230, 230)";
+		if (m_objCurrentItem.childNodes.length == 4)
+		{
+			m_objCurrentItem.childNodes.item(2).style.color = "rgb(230, 230, 230)";
+		}
+		if (m_objCurrentItem.childNodes.length == 3)
+		{
+			m_objCurrentItem.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Std.png)";
+		}
+		
+		if (objSrc.hasChildNodes())
+		{
+			objSrc.children[0].style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+			objSrc.style.color = "rgb(255, 170, 0)";
+			m_objCurrentItem = objSrc;
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_SelectMark_Serected.png)";
+			GetParent(objSrc).style.color = "rgb(255, 170, 0)";
+			m_objCurrentItem = GetParent(objSrc);
+		}
+		
+		if (m_objCurrentItem.childNodes.length == 4)
+		{
+			m_objCurrentItem.childNodes.item(2).style.color = "rgb(255, 170, 0)";
+		}
+		if (m_objCurrentItem.childNodes.length == 3)
+		{
+			m_objCurrentItem.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png)";
+		}
+		
+		if (parseInt(objSrc.id, 10) == (m_objSelf.Items.length + 1))
+		{
+			m_MainSelectArea.style.display = "none";
+			m_SubSelectArea.style.display = "block";
+		}
+		if (null != m_objSelf.CallbackFunc) 
+		{
+			var strSelectedValue = m_objSelf.GetCallBackListValue(parseInt(m_objCurrentItem.id, 10));
+			m_objSelf.CallbackFunc(m_objSelf.AttachSrc, strSelectedValue, m_ShutterMode);
+		}
+	};
+	
+	this.CallbackItemMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);	
+		if (!objSrc.hasChildNodes() 
+			|| objSrc.className == "DIV_DLG_ECS_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW"
+			|| objSrc.className == "DIV_DLG_ANGLE_IMAGE")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+		objSrc.style.backgroundColor = "rgb(255,170,0)";
+		if (objSrc.childNodes.length == 3)
+		{
+			objSrc.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Pressed.png)";
+		}
+		if (objSrc.childNodes.length == 4)
+		{
+			objSrc.childNodes.item(2).style.color = "rgb(0,0,0)";
+		}
+	};
+
+	this.CallbackItemMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);	
+		if (!objSrc.hasChildNodes() 
+			|| objSrc.className == "DIV_DLG_ECS_CURRENT_DATA"
+			|| objSrc.className == "DIV_DLG_ARROW"
+			|| objSrc.className == "DIV_DLG_ANGLE_IMAGE")
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (objSrc == m_objCurrentItem)
+		{
+			objSrc.style.color = "rgb(255,170,0)";
+			if (objSrc.childNodes.length == 4)
+			{
+				objSrc.childNodes.item(2).style.color = "rgb(255,170,0)";
+			}
+			if (objSrc.childNodes.length == 3)
+			{
+				objSrc.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png)";
+			}
+		}
+		else
+		{
+			objSrc.style.color = "rgb(230,230,230)";
+			if (objSrc.childNodes.length == 4)
+			{
+				objSrc.childNodes.item(2).style.color = "rgb(230,230,230)";
+			}
+			if (objSrc.childNodes.length == 3)
+			{
+                objSrc.childNodes.item(2).style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Std.png)";
+			}
+		}
+		
+		if (parseInt(objSrc.id) % 2 == 0)
+		{
+			objSrc.style.backgroundColor = "rgb(28,28,28)";
+		}
+		else
+		{
+			objSrc.style.backgroundColor = "";
+		}		
+	};
+	
+	this.CallbackButtonClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if (parseInt(objSrc.id) == 2)
+		{
+			//Back
+			m_Object.style.display = "block";
+			m_SubSelectArea.style.display = "none";
+			m_MainSelectArea.style.display = "block";
+			m_CurrentECSData.innerHTML = m_ObjText.innerHTML;
+		}
+		else
+		{
+			m_Object.style.display = "none";
+			if (null != m_objSelf.CallbackFunc) 
+			{
+				if (0 == parseInt(objSrc.id))
+				{
+					//Cancel
+					m_objSelf.SelectedIndex = parseInt(m_objOldItem.id, 10);
+					var strSelectedValue = m_objSelf.GetCallBackListValue(m_objSelf.SelectedIndex);
+					m_objSelf.CallbackFunc(m_objSelf.AttachSrc, strSelectedValue, "ShutterCancel");
+				}
+				else
+				{
+					//Ok
+					m_objSelf.SelectedIndex = parseInt(m_objCurrentItem.id, 10);
+					m_objSelf.CallbackFunc(m_objSelf.AttachSrc, -1, "Ok");
+				}
+			}
+		}
+	};
+	
+	this.CallbackButtonMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.color = "rgb(0,0,0)";
+		if (parseInt(objSrc.id) == 2)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Pressed.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		}
+	};
+	
+	this.CallbackButtonMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.color = "rgb(230,230,230)";
+		if (parseInt(objSrc.id) == 2)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Normal.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		}
+	};
+	
+	this.CallbackBtnTouchStart = function(objEvent)
+	{	
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(0,0,0)";
+
+		if (parseInt(objSrc.id) == 2)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Pressed.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		}
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		clearInterval(m_ShutterTouchMoveTime);
+		m_ShutterTouchMoveTime = 0;
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		objSrc.style.color = "rgb(230,230,230)";
+		if (parseInt(objSrc.id) == 2)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Back_Normal.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		}
+
+        if (parseInt(objSrc.id) == 2)
+		{
+			//Back
+			m_Object.style.display = "block";
+			m_SubSelectArea.style.display = "none";
+			m_MainSelectArea.style.display = "block";
+		}
+		else
+		{
+			m_Object.style.display = "none";
+			if (null != m_objSelf.CallbackFunc) 
+			{
+				if (0 == parseInt(objSrc.id))
+				{
+					//Cancel
+					m_objSelf.SelectedIndex = parseInt(m_objOldItem.id, 10);
+					var strSelectedValue = m_objSelf.GetCallBackListValue(m_objSelf.SelectedIndex);
+					m_objSelf.CallbackFunc(m_objSelf.AttachSrc, strSelectedValue, "ShutterCancel");
+				}
+				else
+				{
+					//Ok
+					m_objSelf.CallbackFunc(m_objSelf.AttachSrc, -1, "Ok");
+				}
+			}
+		}		
+	};
+	
+	this.SetTitle = function(strTitle)
+	{
+		m_ObjTitle.innerHTML = strTitle;
+	};
+	
+	this.SetSelect = function(selectedValue)
+	{
+		if (selectedValue == "Off")
+		{
+			m_objSelf.SelectedIndex = 0;
+		}
+		else if (selectedValue == "ECS")
+		{
+			m_objSelf.SelectedIndex = m_objSelf.Items.length + 1; 
+		}
+		else
+		{
+			m_objSelf.SelectedIndex = j.inArray(selectedValue, m_objSelf.Items);//return index in array
+		}
+	};
+	
+	this.SetListItems = function(arrItems)
+	{
+		if (arrItems == m_objSelf.Items)
+		{
+			return;
+		}
+		m_objSelf.DeleteOldDlgItemsDIV();
+		m_objSelf.Items = arrItems;
+
+		//Off
+		var divItem = document.createElement("DIV");
+		divItem.className = "DIV_DLG_SHUTTER_ITEM";
+		divItem.style.top = 0 + "px";
+		divItem.innerHTML = "Off";
+		divItem.id = 0 + "_" + m_objSelf.NameID + "_DLG_ITEM";
+		j(divItem).css("background-color","rgb(28,28,28)");
+		
+		AddEvent(divItem, "click", this.CallbackItemClick);
+		AddEvent(divItem, "mousedown", this.CallbackItemMouseDown);
+		AddEvent(divItem, "mouseup", this.CallbackItemMouseUp);
+		AddEvent(divItem, "touchstart", this.CallbackItemTouchStart);	
+		AddEvent(divItem, "touchend", this.CallbackItemTouchEnd);
+		AddEvent(divItem, "touchcancel", this.CallbackItemTouchEnd);
+			
+		var divItemIcon = document.createElement("DIV");
+		divItemIcon.className = "DIV_DLG_ITEM_ICON";
+			
+		divItem.appendChild(divItemIcon);
+		m_ObjItemArea.appendChild(divItem);
+		
+		//List
+		for (var i = 0; i < m_objSelf.Items.length; i++)
+		{
+			var divItem = document.createElement("DIV");
+			divItem.className = "DIV_DLG_SHUTTER_ITEM";
+			divItem.style.top = ((i + 1) * 48) + "px";
+			divItem.innerHTML = m_objSelf.Items[i];
+			divItem.id = i + 1 + "_" + m_objSelf.NameID + "_DLG_ITEM";
+			if ((i + 1) % 2 == 0)
+			{
+				j(divItem).css("background-color","rgb(28,28,28)");
+			}
+			
+			AddEvent(divItem, "click", this.CallbackItemClick);
+			AddEvent(divItem, "mousedown", this.CallbackItemMouseDown);
+			AddEvent(divItem, "mouseup", this.CallbackItemMouseUp);
+			AddEvent(divItem, "touchstart", this.CallbackItemTouchStart);	
+			AddEvent(divItem, "touchend", this.CallbackItemTouchEnd);
+			AddEvent(divItem, "touchcancel", this.CallbackItemTouchEnd);
+			
+			var divItemIcon = document.createElement("DIV");
+			divItemIcon.className = "DIV_DLG_ITEM_ICON";
+			
+			divItem.appendChild(divItemIcon);
+			m_objSelf.SetItemAngleIcon(divItem, i);
+			m_ObjItemArea.appendChild(divItem);
+		}
+		
+		//ECS
+		var divItem = document.createElement("DIV");
+		divItem.className = "DIV_DLG_SHUTTER_ITEM";
+		divItem.style.top = (m_objSelf.Items.length + 1) * 48 + "px";
+		divItem.innerHTML = "ECS";
+		divItem.id = (m_objSelf.Items.length + 1) + "_" + m_objSelf.NameID + "_DLG_ITEM";
+		if ((m_objSelf.Items.length + 1) % 2 == 0)
+		{
+			j(divItem).css("background-color","rgb(28,28,28)");
+		}
+		
+		AddEvent(divItem, "click", this.CallbackItemClick);
+		AddEvent(divItem, "mousedown", this.CallbackItemMouseDown);
+		AddEvent(divItem, "mouseup", this.CallbackItemMouseUp);
+		AddEvent(divItem, "touchstart", this.CallbackItemTouchStart);	
+		AddEvent(divItem, "touchend", this.CallbackItemTouchEnd);
+		AddEvent(divItem, "touchcancel", this.CallbackItemTouchEnd);
+			
+		var divItemIcon = document.createElement("DIV");
+		divItemIcon.className = "DIV_DLG_ITEM_ICON";
+			
+		divItem.appendChild(divItemIcon);
+		
+		var divCurrentData = document.createElement("DIV");
+		divCurrentData.id =  1 + "_DIV_DLG_ECS_CURRENT_DATA";
+		divCurrentData.className = "DIV_DLG_ECS_CURRENT_DATA";
+		m_CurrentECSData = divCurrentData;
+		divItem.appendChild(divCurrentData);
+			
+		var divShutterArrow = document.createElement("DIV");
+		divShutterArrow.className = "DIV_DLG_ARROW";
+		divShutterArrow.innerHTML = ">";
+		divShutterArrow.id = i + "_SHUTTER_ARROW";
+		divItem.appendChild(divShutterArrow);
+		m_ObjItemArea.appendChild(divItem);
+		
+		if ((m_objSelf.Items.length + 2 ) < 6)
+		{
+			for (var i = m_objSelf.Items.length + 2; i < 6; i++)
+			{
+				var divItem = document.createElement("DIV");
+				divItem.className = "DIV_DLG_SHUTTER_ITEM";
+				divItem.style.top = (i * 48) + "px";
+			
+				if (i % 2 == 0)
+				{
+					j(divItem).css("background-color","rgb(28,28,28)");
+				}
+			
+				m_ObjItemArea.appendChild(divItem);
+			}
+		}
+		m_objSelf.SetListItemSelect();
+	};
+	
+	this.DeleteOldDlgItemsDIV = function()
+	{
+		for (var i = 0; i < (m_objSelf.Items.length + 2); i++)
+		{
+			var deleteItem = $(i + "_" + m_objSelf.NameID + "_DLG_ITEM");
+			
+			RemoveEvent(deleteItem, "click", this.CallbackItemClick);
+			RemoveEvent(deleteItem, "mousedown", this.CallbackItemMouseDown);
+			RemoveEvent(deleteItem, "mouseout", this.CallbackItemMouseOut);
+			RemoveEvent(deleteItem, "mouseup", this.CallbackItemMouseUp);
+			RemoveEvent(deleteItem, "touchstart", this.CallbackItemTouchStart);	
+			RemoveEvent(deleteItem, "touchend", this.CallbackItemTouchEnd);
+			RemoveEvent(deleteItem, "touchcancel", this.CallbackItemTouchEnd);
+			j(deleteItem).remove();
+		}
+		
+		if ((m_objSelf.Items.length + 2) < 6)
+		{
+			for (var i = (m_objSelf.Items.length + 2); i < 6; i++)
+			{
+				var deleteItem = $(i + "_" + m_objSelf.NameID + "_DLG_ITEM");
+				j(deleteItem).remove();
+			}
+		}
+	}
+	
+	this.SetListItemSelect = function()
+	{
+		if (!g_shutterEnable)
+		{
+			m_objSelf.SelectedIndex = 0;
+		}
+		else if (g_shutterMode == "ECS")
+		{
+			m_objSelf.SelectedIndex = m_objSelf.Items.length + 1; 
+			m_objSelf.SetSubECSText(g_strShutterValue);
+		}
+		else
+		{
+			m_objSelf.SelectedIndex = j.inArray(g_strShutterValue, m_objSelf.Items) + 1;//return index in array
+		}
+		g_RequestedShutterEnable = g_shutterEnable;
+	};
+	
+	this.CallbackTouchStart = function(objEvent)
+	{
+		m_TouchMoveValue = objEvent.touches[0].pageY;
+		scrollStartPos = this.scrollTop + objEvent.touches[0].pageY;//get first touchDown position.
+		objEvent.preventDefault();
+		m_IsTouchMoving = false;	
+	}; 
+
+	this.CallbackMainItemTouchMove = function(objEvent)
+	{
+		m_TouchMoveValue = m_TouchMoveValue - objEvent.touches[0].pageY;
+		objEvent.preventDefault();
+		if (m_IsTouchMoving)
+		{
+			//change current touchdown item's scrollTop in 
+			this.scrollTop = scrollStartPos - objEvent.touches[0].pageY;
+		}
+	};
+	
+	this.JudgeTouchMoveEvent = function()
+	{
+		if (m_TouchMoveValue < 5 && m_TouchMoveValue > -5)
+		{
+			m_IsTouchMoving = false;
+		}
+		else
+		{
+			m_IsTouchMoving = true;
+		}
+	};
+	
+	this.GrayPartsOfItems = function(isEnabled, value)
+	{
+		for (var i = 0; i < value.length; ++i)
+		{
+			var tempObjItem = $(value[i] + "_" + m_objSelf.NameID + "_DLG_ITEM");
+			if (!isEnabled)
+			{
+				tempObjItem.style.opacity = 0.2;
+				RemoveEvent(tempObjItem, "click", this.CallbackItemClick);
+				RemoveEvent(tempObjItem, "mousedown", this.CallbackItemMouseDown);
+				RemoveEvent(tempObjItem, "mouseup", this.CallbackItemMouseUp);
+				RemoveEvent(tempObjItem, "touchstart", this.CallbackItemTouchStart);	
+				RemoveEvent(tempObjItem, "touchend", this.CallbackItemTouchEnd);
+				RemoveEvent(tempObjItem, "touchcancel", this.CallbackItemTouchEnd);
+			}
+			else
+			{
+				tempObjItem.style.opacity = 1;
+				AddEvent(tempObjItem, "click", this.CallbackItemClick);
+				AddEvent(tempObjItem, "mousedown", this.CallbackItemMouseDown);
+				AddEvent(tempObjItem, "mouseup", this.CallbackItemMouseUp);
+				AddEvent(tempObjItem, "touchstart", this.CallbackItemTouchStart);	
+				AddEvent(tempObjItem, "touchend", this.CallbackItemTouchEnd);
+				AddEvent(tempObjItem, "touchcancel", this.CallbackItemTouchEnd);
+			}
+		}
+	}
+	
+	this.IsDialogShow = function()
+	{
+		var b_IsDlgShow = true;
+		if(m_Object.style.display == "none")
+		{
+			b_IsDlgShow = false;
+		}
+		return b_IsDlgShow;
+	};
+	
+	this.GetCallBackListValue = function(index)
+	{
+		var rntValue;
+		switch (index)
+		{
+			case 0:
+				rntValue = "Off";
+				g_RequestedShutterEnable = false;
+				break;
+			case m_objSelf.Items.length + 1:
+				rntValue = "ECS";
+				g_RequestedShutterEnable = true;
+				break;
+			default:
+				rntValue =  m_objSelf.Items[index - 1];
+				g_RequestedShutterEnable = true;
+				break;
+		}
+		
+		return rntValue;
+	};
+	
+	this.PlusOrMinisButtonClick = function(objSrc)
+	{
+		var strButton;
+		switch (parseInt(objSrc.id, 10))
+		{
+			case 4:
+				//minus
+				strButton = "Minus";
+				break;
+			case 5:
+				//plus
+				strButton = "Plus";
+				break;
+			default:
+				break;
+		}
+		
+		if (null != m_objSelf.CallBackButtonFunc) 
+		{
+			m_objSelf.CallBackButtonFunc(m_objSelf.AttachSrc, strButton);
+		}
+	};
+	
+	this.sliderCallBack = function(currentMulti)
+	{
+		if (((currentMulti > 0) && (0.2 != m_objPlusBtn.style.opacity))
+			||((currentMulti < 0) && (0.2 != m_objMinusBtn.style.opacity)))
+		{
+			if (null != m_objSelf.CallBackSliderFunc) 
+			{
+				m_objSelf.CallBackSliderFunc(m_objSelf.AttachSrc, -currentMulti);
+			}
+		}
+	};
+	
+	this.SetSubECSText = function(strValue)
+	{
+		m_ObjText.innerHTML = strValue;
+		m_CurrentECSData.innerHTML = strValue;
+	};
+	
+	this.SetPlusOrMinisButtonEnabled = function(buttonId, isEnabled)
+	{
+		if (buttonId == "plus")
+		{
+			m_objPlusBtn.userData.SetDisabled(!isEnabled);
+			m_objPlusBtn.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Plus_Normal.png)";
+		}
+		else if (buttonId == "minus")
+		{
+			m_objMinusBtn.userData.SetDisabled(!isEnabled);
+			m_objMinusBtn.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Minus_Normal.png)";
+		}
+	};
+	
+	this.SetShutterMode = function(strMode)
+	{
+		m_ShutterMode = strMode;
+	};
+	
+	this.SetItemAngleIcon = function(divItem, index)
+	{
+		if(g_GetListMode == "Angle")
+		{
+			j(divItem).css({"width" : "230px", "padding-left" : "42px"});
+			var divAngleIcon = document.createElement("DIV");
+			divAngleIcon.id = index + "_DIV_DLG_ANGLE_IMAGE";
+			divAngleIcon.className = "DIV_DLG_ANGLE_IMAGE";
+			divAngleIcon.style.top = "2px";
+			divItem.appendChild(divAngleIcon);
+			divAngleIcon.style.left = (m_objSelf.Items.length > 5) ? "14px":"15px";
+		}
+	};
+	
+	this.ClearTimer = function()
+	{
+		clearInterval(m_ShutterTouchMoveTime);
+		m_ShutterTouchMoveTime = 0;
+	};
+	this.Create();
+}

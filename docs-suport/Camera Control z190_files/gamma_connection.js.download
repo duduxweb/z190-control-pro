@@ -1,0 +1,217 @@
+// JavaScript Document
+var g_strGammaType = null;
+var g_strGammaValue = null;
+var g_bGammaGray = false;
+var ShootMode =null;
+var HDRMode =null;
+var HDRValue=null;
+var GammaCtrl = {
+	GetValue : function()
+	{
+		var names = {"Paint.Gamma.Enabled":["*"],"Paint.Gamma.Type":["*"],"Paint.Gamma.Value":["*"],"Paint.Gamma.HDR.Value":["cam"],"Camera.ShootingMode":["cam"],"Camera.ShootingMode.QFHD.RecOut":["cam"]};
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			var respGamma = JSON.stringify(resp.error || resp.result);
+			var gammaData = JSON.parse(respGamma);
+			if (gammaData == "timeout")
+			{
+					
+			}
+			else {
+                 ShootMode = gammaData["Camera.ShootingMode"]["cam"];
+                HDRMode =gammaData["Camera.ShootingMode.QFHD.RecOut"]["cam"];
+                HDRValue = gammaData["Paint.Gamma.HDR.Value"]["cam"];
+                var gammaValue = gammaData["Paint.Gamma.Value"];
+                g_strGammaType = gammaData["Paint.Gamma.Type"];
+                var isEnabled = gammaData["Paint.Gamma.Enabled"];
+                var gammaValueMap = {
+                    "STD1": "STD1 DVW",
+                    "STD2": "STD2 x4.5",
+                    "STD3": "STD3 x3.5",
+                    "STD4": "STD4 240M",
+                    "STD5": "STD5 R709",
+                    "STD6": "STD6 x5.0",
+                    "HG1": "HG1 3250G36",
+                    "HG2": "HG2 4600G30",
+                    "HG3": "HG3 3259G40",
+                    "HG4": "HG4 4609G33"
+                };
+                g_strGammaValue = gammaValueMap[gammaValue];
+                if (ShootMode == "SDR") {
+
+                    g_objGamma.innerHTML = g_strGammaValue;
+
+                    if ("HyperGamma" == g_strGammaType) {
+                        g_strGammaType = "HG";
+                    }
+                    g_objGamma.userData[1].SetGammaType(g_strGammaType);
+                    g_objGamma.userData[1].SetSelect(g_strGammaValue);
+                }else if(ShootMode == "HDR"){
+
+                	if(HDRMode == "S-Log3"){
+                        g_objGamma.innerHTML = HDRMode;
+					}else{
+                        g_objGamma.innerHTML =HDRValue ;
+					}
+				}
+            }
+		}
+		});
+
+	},
+	
+	SetValue : function(gammaType, SelectedValue)
+	{
+		if (gammaType == "STD")
+		{
+			SelectedValue = SelectedValue.substr(0,4);
+		}
+		else if (gammaType == "HG")
+		{
+			gammaType = "HyperGamma";
+			SelectedValue = SelectedValue.substr(0,3);
+		}
+		// else if (gammaType == "User")
+		// {
+		// 	SelectedValue = SelectedValue.substr(0,4) + SelectedValue.substr(5,6);
+		// }
+		var names = {"Paint.Gamma.Type":gammaType,"Paint.Gamma.Value":SelectedValue};
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }});	
+	},
+	
+	GetStatus : function()
+	{
+		var names = {"Paint.Gamma.Enabled":null};
+		var id = client.property.GetStatus({params: names,
+		onresponse: function(resp) {
+			var resp_str = JSON.stringify(resp.error || resp.result);
+			var gamma_GetStatus = JSON.parse(resp_str);
+			if (gamma_GetStatus == "timeout")
+			{		
+			}
+			else
+			{
+
+				if ("Locked" == gamma_GetStatus["Paint.Gamma.Enabled"])
+				{
+					g_bGammaGray = true;
+						
+					if (g_OldObject == g_objGamma)
+					{
+						g_objGamma.userData[1].ShowDialog(false);
+						g_OldObject = null;
+					}
+				}
+				else
+				{
+					g_bGammaGray = false;
+				}
+				g_objGamma.userData[0].SetDisable(g_bGammaGray);
+
+			}
+		}});
+	},
+
+    NotifyGammaStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Paint.Gamma.Enabled":
+                    GammaCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetGammaData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {		
+			switch(key)
+			{
+				case "Paint.Gamma.Enabled":
+                    GammaCtrl.GetStatus();
+					break;
+				case "Paint.Gamma.Type":
+					g_strGammaType = value;
+					if ("HyperGamma" == g_strGammaType)
+					{
+						g_strGammaType = "HG";
+					}
+					g_objGamma.userData[1].SetGammaType(g_strGammaType);
+					break;
+				case "Paint.Gamma.Value":
+					var gammaValueMap = {"STD1":"STD1 DVW",
+									 "STD2":"STD2 x4.5",
+									 "STD3":"STD3 x3.5",
+									 "STD4":"STD4 240M",
+									 "STD5":"STD5 R709",
+									 "STD6":"STD6 x5.0",
+									 "HG1":"HG1 3250G36",
+									 "HG2":"HG2 4600G30",
+									 "HG3":"HG3 3259G40",
+									 "HG4":"HG4 4609G33"};
+					g_strGammaValue = gammaValueMap[value];
+					g_objGamma.innerHTML = g_strGammaValue;
+					g_objGamma.userData[1].SetSelect(g_strGammaValue);
+					break;
+				case "P.Menu.pmw-f5x.Event.EventID":
+					if ((EVENT_PLAY_UPDATE == value)
+						|| (EVENT_THUMBNAIL_UPDATE == value)
+						|| (EVENT_RECORDE_UPDATE == value)
+						|| (EVENT_VIEW_UPDATE == value)
+						|| (EVENT_GAMMA_UPDATE == value)
+						|| (EVENT_ABB_EXECUTE_FOR_GREY_OUT == value)
+						|| (EVENT_AWB_MODE_DISPLAY == value)
+						|| (EVENTKIND_POOLFEED_REFRESH == value))
+					{
+						GammaCtrl.GetStatus();
+					}
+					break;
+				case "Paint.Gamma.HDR.Value":
+                    HDRValue =value["cam"];
+                    if(ShootMode == "HDR"){
+                        if(HDRMode == "S-Log3"){
+                            g_objGamma.innerHTML = HDRMode;
+                        }else{
+                            g_objGamma.innerHTML =HDRValue;
+                        }
+                    }else{
+                        g_objGamma.innerHTML = g_strGammaValue;
+                        g_objGamma.userData[1].SetSelect(g_strGammaValue);
+                    }
+					break;
+				case "Camera.ShootingMode":
+                    ShootMode=value["cam"];
+                    if(ShootMode == "HDR"){
+                        if(HDRMode == "S-Log3"){
+                            g_objGamma.innerHTML = HDRMode;
+                        }else{
+                            g_objGamma.innerHTML =HDRValue;
+                        }
+                    }else{
+                        g_objGamma.innerHTML = g_strGammaValue;
+                        g_objGamma.userData[1].SetSelect(g_strGammaValue);
+					}
+					break;
+				case "Camera.ShootingMode.QFHD.RecOut":
+					HDRMode =value["cam"];
+                    if(ShootMode == "HDR"){
+                        if(HDRMode == "S-Log3"){
+                            g_objGamma.innerHTML = HDRMode;
+                        }else{
+                            g_objGamma.innerHTML =HDRValue;
+                        }
+                    }else{
+                        g_objGamma.innerHTML = g_strGammaValue;
+                        g_objGamma.userData[1].SetSelect(g_strGammaValue);
+                    }
+					break;
+				default:
+					break;
+			}
+		})
+	},
+}

@@ -1,0 +1,108 @@
+// JavaScript Document
+var g_bAutoShutterGray = false;
+var AutoShutterCtrl = {
+
+	GetValue : function()
+	{
+		var names = {"Camera.Shutter.SettingMethod":["*"]};
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			var respAuShutter = JSON.stringify(resp.error || resp.result);
+			var AShutterData = JSON.parse(respAuShutter);
+			if (AShutterData == "timeout")
+			{
+					
+			}
+			else
+			{
+				var AshutterValue = AShutterData["Camera.Shutter.SettingMethod"];
+				var AshutterValueMap = {"Manual":"Off","Automatic":"On"};
+
+				if ("Manual" == AshutterValue)
+				{
+					g_objAutoShutter.innerHTML = "Off";
+				}
+				else if ("Automatic" == AshutterValue)
+				{
+					g_objAutoShutter.innerHTML = "On";
+				}
+				g_objAutoShutter.userData[1].SetSelect(g_objAutoShutter.innerHTML);
+			}
+		}});
+
+	},
+
+	SetValue : function(isEnabled, SelectedValue)
+	{
+		var AshutterValueMap = {"Off":"Manual","On":"Automatic"};
+		var names = {"Camera.Shutter.SettingMethod":AshutterValueMap[SelectedValue]};
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }});	
+	},
+
+    NotifyAutoShutterStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.Shutter.SettingMethod":
+                    AutoShutterCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	GetStatus : function()
+	{
+		var names = {"Camera.Shutter.SettingMethod":null};
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) {
+			var resp_str = JSON.stringify(resp.error || resp.result);
+			var statusData = JSON.parse(resp_str);
+			if (statusData == "timeout")
+			{
+				//TODO
+			}
+			else
+			{
+				if ("Locked" == statusData["Camera.Shutter.SettingMethod"])
+				{
+					g_bAutoShutterGray = true;
+					if (g_OldObject == g_objAutoShutter)
+					{
+						g_objAutoShutter.userData[1].ShowDialog(false);
+						g_OldObject = null;
+					}
+				}
+				else
+				{
+					g_bAutoShutterGray = false;
+				}
+				g_objAutoShutter.userData[0].SetDisable(g_bAutoShutterGray);
+			}
+		}});
+	},
+
+	NotifySetAutoShutterData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {
+			switch(key)
+			{
+				case "Camera.Shutter.SettingMethod":
+					if ("Manual" == value)
+					{
+						g_objAutoShutter.innerHTML = "Off";
+					}
+					else if ("Automatic" == value)
+					{
+						g_objAutoShutter.innerHTML = "On";
+					}
+					g_objAutoShutter.userData[1].SetSelect(g_objAutoShutter.innerHTML);
+                    AutoShutterCtrl.GetStatus();
+					break;
+				default: 
+					break;
+			}
+		})
+	}
+}

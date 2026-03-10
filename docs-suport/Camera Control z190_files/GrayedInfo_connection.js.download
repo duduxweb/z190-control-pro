@@ -1,0 +1,73 @@
+
+function NotifyMessagePopupProperties(objArrItems)
+{
+	j.each(objArrItems, function(key, value) {
+		if ("Network.RemoteControl.Allow" == key)
+		{
+			MenuGrayStatus = value["read"];
+			if (MenuGrayStatus == false)
+			{
+			   if (g_OldObject)
+			   {
+					g_OldObject.userData[1].ShowDialog(false);
+			   }
+			   if (GotoCursor  == false)
+			   {
+					objUpperMask.style.display = "block";
+					objMiddleMask.style.display = "block";
+					objLowerMask.style.display = "block";
+			   }
+			   if (GotoCursor  == true)
+			   {
+					objUpperMask.style.display = "block";
+					objMiddleMask.style.display = "block";
+					objLowerMask.style.display = "none";
+					g_objMaskClickDlg.userData.ShowDialog(false);   
+			   }
+			}
+			if (MenuGrayStatus == true)
+			{
+				objABMask.style.display = "none";
+				objUpperMask.style.display = "none";
+				objMiddleMask.style.display = "none";
+				objLowerMask.style.display = "none";
+				g_objMaskClickDlg.userData.ShowDialog(false);
+			}
+	}});
+}
+
+function GetMessagePopupStatus()
+{	
+	var names = {"Network.RemoteControl.Allow":null};
+	var id = client.property.GetValue({params: names, onresponse: function(resp) {
+		var respMessagePopup = JSON.stringify(resp.error || resp.result);
+		var MessagePopupData = JSON.parse(respMessagePopup);
+		var allow = MessagePopupData["Network.RemoteControl.Allow"] || {};
+		MenuGrayStatus =  allow.read;
+		
+		if (MenuGrayStatus == false)
+		{
+		   if (GotoCursor  == false)
+		   {
+				objUpperMask.style.display = "block";
+				objMiddleMask.style.display = "block";
+				objLowerMask.style.display = "block";
+		   }
+		   if (GotoCursor  == true)
+		   {
+				objUpperMask.style.display = "block";
+				objMiddleMask.style.display = "block";
+				objLowerMask.style.display = "none";
+				g_objMaskClickDlg.userData.ShowDialog(false);
+		   }
+		}
+		if (MenuGrayStatus == true)
+		{
+			objABMask.style.display = "none";
+			objUpperMask.style.display = "none";
+			objMiddleMask.style.display = "none";
+			objLowerMask.style.display = "none";
+			g_objMaskClickDlg.userData.ShowDialog(false);
+		}	 		
+	}});
+}

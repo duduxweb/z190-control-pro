@@ -16,6 +16,11 @@ cd z190-control-pro
 npm install
 ```
 
+```bash
+npx playwright install
+npm install ws
+```
+
 ## Uso
 
 ### Iniciar o painel de controle
@@ -92,10 +97,6 @@ O dashboard exibe em tempo real os valores atuais da câmera:
 - **Gravação**: Color bars, status
 
 Os dados são atualizados automaticamente a cada 3 segundos via polling.
-
-## Versão Web (Arquivada)
-
-A pasta `zcontrol-web/` contém uma versão web completa com React 19 + tRPC + Tailwind CSS 4, projetada para rodar na nuvem com sistema de Bridge WebSocket. Esta versão está arquivada para referência futura.
 
 ## Licença
 

@@ -1,0 +1,122 @@
+// JavaScript Document
+var g_bAutoNDGray = false;
+var AutoNDCtrl = {
+
+	GetValue : function()
+	{
+		var names = {"Camera.NDFilter.SettingMethod":["cam"]};
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			var respAuND = JSON.stringify(resp.error || resp.result);
+			var ANDData = JSON.parse(respAuND);
+			if (ANDData == "timeout")
+			{
+					
+			}
+			else
+			{
+				var ANDValue = ANDData["Camera.NDFilter.SettingMethod"];
+                var TrueValue=null;
+                for(var item in ANDValue){
+                    if(item=="cam"){  //item 表示Json串中的属性，如'name'
+                        TrueValue=ANDValue[item];//key所对应的value
+
+                    }
+                }
+				var ANDValueMap = {"Manual":"Off","Automatic":"On"};
+
+				if ("Manual" == TrueValue)
+				{
+					g_objAutoND.innerHTML = "Off";
+				}
+				else if ("Automatic" == TrueValue)
+				{
+					g_objAutoND.innerHTML = "On";
+				}
+				g_objAutoND.userData[1].SetSelect(g_objAutoND.innerHTML);
+			}
+		}});
+
+	},
+
+	SetValue : function(isEnabled, SelectedValue)
+	{
+		var ANDValueMap = {"Off":"Manual","On":"Automatic"};
+		var names = {"Camera.NDFilter.SettingMethod":{"cam":ANDValueMap[SelectedValue]}};
+		var id = client.property.SetValue({params: names, onresponse: function(resp) { }});	
+	},
+	
+	GetStatus : function()
+	{
+		var names = {"Camera.NDFilter.SettingMethod":null};
+		var id = client.property.GetStatus({params: names, onresponse: function(resp) {
+			var resp_str = JSON.stringify(resp.error || resp.result);
+			var statusData = JSON.parse(resp_str);
+			if (statusData == "timeout")
+			{
+				//TODO
+			}
+			else
+			{
+				if ("Locked" == statusData["Camera.NDFilter.SettingMethod"])
+				{
+					g_bAutoNDGray = true;
+					if (g_OldObject == g_objAutoND)
+					{
+						g_objAutoND.userData[1].ShowDialog(false);
+						g_OldObject = null;
+					}
+				}
+				else
+				{
+					g_bAutoNDGray = false;
+				}
+				g_objAutoND.userData[0].SetDisable(g_bAutoNDGray);
+			}
+		}});
+	},
+
+
+    NotifyAutoNDStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.NDFilter.SettingMethod":
+                    AutoNDCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetANDData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {
+			switch(key)
+			{
+				case "Camera.NDFilter.SettingMethod":
+                    var TrueValue=null;
+                    for(var item in value){
+                        if(item=="cam"){  //item 表示Json串中的属性，如'name'
+                            TrueValue=value[item];//key所对应的value
+
+                        }
+                    }
+					if ("Manual" == TrueValue)
+					{
+						g_objAutoND.innerHTML = "Off";
+					}
+					else if ("Automatic" == TrueValue)
+					{
+						g_objAutoND.innerHTML = "On";
+					}
+					g_objAutoND.userData[1].SetSelect(g_objAutoND.innerHTML);
+					break;
+				default: 
+					break;
+			}
+		})
+	}
+}

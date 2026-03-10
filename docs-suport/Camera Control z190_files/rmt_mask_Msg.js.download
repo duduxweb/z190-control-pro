@@ -1,0 +1,171 @@
+// JavaScript Document
+function MenuMaskMsg(objSrc, AlertText, CallbackFunc)
+{
+	this.AlertText = AlertText;
+	this.CallbackFunc = CallbackFunc;
+	
+	var m_Object = objSrc;
+	var m_ObjTitle = null;
+	var m_ObjTextField = null;
+	var m_ObjSelf = this;
+	var m_MessageID = 0;
+	
+	this.Create = function () 
+	{
+		m_Object.style.display = "none";
+		
+		var divTitle = document.createElement("DIV");
+		divTitle.id = "DIV_MESSAGE_DIALOG_TITLE";
+		divTitle.className = "DIV_MESSAGE_DIALOG_TITLE";
+		divTitle.style.top = "14px";
+		m_ObjTitle = divTitle;
+		m_Object.appendChild(divTitle);
+		
+		var divTextField = document.createElement("DIV");
+		divTextField.id="DIV_MESSAGE_DIALOG_TEXTFIELD";
+		divTextField.className = "DIV_MESSAGE_DIALOG_TEXTFIELD";
+		divTextField.innerHTML = this.AlertText;
+		m_Object.appendChild(divTextField);	
+		m_ObjTextField = divTextField; 
+		
+		var divTopSeparator = document.createElement("DIV");
+		divTopSeparator.className = "DIV_DLG_SEPARATOR";
+		divTopSeparator.style.top = "36px";
+		divTopSeparator.style.left = "16px";
+		divTopSeparator.style.width = "324px";
+		m_Object.appendChild(divTopSeparator);
+		
+		var divDownSeparator = document.createElement("DIV");
+		divDownSeparator.className = "DIV_DLG_SEPARATOR";
+		divDownSeparator.style.top = "188px";
+		divDownSeparator.style.left = "16px";
+		divDownSeparator.style.width = "324px";
+		m_Object.appendChild(divDownSeparator);
+		
+		var divExecuteBtn =document.createElement("DIV");
+		divExecuteBtn.id = "1_DIV_MESSAGE_DLG_SETTING_BUTTON"
+		divExecuteBtn.className = "DIV_MESSAGE_DLG_OK_BUTTON";
+		divExecuteBtn.style.top = "188px"
+		divExecuteBtn.style.right = "8px";
+		divExecuteBtn.innerHTML = "OK";
+		AddEvent(divExecuteBtn, "click", this.CallbackBtnClick);
+		AddEvent(divExecuteBtn, "mouseover", this.CallbackBtnMouseOver);
+		AddEvent(divExecuteBtn, "mouseout", this.CallbackBtnMouseOut);
+		AddEvent(divExecuteBtn, "mousedown", this.CallbackBtnMouseDown);
+		AddEvent(divExecuteBtn, "mouseup", this.CallbackBtnMouseUp);
+		AddEvent(divExecuteBtn, "touchstart", this.CallbackBtnTouchStart);	
+		AddEvent(divExecuteBtn, "touchend", this.CallbackBtnTouchEnd);
+		AddEvent(divExecuteBtn, "touchcancel", this.CallbackBtnTouchCancel);
+		
+		m_Object.appendChild(divExecuteBtn);	
+	}
+	
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objEvent.preventDefault();
+		objSrc.style.color = "rgb(0,0,0)";
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(230,230,230)";
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+
+		m_Object.style.display = "none";
+		
+	};
+
+	this.CallbackBtnTouchCancel = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		objSrc.style.color = "rgb(230,230,230)";
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+	};
+
+	this.CallbackBtnClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+
+		if (m_ObjSelf.CallbackFunc) 
+		{
+			m_ObjSelf.CallbackFunc(m_Object, true, m_MessageID);
+		}
+
+		m_Object.style.display = "none";
+
+	};
+	
+	this.CallbackBtnMouseOver = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+	};
+	
+	this.CallbackBtnMouseOut = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+	};
+	
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Pressed.png)";
+		objSrc.style.color = "rgb(23,23,23)";
+	};
+	
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png)";
+		objSrc.style.color = "rgb(230,230,230)";
+	};
+	
+	this.ShowDialog = function()
+	{
+		if ((arguments.length != 0) && (false == arguments[0]))
+		{
+			m_Object.style.display = "none";
+			return;
+		}
+		
+		if("none" == m_Object.style.display) {
+			m_Object.style.display = "block";
+		}
+	}
+	
+	this.SetText = function(AlertText)
+	{
+		m_ObjTextField.innerHTML = AlertText;
+	}
+	
+	this.SetTitle = function(objTitle)
+	{
+		m_ObjTitle.innerHTML = objTitle;
+	}
+	
+	this.SetMessageID = function(iMsgID)
+	{
+		m_MessageID = iMsgID;
+	}
+	this.Create();
+}

@@ -1,0 +1,195 @@
+// JavaScript Document
+
+function SwitchButtonCtrl(objSrc, objCallback, objIndex)
+{
+	this.Parent = GetParent(objSrc);
+	this.AttachSrc = objSrc;
+	this.CallbackFunc = objCallback;
+	this.RootURL = GetRootPath();
+	this.Type = "BUTTON";
+	this.Status = false;
+	this.Index = objIndex;
+	
+	var m_objSelf = null;
+	
+	this.Initialize = function()
+	{
+		if (!m_objSelf)
+		{
+			m_objSelf = this;
+			AddEvent(this.AttachSrc, "click", this.CallbackBtnClick);
+			AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);	
+			AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);	
+			AddEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchEnd);
+		}
+	};
+
+	
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if (m_objSelf.Status == true)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Pressed.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Pressed.png)";
+		}
+	};
+	
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if (m_objSelf.Status == true)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Normal.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png)";
+		}
+	};
+	
+	this.CallbackBtnClick = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		if (m_objSelf.CallbackFunc)
+		{
+			m_objSelf.CallbackFunc(m_objSelf.AttachSrc);
+		}
+	};
+	
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		objEvent.preventDefault();
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if (m_objSelf.Status == true)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Pressed.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Pressed.png)";
+		}
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if (m_objSelf.Status == true)
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Normal.png)";
+		}
+		else
+		{
+			objSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png)";
+		}
+
+		if (m_objSelf.CallbackFunc)
+		{
+			m_objSelf.CallbackFunc(m_objSelf.AttachSrc);
+		}
+	};
+	
+	this.SetStatus = function(lightStatus)
+	{
+		this.AttachSrc.Status = lightStatus;
+		m_objSelf.Status = lightStatus;
+		if (m_objSelf.Status == true)
+		{
+			m_objSelf.AttachSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_Active_Normal.png)";
+		}
+		else
+		{
+			m_objSelf.AttachSrc.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png)";
+		}
+	};
+	
+	this.SetDisabled = function(bDisabled)
+	{
+		if (g_LockFlag)
+		{
+			RemoveEvent(this.AttachSrc, "click", this.CallbackBtnClick);
+			RemoveEvent(this.AttachSrc, "mouseout", this.CallbackBtnMouseOut);
+			RemoveEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+			RemoveEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);
+			RemoveEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+			RemoveEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);
+			RemoveEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchCancel);
+			
+			AddEvent(this.AttachSrc, "touchstart", this.CallBackTouchEmptyEvent);
+			AddEvent(this.AttachSrc, "touchend", this.CallBackTouchEmptyEvent);	
+			this.AttachSrc.style.opacity = 0.2;
+			this.AttachSrc.style.color = "rgb(10,10,10)";
+		}
+		else
+		{
+			if (bDisabled)
+			{
+				this.AttachSrc.style.opacity = 0.2;
+				this.AttachSrc.style.color = "rgb(10,10,10)"
+				RemoveEvent(this.AttachSrc, "click", this.CallbackBtnClick);
+				RemoveEvent(this.AttachSrc, "mouseout", this.CallbackBtnMouseOut);
+				RemoveEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+				RemoveEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);	
+				RemoveEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+				RemoveEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);	
+				RemoveEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchCancel);
+				AddEvent(this.AttachSrc, "touchstart", this.CallbackEmptyTouchEvent);	
+				AddEvent(this.AttachSrc, "touchend", this.CallbackEmptyTouchEvent);	
+				AddEvent(this.AttachSrc, "touchcancel", this.CallbackEmptyTouchEvent);
+			}
+			else
+			{
+				this.AttachSrc.style.opacity = 1;
+				this.AttachSrc.style.color = "rgb(51,51,51)"
+				AddEvent(this.AttachSrc, "click", this.CallbackBtnClick);
+				AddEvent(this.AttachSrc, "mouseout", this.CallbackBtnMouseOut);
+				AddEvent(this.AttachSrc, "mousedown", this.CallbackBtnMouseDown);
+				AddEvent(this.AttachSrc, "mouseup", this.CallbackBtnMouseUp);	
+				AddEvent(this.AttachSrc, "touchstart", this.CallbackBtnTouchStart);	
+				AddEvent(this.AttachSrc, "touchend", this.CallbackBtnTouchEnd);	
+				AddEvent(this.AttachSrc, "touchcancel", this.CallbackBtnTouchCancel);
+				RemoveEvent(this.AttachSrc, "touchstart", this.CallbackEmptyTouchEvent);	
+				RemoveEvent(this.AttachSrc, "touchend", this.CallbackEmptyTouchEvent);	
+				RemoveEvent(this.AttachSrc, "touchcancel", this.CallbackEmptyTouchEvent);
+			}
+		}
+	}
+	
+	this.CallbackEmptyTouchEvent = function CallbackEmptyTouchEvent(objEvent)
+	{
+		objEvent.preventDefault();
+	};
+	
+	this.Initialize();
+}

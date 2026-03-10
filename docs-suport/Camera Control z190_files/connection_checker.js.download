@@ -1,0 +1,79 @@
+// JavaScript Document
+this.ConnectionChecker || (function (global) {
+	'use strict';
+
+	global.ConnectionChecker = function(){
+		var checker = this;
+
+		checker.if = {};
+		checker.pollingTimer = null;
+		checker.deferred  = null;
+
+		checker.start = function(){
+			if( checker.deferred && 'pending' == checker.deferred.state() ){
+				return checker.deferred.promise();
+			}
+			checker.deferred = j.Deferred();
+			checker.polling();
+			return checker.deferred.promise();
+		};
+
+		checker.stop = function(){
+			if( checker.pollingTimer !== null ){
+				clearTimeout(checker.pollingTimer);
+				checker.pollingTimer = null;
+			}
+			if( checker.deferred && 'pending' == checker.deferred.state() ){
+				checker.deferred.resolve();
+			}
+		};
+
+		checker.polling = function(){
+			checker.pollingTimer = setTimeout(function(){
+				checker.check()
+				.done(checker.polling)
+				.fail(function(e){
+					checker.deferred.reject(e);
+				});
+			}, 3000);
+		};
+
+		checker.check = function(){
+			var deferred = j.Deferred();
+			var ret = client.property.GetValue({
+				params : [{ 'System.Config':['RemoteSetting']}], // {'Network.Connection.KeepAlive':["cam"]} ‚Ì‘ã‚í‚è.
+				onresponse : function(resp){
+					if(resp.error && resp.error === 'timeout'){
+						deferred.reject(resp.error);
+					}
+					else if( checker.isUnauthorizedError(resp.error) ){
+						deferred.reject(resp.error[1]);
+					}
+					else{
+						deferred.resolve();
+					}
+				},
+				timeout : 2000
+			});
+			if( 0 > ret ){
+				deferred.reject();
+			}
+			return deferred.promise();
+		};
+
+		checker.isUnauthorizedError = function(error){
+			if( j.isArray(error) && 2 == error.length ){
+				if( 401 === error[0] ){
+					return true;
+				}
+			}
+			return false;
+		};
+
+		checker.if.start = checker.start;
+		checker.if.stop = checker.stop;
+
+		return checker.if;
+	};
+})(this);
+

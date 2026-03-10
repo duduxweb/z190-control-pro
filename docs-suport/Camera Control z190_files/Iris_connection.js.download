@@ -1,0 +1,176 @@
+// JavaScript Document
+
+var IrisValue = 5.6;
+var g_bIrisGray = false;
+var IsIrisClose = false;
+var IrisValue1 = 0;
+var Irispre1 = 0;
+var Irisnext1 = -1;
+var Irispre2 = 0;
+var Irisnext2 = -1;
+
+var IrisCtrl = {
+
+	GetValue : function()
+	{
+		var  assignValueItems = new Array();
+		var names = {"Camera.Iris.Value":["*"],"Camera.Iris.Close.Enabled":["*"]};
+		
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			
+			var respIris = JSON.stringify(resp.error || resp.result);
+			var IrisData = JSON.parse(respIris);
+			
+			
+			if (IrisData == "timeout")
+			{
+					
+			}
+			else
+			{
+				IrisValue1 = IrisData["Camera.Iris.Value"];
+				IsIrisClose = IrisData["Camera.Iris.Close.Enabled"];
+				if (g_LensMountValue != "Disconnected")
+				{
+					if (IsIrisClose == "true" || IsIrisClose == true)
+					{	
+						g_ObjIrisValue.innerHTML = "Close";
+					}
+					else
+					{	
+						if ( IrisValue1 == 2 || IrisValue1 == 4 || IrisValue1 == 8 || IrisValue1 == 11 || IrisValue1 == 10 )
+						{
+							g_ObjIrisValue.innerHTML = "F" + IrisValue1;
+						}
+						else
+						{
+							g_ObjIrisValue.innerHTML = "F" + Irisplusone(IrisValue1);
+						}
+					}
+				}
+				g_ObjIrisButton.userData[0].UpdateIrisSlider();
+			}
+	
+		}});
+
+	},
+	
+	SetValue : function()
+	{
+		var names = {"Camera.Iris.Value":linear.tofloat(IrisValue),"Camera.Iris.Close.Enabled":IsIrisClose};
+		var id = client.property.SetValue({params: names,
+		onresponse: function(resp) {
+											
+		}})
+	},
+	
+	GetStatus : function ()
+	{
+		var names = {"Camera.Iris.SettingMethod":null,"Camera.Iris.Close.Enabled":null};
+		
+		var id = client.property.GetStatus({params: names,
+			onresponse: function(resp) {
+				var resp_str = JSON.stringify(resp.error || resp.result);
+				var respData = JSON.parse(resp_str);
+				if (respData == "timeout")
+				{		
+				}
+				else
+				{
+					var strIrisLocked = respData["Camera.Iris.SettingMethod"];
+					var IrisIsClosedLocked = respData["Camera.Iris.Close.Enabled"];
+					if(strIrisLocked == "Locked" || g_LensMountValue == "Disconnected" || IrisIsClosedLocked == "Locked" || g_objAutoIris.innerHTML == "On")
+					{
+						g_bIrisGray = true;	
+					}
+					else 
+					{
+						g_bIrisGray = false;
+					}
+					IrisGrayFunction(g_bIrisGray, g_LockFlag);
+				}
+			},
+
+
+			timeout:3000});
+	},
+
+    NotifyIrisStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.Iris.SettingMethod":
+                    IrisCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetIrisData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) 
+		{
+			if ("Camera.Iris.Close.Enabled" == key)
+			{
+				IsIrisClose = value;
+                if (IsIrisClose == "true" || IsIrisClose == true)
+                {
+                    g_ObjIrisValue.innerHTML = "Close";
+					g_ObjIrisButton.userData[0].UpdateIrisSlider();
+                }
+			}
+			
+			if ("Camera.Iris.Value" == key)
+			{
+				if (g_LensMountValue != "Disconnected")
+				{
+					IrisValue1 = value;
+					if (IsIrisClose == "true" || IsIrisClose == true)
+					{
+						g_ObjIrisValue.innerHTML = "Close";
+					}
+					else
+					{
+						if ( IrisValue1 == 2 || IrisValue1 == 4 || IrisValue1 == 8 || IrisValue1 == 11 || IrisValue1 == 10 )
+						{
+							g_ObjIrisValue.innerHTML = "F" + IrisValue1;
+						}
+						else
+						{
+							g_ObjIrisValue.innerHTML = "F" + Irisplusone(IrisValue1);
+						}
+
+						g_ObjIrisButton.userData[0].UpdateIrisSlider();
+					}
+				}
+			}
+			
+			if ("P.Menu.pmw-f5x.Event.EventID" == key)
+			{
+				if (value == EVENT_THUMBNAIL_UPDATE || 
+					value == EVENT_PLAY_UPDATE || 
+					value == EVENT_RECORDE_UPDATE || 
+					value == EVENT_VIEW_UPDATE || 
+					value == EVENT_IRISPOSITION_NOTIFY_DISPLAY ||
+					value == EVENT_700P_CONNECTION_STATUS_REFRESH_WIFI ||
+					value == EVENT_IRISAUTOMODE_NOTIFY_DISPLAY ||
+					value == EVENT_ATTACHLENS_NOTIFY_LENSEXTENDER_UPDATE ||
+					value == EVENTKIND_POOLFEED_REFRESH)
+				{
+					IrisCtrl.GetStatus();
+				}
+			}
+
+			if("Camera.Iris.SettingMethod" == key)
+			{
+                IrisCtrl.GetStatus();
+			}
+			
+		})
+
+	}
+}

@@ -1,0 +1,132 @@
+// JavaScript Document
+
+var IsZoomLock = "Unlocked";
+var ZoomValue = 0;
+var g_bZoomGray = false;
+var Zoompre1 = 0;
+var Zoomnext1 = -1;
+var Zoompre2 = 0;
+var Zoomnext2 = -1;
+
+
+var ZoomCtrl = {
+
+	GetValue : function()
+	{
+		var  assignValueItems = new Array();
+		var names = {"Camera.Zoom.Value":["*"]};
+		var id = client.property.GetValue({params: names,
+		onresponse: function(resp) {
+			var respZoom = JSON.stringify(resp.error || resp.result);
+			var ZoomData = JSON.parse(respZoom);
+			if (ZoomData == "timeout")
+			{
+					
+			}
+			else
+			{
+				var ZoomValue1 = ZoomData["Camera.Zoom.Value"];
+				if (g_LensMountValue != "Disconnected")
+				{
+					g_ObjZoomValue.innerHTML = ZoomValue1;
+				}
+			}
+		
+		}});
+
+	},
+
+	GetStatus : function ()
+	{
+		var names = {"Camera.Zoom.Value":null};
+		
+		var id = client.property.GetStatus({params: names,
+			onresponse: function(resp) {
+				var resp_str = JSON.stringify(resp.error || resp.result);
+				var respData = JSON.parse(resp_str);
+				if (respData == "timeout")
+				{		
+				}
+				else
+				{
+					var strZoomLocked = respData["Camera.Zoom.Value"];
+					
+					if(strZoomLocked == "Locked")
+					{
+						g_bZoomGray = true;	
+					}
+					else 
+					{
+						g_bZoomGray = false;
+					}
+					ZoomGrayFunction(g_bZoomGray, g_LockFlag);
+				}
+			},
+			timeout:3000});
+	},
+
+	IncrementProperties : function()
+	{
+		var names = {"Camera.Zoom.Velocity":ZoomValue};
+		var id = client.property.UpdateValue({params: names,
+		onresponse: function(resp) {
+													
+		}});
+
+	},
+	
+	DecrementProperties : function()
+	{
+		var names = {"Camera.Zoom.Velocity":ZoomValue};
+		var id = client.property.UpdateValue({params: names,
+		onresponse: function(resp) {
+											
+		}});	
+	},
+
+    NotifyZoomStatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.Zoom.Value":
+                    ZoomCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetZoomData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) 
+		{
+			
+			if ("Camera.Zoom.Value" == key)
+			{
+				if (g_LensMountValue != "Disconnected")
+				{
+					var ZoomValue1 = value;
+					g_ObjZoomValue.innerHTML = ZoomValue1;
+				}
+			}
+			if ("P.Menu.pmw-f5x.Event.EventID" == key)
+			{
+				if ((EVENT_PLAY_UPDATE == value)
+					|| (EVENT_THUMBNAIL_UPDATE == value)
+					|| (EVENT_RECORDE_UPDATE == value)
+					|| (EVENT_VIEW_UPDATE == value)
+					|| (EVENT_700P_ZOOM_FOCUS_REMOTE_ON_FOR_WIFI == value)
+					|| (EVENT_ATTACHLENS_NOTIFY_LENSEXTENDER_UPDATE == value)
+					|| (EVENTKIND_POOLFEED_REFRESH == value))
+				{
+					ZoomCtrl.GetStatus();
+				}
+			}
+
+			
+		})
+		
+	}
+}

@@ -1,0 +1,1944 @@
+/* CSS Document */
+
+
+/***************************************************************
+ *					MAIN_PAGE COMMON   				 		   *
+ ***************************************************************/
+ 
+ ::-webkit-scrollbar
+{
+	width: 0px;
+	height: 0px;
+}
+::-webkit-scrollbar-track-piece
+{
+	background-color: #ffffff;
+	-webkit-border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:vertical
+{
+	height: 0px;
+	background-color: #666;
+	-webkit-border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:horizontal
+{
+	width: 0px;
+	background-color: #666;
+	-webkit-border-radius: 0px;
+}
+
+.BODY 
+{
+	background-color:#666666;
+	margin:0;
+	padding:0;
+	-moz-user-select: none; 
+	-webkit-user-select: none; 
+	-ms-user-select: none; 
+}
+
+.DIV_MAIN_CONTAINER
+{
+	position:absolute;
+	width:1026px;
+	height:695px;
+/*	border:solid 1px red;*/
+}
+
+.DIV_HEADER_TITLE
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1026px;
+	height:42px;
+	background-repeat:repeat-x;
+	background:url(../images/Parts_CR_T_CC_Header.png);
+	/*border:solid 1px red;*/
+}
+
+.LBL_PAGENAME
+{
+	position:absolute;
+	left:50px;
+	text-align:left;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	letter-spacing:0px;
+	line-height:42px;
+	color:rgb(230, 230, 230);
+	/*border:solid 1px red;*/
+}
+
+.DIV_PAGE_SWITCH_MENU
+{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:0px;
+	height:676px;
+	background:rgb(20,20,20);
+	float:left;
+	display:block;
+	z-index:-2;
+}
+
+.DIV_SWITCH_MENU_SEPARATOR
+{
+	position:absolute;
+	top:48px;
+	left:0px;
+	width:200px;
+	height:2px;
+	background:url(../images/Parts_CR_T_GM_List_Separator.png) repeat-x;
+	display:none;
+
+}
+
+.DIV_LIST_SEP_SHADOW
+{
+	position:absolute;
+	top:0px;
+	left:312px;
+	width:8px;
+	height:696px;
+	background:url(../images/Parts_CR_T_GM_List_Separator_Shadow.png) repeat-y;
+	z-index:2;
+}
+
+.DIV_PAGE_SWITCH_BTN
+{
+	position:absolute;
+	left:2px;
+	top:-1px;
+	width:44px;
+	height:44px;
+	background:url(../images/Parts_CR_T_Hdr_Button_GlobalMenu_Normal.png) no-repeat;
+	cursor:pointer;
+}
+
+.DIV_SWITCH_MENU_ITEM
+{
+	position:absolute;
+	width:308px;
+	height:50px;
+	line-height:48px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px; /*24px*/
+	color:rgb(230, 230, 230);
+	cursor:pointer;
+	display:none;
+	z-index:0;
+	padding-left:12px;
+	text-align:left;
+}
+
+.DIV_WIFI_STATUS_D
+{
+	position:absolute;
+	left:742px;
+	top:12px;
+	width:18px;
+	height:18px;
+	background-repeat:no-repeat;
+	background:url(../images/Parts_CR_T_Hdr_Indication_Disconnected.png);
+	display:block;
+}
+
+.DIV_WIFI_STATUS_C
+{
+	position:absolute;
+	left:742px;
+	top:12px;
+	width:18px;
+	height:18px;
+	background-repeat:no-repeat;
+	background:url(../images/Parts_CR_T_Hdr_Indication_Connected.png);
+	display:none;
+}
+
+.TEXT_WIFI_STATUS
+{
+	position:absolute;
+	top:12px;
+	left:760px;
+	height:18px;
+	width:110px;	
+	text-align:left;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	font-weight:500;
+	letter-spacing:0px;
+	line-height:18px;
+	color:rgb(230, 230, 230);
+}
+
+.DIV_ALL_LOCK
+{
+	position:absolute;
+	left:888px;
+	top:0px;
+	width:132px;
+	height:44px;
+	background-repeat:no-repeat;
+	background:url(../images/Parts_CR_T_Hdr_Lock_Base_Static.png);
+}
+
+.DIV_ALL_LOCK_BTN_SILDER
+{
+	 position:absolute;	
+	 left:0px;
+	 top:0px;
+	 width:60px;
+	 height:44px;
+	 background-image:url(../images/Parts_CR_T_Hdr_Lock_Base_Knob_Normal.png);	
+}
+
+.DIV_STATUS_INFO
+{
+	position:absolute;
+	left:0px;
+	top:42px;
+	width:1026px;
+	height:113px;
+	background-color:rgb(26, 26, 26);
+}
+
+.LBL_STATUS
+{
+	position:absolute;
+	width:48px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:16px;
+	height:16px;
+	line-height:16px;
+	text-align:center;
+	color:#00ff00;
+}
+
+.DIV_UPPER_MASKDIALOG
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:1024px;
+	height:42px;
+	display:none;
+	background:#000;
+	z-index:10;
+	/*border:1px solid green;*/
+}
+
+.DIV_MIDDLE_MASKDIALOG
+{
+	position:absolute;
+	left:0px;
+	top:42px;
+	width:1024px;
+	height:116px;
+	background:#000;
+	display:none;
+	z-index:10;
+	/*border:1px solid red;*/
+}
+
+.DIV_LOWER_MASKDIALOG
+{
+	position:absolute;
+	top:215px;
+	left:0px;
+	width:1024px;
+	height:480px;
+	background:#000;
+	display:none;
+	z-index:10;
+	/*border:1px solid blue;*/
+}
+
+.DIV_MASKCLICK_DLG
+{
+	position:absolute;
+	top:197px;
+	left:334px;
+	width:356px;
+	height:260px;
+    z-index:50;
+	display:none;
+	background-image:url(../images/Parts_CR_T_CC_Dialog_Base.png);
+	/*border:1px solid green;*/
+}
+
+.DIV_MESSAGE_DIALOG_TITLE
+{
+	position:absolute;
+	top:24px;
+	left:18px;
+	width:auto;
+	height:18px;
+	color:rgb(230,230, 230);
+	font-size:18px;
+	line-height:18px;
+	font-family:Verdana, Geneva, sans-serif;
+}
+
+.DIV_MESSAGE_DIALOG_TEXTFIELD
+{
+	position:absolute;
+	top:42px;
+	left:16px;
+	width:324px; 
+	height:136px;
+	color:rgb(230, 230, 230);
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:500;
+	font-size:18px;
+	text-align:center;
+	padding-top:44px;
+}
+
+.DIV_MESSAGE_DLG_OK_BUTTON
+{
+	position:absolute;
+	top:274px;
+	width:104px;
+	height:64px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	color:rgb(230, 230, 230);
+	line-height:64px;
+	cursor:pointer;
+	text-align:center;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Button_Normal.png);
+}
+
+.LBL_STATUS_GROUP
+{
+	position:absolute;
+	top:-14px;
+	left:16px;
+	width:72px;
+	height:108px;
+/*	border:solid 1px red;*/
+}
+
+.LBL_STATUS_IMAGE
+{
+	position:absolute;
+	left:-4px;
+	width:72px;
+	height:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	line-height:30px;
+	text-align:left;
+	color:#00ff00;
+	background-repeat:no-repeat;
+	background-image:none;
+	/*border:1px solid green;*/
+}
+
+.LBL_STATUS__CARD_IMAGE
+{
+	position:absolute;
+	left:-4px;
+	width:72px;
+	height:30px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	line-height:30px;
+	text-align:left;
+	color:#00ff00;
+	background-repeat:no-repeat;
+	background-image:none;
+	/*border:1px solid green;*/
+}
+
+.LBL_STATUS__CARD_B_IMAGE
+{
+	position:absolute;
+	left:-4px;
+	width:72px;
+	height:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	line-height:30px;
+	text-align:left;
+	color:#00ff00;
+	background-repeat:no-repeat;
+	background-image:none;
+	/*border:1px solid green;*/
+}
+.LBL_STATUS_A_IMAGE
+{
+	position:absolute;
+	left:-4px;
+	width:72px;
+	height:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	line-height:30px;
+	text-align:left;
+	color:#00ff00;
+	background-repeat:no-repeat;
+	background-image:none;
+	/*border:1px solid green;*/
+}
+
+.LBL_STATUS_REC_TEXT
+{
+	position:absolute;
+	left:4px;
+	width:72px;
+	height:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:20px;
+	font-weight:500;
+	line-height:30px;
+	text-align:center;
+	color: #ffffff;
+	/*border:1px solid #F00;*/
+}
+
+.LBL_STATUS_TEXT
+{
+	position:absolute;
+	left:-4px;
+	width:72px;
+	height:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:20px;
+	font-weight:500;
+	line-height:30px;
+	text-align:left;
+	color: #ffffff;
+	/*border:1px solid #F00;*/
+}
+
+.DIV_SEPARATOR_LINE
+{
+	position:absolute;
+	top:8px;
+	width:1px;
+	height:96px;
+	background-image:url(../images/Parts_CR_T_CC_Status_Separator.png);
+	background-repeat:no-repeat;
+	z-index:1;
+	/*border:solid 1px red;*/
+}
+
+.DIV_MAIN_BATTERY_STATUS
+{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:60px;
+	height:24px;
+	color:rgb(230, 230, 230);
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:18px;
+	line-height:24px;
+	text-align:center;
+	letter-spacing:-2px;
+	background:center;
+	/*border:solid 1px green;*/
+	/*background-image:url(../images/Parts_CR_T_CC_Status_Battery_4.png);
+	background-repeat:no-repeat;*/
+}
+
+.DIV_MAIN_BATTERY
+{
+	position:absolute;
+	top:20px;
+	right:-25px;
+	width:102px;
+	height:24px;
+/*	border:solid 1px red;*/
+}
+
+.DIV_BATTERY_TIME
+{
+	position:absolute;
+	top:25px;
+	left:8px;
+	width:auto;
+	height:24px;
+	font-size:18px;
+	line-height:24px;
+	color:rgb(230, 230, 230);
+	text-align:right;
+	letter-spacing:-1px;
+	font-family:Verdana, Geneva, sans-serif;
+	/*border:solid 1px blue;*/
+}
+
+.DIV_ASSIGN_CTRL
+{
+	position:absolute;
+	top:106px;
+	left:33px;
+	width:960px;
+	height:132px;
+	background-color:rgb(38, 38, 38);
+	display:none;
+	z-index:1;
+	/*border:solid 1px red;*/
+}
+
+.DIV_BIG_PARTING_LINE
+{
+	position:absolute;
+	top:152px;
+	left:0px;
+	width:1026px;
+	height:12px;
+	background-image:url(../images/Parts_CR_T_CC_Separator_Bold.png);
+	background-repeat:repeat-x;
+	z-index:1;
+}
+
+.DIV_FUNCTION_SELECTOR
+{
+	position:absolute;
+	top:157px;
+	left:0px;
+	width:1026px;
+	height:60px;
+	background-color:rgb(38, 38, 38);
+}
+
+.DIV_NORMAL_PARTING_LINE
+{
+	position:absolute;
+	top:212px;
+	left:16px;
+	height:12px;
+	width:992px; /*968*/
+	z-index:1;
+	background-image:url(../images/Parts_CR_T_CC_Separator_Light.png);
+	background-repeat:repeat-x;
+}
+
+.DIV_FUNCTION_CTRL
+{
+	position:absolute;
+	top:216px;
+	left:0px;
+	width:1026px;
+	height:480px;
+	background-color:rgb(38, 38, 38);
+/*	border:solid 1px red;
+*/}
+
+.DIV_REC_CTRL
+{
+	position:absolute;
+	/*top:8px;*/
+	top:0px;
+	left:0px;
+	width:328px;
+	height:300px;
+	/*border:solid 1px red;*/
+}
+
+.LBL_FUNCTION_NAME
+{
+	position:absolute;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	line-height:20px;
+	text-align:left;
+	color:rgb(230, 230, 230);
+} 
+ 
+.DIV_RECORDING_AREA
+{
+	position:absolute;
+	width:960px;
+	left:32px;
+	height:512px;
+	top: 31px;
+	/*border:solid 1px green;*/
+}
+
+.DIV_FUNCTRL_AREA
+{
+	position:absolute;
+	top:439px; /*324+8+14*/
+	left:0;
+	width:960px;
+	height:435px;
+/*	border:solid 1px green;*/
+}
+
+.DIV_CROSS_BUTTONGROUP
+{
+	position:absolute;
+	left:16px;
+	top:21px;
+	width:992px;
+	height:335px;
+	display:none;
+	/*border:solid 1px red;*/
+}
+
+.DIV_PLAY_BUTTONGROUP
+{
+	position:absolute;
+	left:16px;
+	top:0px;
+	width:992px;
+	height:335px;
+	display:none;
+}
+
+.DIV_PLAY_CLIP_GROUP
+{
+	position:absolute;
+	top:0px;
+	left:424px;
+	width:155px;
+	height:24px;
+}
+
+.DIV_PLAY_CLIP
+{
+	position:absolute;
+	top:47px;
+	left:-3px;
+	width:55px;
+	height:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	line-height:24px;
+	color:rgb(153,153,153);
+	text-align:center;
+}
+
+.DIV_PLAY_CLIP_VALUE
+{
+	position:absolute;
+	top:47px;
+	left:52px;
+	width:100px;
+	height:24px;
+	color:rgb(230,230,230);
+	font-size:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	letter-spacing:0px;
+	line-height:24px;
+}
+
+.DIV_GLOBAL_MENU_SUBTITLE
+{
+	position:absolute;
+	width:218px;
+	height:40px;
+	line-height:40px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px; /* T_M(18px) */
+	color:rgb(230, 230, 230);
+	cursor:default;
+	display:none;
+	z-index:0;
+	padding-left:12px;
+	text-align:left;
+}
+
+.DIV_GLOBAL_MENU_ITEM
+{
+	position:absolute;
+	width:218px;
+	height:46px;
+	line-height:46px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px; /*T_L(24px)*/
+	color:rgb(230, 230, 230);
+	cursor:pointer;
+	display:none;
+	z-index:0;
+	padding-left:28px;
+	text-align:left;
+}
+
+.DIV_GLOBAL_MENU_SEPARATOR
+{
+	position:absolute;
+	left:0px;
+	width:280px;
+	height:1px;
+	background-color:rgb(102,102,102);
+}
+
+
+
+
+/***************************************************************
+ *					COMMON DIALOG MODULE   				       *
+ ***************************************************************/
+.DIV_DLG_MAIN
+{
+	position:absolute;
+	width:304px;
+	height:396px;
+	display:none;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Base_6.png);
+	z-index:3;
+}
+
+.DIV_DLG_SUB
+{
+	position:absolute;
+	width:272px;
+	height:357px;
+	left:16px;
+	top:38px;
+	/*border:1px solid #fdf;*/
+}
+ 
+.DIV_DLG_TITLE, .DIV_SWITCH_MENU_TITLE
+{
+	position:absolute;
+	left:16px;
+	top:16px;
+	width:272px;
+	line-height:18px;
+	text-align:left;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	color:rgb(230,230,230);
+	/*border:1px solid green;*/
+
+}
+
+.DIV_DLG_SEPARATOR
+{
+	position:absolute;
+	height:1px;
+	width:272px;
+	background-color:rgb(77,77,77);
+}
+
+.DIV_DLG_ITEMAREA
+{
+	position:absolute;
+	width:272px;
+	height:288px;
+	/*border:1px solid green;*/
+	overflow:hidden;
+}
+
+.DIV_DLG_ITEM,.DIV_DLG_GAIN_ITEM,.DIV_DLG_SHUTTER_ITEM,.DIV_SQFPS_DLG_SUB_ITEM
+{
+	position:absolute;
+	width:252px;/*272*/
+	height:48px;
+	line-height:48px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px; /*24px*/
+	color:rgb(230, 230, 230);
+	cursor:pointer;
+	text-align:left;
+	padding-left:20px;
+	white-space:nowrap;
+}
+
+.DIV_DLG_ITEM_ICON
+{
+	position:absolute;
+	left:4px;
+	top:15px;
+	width:16px;
+	height:16px;
+	cursor:pointer;
+}
+
+.DIV_DLG_ARROW
+{
+	position:absolute;
+	left:238px;
+	font-size:24px;
+	width:24px;
+	height:24px;
+	line-height:24px;
+	top:12px;
+	color:rgb(153,153,153);
+	text-align:right;
+}
+
+.DIV_DLG_BUTTON
+{
+	position:absolute;
+	width:104px;
+	height:64px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	cursor:pointer;
+	text-align:center;
+	line-height:64px;
+	color:rgb(230,230,230);
+	background:url(../images/Parts_CR_T_CC_Spinner_Button_Normal.png) no-repeat;
+}
+ 
+.DIV_DLG_TOP_ARROW
+{
+	position:absolute;
+	top:0px;
+	left:136px;
+	width:32px;
+	height:16px;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Arrow_Top.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_DLG_BOTTOM_ARROW
+{
+	position:absolute;
+	top:380px;
+	left:136px;
+	width:32px;
+	height:16px;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Arrow_Bottom.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_DLG_LEFT_ARROW
+{
+	position:absolute;
+	top:193px;
+	left:0px;
+	width:16px;
+	height:32px;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Arrow_Left.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_DLG_RIGHT_ARROW
+{
+	position:absolute;
+	top:193px;
+	left:287px;
+	width:16px;
+	height:32px;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Arrow_Right.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_DLG_PARTINGLINE
+{
+	position:absolute;
+	top:36px;
+	left:16px;
+	width:272px;
+	height:1px;
+	background-color:rgb(77,77,77);
+}
+
+.DIV_DLG_MINUS_BTN
+{
+	position:absolute;
+	top:118px;
+	left:8px;
+	width:48px;
+	height:48px;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Button_Minus_Normal.png);
+	background-repeat:no-repeat;
+	cursor:pointer;
+	/*border:1px solid #F00;*/
+}
+
+.DIV_DLG_PLUS_BTN
+{
+	position:absolute;
+	top:118px;
+	left:216px;
+	width:48px;
+	height:48px;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Button_Plus_Normal.png);
+	background-repeat:no-repeat;
+ 	cursor:pointer;
+	/*border:1px solid #F00;*/
+}
+
+.DIV_DLG_TEXT_FIELD
+{
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Spinner_SettingValue_Base_Normal.png);
+	background-repeat:repeat-x;
+	position:absolute;
+	top:114px;
+	left:64px;
+	width:134px;
+	height:56px;
+	padding:5px;
+	color:rgb(255, 170, 0);
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:500;
+	font-size:36px;
+	padding-left:5px;
+	letter-spacing:0px;
+	cursor:pointer;
+	text-align:center;
+	margin-top:2px;
+}
+
+.DIV_DLG_BACK_BTN
+{
+	position:absolute;
+	top:286px;
+	left:-9px;
+	width:92px;
+	height:64px;
+	color:rgb(230,230,230);
+	font-size:24px;
+	line-height:64px;
+	font-family:Verdana, Geneva, sans-serif;
+	text-align:center;
+	background-image:url(../images/Parts_CR_T_CC_Spinner_Button_Back_Normal.png);
+	cursor:pointer;
+	padding-left:12px;
+	background-repeat:no-repeat;
+}
+
+.DIV_DLG_SETTING_BTN
+{
+	position:absolute;
+	top:274px;
+	width:104px;
+	height:64px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:20px;
+	color:rgb(230,230,230);
+	line-height:64px;
+	cursor:pointer;
+	text-align:center;
+	vertical-align:bottom;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Spinner_Button_Normal.png);
+}
+
+.DIV_DLG_SELECT_BTN
+{	
+	position:absolute;
+	top:28px;
+	left:8px;
+	width:112px;
+	height:56px;
+	font-size:18px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:500;
+	line-height:53px;
+	color:rgb(23,23,23);
+	text-align:left;
+	padding-left:27px;
+	cursor:pointer;
+	/*border:1px solid #F00;*/
+	z-index:3;
+	background:no-repeat;
+}
+
+/***************************************************************
+ *					REC_BUTTON MODULE   				       *
+ ***************************************************************/
+ .DIV_BTN_REC
+{
+	position:absolute;
+	left:36px;
+	top:73px;
+	width:216px;
+	height:88px;
+	/*border:solid 1px blue;*/
+}
+
+.DIV_REC_STOP
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:112px;
+	height:88px;
+	/*border:solid 1px red;*/
+	background-image:url(../../WebCommon/images/Parts_PFXR_T_CC_Btn_RecStop_Normal.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_REC_START
+{
+	position:absolute;
+	left:104px;
+	top:0px;
+	width:112px;
+	height:88px;
+	background-image:url(../../WebCommon/images/Parts_PFXR_T_CC_Btn_RecStart_Normal.png);
+	background-repeat:no-repeat;
+	/*border:solid 1px red;*/
+	
+}
+
+.DIV_LOCK_BTN
+{
+	position:absolute;
+	top:181px;
+	left:96px;
+	width:96px;
+	height:32px;
+	cursor:pointer;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_UnLock_Normal.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_LOCK_BTN_SILDER
+{
+	 position:absolute;	
+	 left:0px;
+	 top:0px;
+	 width:52px;
+	 height:32px;
+	 background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Normal.png)	
+}
+
+.DIV_LOCK_TEXT
+{
+	position:absolute;
+	top:213px;
+	left:100px;
+	width:auto;
+	height:18px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	font-weight:500;
+	line-height:18px;
+	letter-spacing:0px;
+	color:#FFF;
+
+}
+
+.DIV_LOCK_ARROW
+{
+	position:absolute;
+	top:213px;
+	left:142px;
+	width:48px;
+	height:16px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Arrow.png);
+	background-repeat:no-repeat;
+}
+	
+.DIV_FUN_TEXTFIELD
+{
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_FunctionValue_Base_M_Normal.png);
+	background-repeat:repeat-x;
+	position:absolute;
+	width:224px;
+	height:32px;
+	padding-top:8px;
+	padding-bottom:8px;
+	padding-left:6px;
+	padding-right:4px;
+	color:rgb(255, 170, 0);
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	cursor:pointer;
+}
+
+.DIV_BALANCE_BUTTON
+{
+	position:absolute;
+	top:216px;
+	width:250px;
+	height:64px;
+	color:rgb(51, 51, 51);
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	text-align:center;
+	line-height:64px;
+	cursor:pointer;
+	background-image:url(../images/Parts_CR_T_CC_Rec_AWB_Button_Normal.png);
+	background-repeat:no-repeat;
+	/*	border:1px solid #0F6;*/
+}
+
+.DIV_BALANCE_BUTTON_AWB
+{
+	position:absolute;
+	top:216px;
+	width:250px;
+	height:64px;
+	color:rgb(51, 51, 51);
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	font-weight:500;
+	text-align:center;
+	line-height:64px;
+	cursor:pointer;
+	background-image:url(../images/Parts_CR_T_CC_Rec_AWB_Button_Normal.png);
+	background-repeat:no-repeat;
+	display:none;
+/*	border:1px solid #0F6;*/
+}
+
+/***************************************************************
+ *					PAGE SELECTOR   				   *
+ ***************************************************************/
+.LBL_SELECT_PAGENAME
+{
+	position:absolute;
+	width:136px;
+	height:48px;
+	top:12px;
+	color:rgb(230,230,230);
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	line-height:60px;
+	text-align:center;
+	cursor:pointer;
+	z-index:1;
+}
+
+.DIV_PAGE_SILDER
+{
+	position:absolute;
+	/*background:rgb(255,170,0);*/
+	background-image:url(../images/Parts_CR_T_CC_Rec_Tab_Selected.png);
+	width:136px;
+	height:48px;
+	top:19px;
+	z-index:1;
+}
+
+/***************************************************************
+ *					Cross Group Button   				   *
+ ***************************************************************/
+ .DIV_CROSS_FUNCTION_BUTTON
+ {
+	 position:absolute;
+	 width:160px;
+	 height:108px;
+	 color:rgb(51,51,51);
+	 font-family:Verdana, Geneva, sans-serif;
+	 font-size:18px;
+	 line-height:108px;
+	 text-align:center;
+	 letter-spacing:0px;
+	 font-weight:500;
+	 background-image:url(../../WebCommon/images/Parts_CR_T_CC_Gen_Button_Normal.png);
+	 background-repeat:no-repeat;
+	 cursor:pointer;
+ }
+ 
+ .DIV_CROSS_DIRECTION_BUTTON
+ {
+	 position:absolute;
+	 width:108px;
+	 height:108px;
+	 color:rgb(51,51,51);
+	 font-family:Verdana, Geneva, sans-serif;
+	 font-size:18px;
+	 line-height:150px;
+	 text-align:center;
+	 letter-spacing:0px;
+	 font-weight:500;
+	 background-image:url(../../WebCommon/images/Parts_CR_T_CC_Gen_Button_Arrow_Normal.png);
+	 background-repeat:no-repeat;
+	 cursor:pointer;
+ }
+ 
+ .DIV_CROSS_BUTTON_ICON
+ {
+	 position:absolute;
+	 top:25px;
+	 left:16px;
+	 width:76px;
+	 height:52px;
+	 background-image:none;
+	 background-repeat:no-repeat;
+	 /*border:1px solid #F00;*/
+	 z-index:1;
+	 
+ }
+ 
+/****************************************************************
+ *					Play Group Button   				        *
+ ****************************************************************/
+ .DIV_PLAY_BUTTON
+ {
+	 position:absolute; 
+	 top:83px;
+	 width:144px;
+	 height:108px; 
+	 background-image:url(../../WebCommon/images/Parts_CR_T_CC_Play_Button_Normal.png);
+	 background-repeat:no-repeat;
+	 color:rgb(51,51,51);
+	 line-height:150px;
+	 font-size:18px;
+	 text-align:center;
+	 font-family:Verdana, Geneva, sans-serif;
+	 cursor:pointer;
+ }
+ 
+.DIV_PLAY_BUTTON_ICON
+ {
+	 position:absolute;
+	 top:16px;
+	 left:16px;
+	 width:112px;
+	 height:52px;
+	 background-image:none;
+	 background-repeat:no-repeat;
+	 /*border:1px solid #F00;*/
+	 z-index:1
+ }
+
+ /****************************************************************
+ *					Main File   				        *
+ ****************************************************************/
+.DIV_MAINFILE_MAIN{
+	position:absolute;
+	top:10px;
+	left:572px;
+	height:90px;
+	width:239px;
+	background-color:rgb(26, 26, 26);
+/*	border:1px solid green;*/
+}
+.DIV_FILE_NAME{
+	position:absolute;
+	left:1px;
+	height:18px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:14pt;
+	text-align:left;
+	/*letter-spacing:-1px;*/
+	line-height:18px;
+	color:rgb(153, 153, 153);
+	/*border:1px solid #FF0;*/	
+}
+.DIV_FILE_VALUE{
+	position:absolute;
+	height:18px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	text-align:left;
+	letter-spacing:-1px;
+	line-height:18px;
+	color:rgb(230, 230, 230);
+	white-space: nowrap;
+	/*border:1px solid #FF0;*/	
+}
+.DIV_FILE_INFO
+{
+	position:absolute;
+	left:0px;
+	height:18px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:14pt;
+	text-align:left;
+	letter-spacing:-1px;
+	line-height:18px;
+	color:rgb(153, 153, 153);
+	/*border:1px solid #FF0;*/	
+}
+.DIV_TCG_NAME
+{
+	position:absolute;
+	left:0px; 
+	top:0px;
+	font-size:12px;
+	color:rgb(153, 153, 153);
+	text-align:left;
+	font-family:Verdana, Geneva, sans-serif;
+}
+
+.DIV_EXT_LK_NAME
+{
+	position:absolute;
+	left:141px;
+	top:0px;
+	width:70px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:12px;
+	color:rgb(230, 230, 230);
+	text-align:right;
+}
+
+.DIV_TIMECODE
+{
+	position:absolute;
+	height:64px;
+	width:210px;
+	left:165px;
+	top:25px;
+/*	border:solid 1px red;*/
+	
+}
+
+.DIV_TIMECODE_VALUE
+{
+	position:absolute;
+	top:16px;
+	left:0;
+	margin:0;
+	padding:0;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:25px;
+	width:210px;
+	color:rgb(230, 230, 230);
+	text-align:center;
+	letter-spacing:-2px;
+	/*border: solid 1px red;*/
+}
+
+.DIV_TIMECODE_VALUE_SONY
+{
+	position:absolute;
+	top:16px;
+	left:0;
+	margin:0;
+	padding:0;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:36px;
+	width:210px;
+	color:rgb(230, 230, 230);
+	text-align:left;
+	letter-spacing:0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***************************************************************
+ *					ASSIGN_SETTING MODULE   				   *
+ ***************************************************************/
+
+.DIV_ASSIGN_BTN_VALUE
+{
+	position:absolute;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;/*parts is 24px*/
+	color:rgb(255, 170, 0);
+	cursor:pointer;
+	text-align:left;
+	line-height:48px;
+	width:186px; 
+	left:52px; 
+	top:0px;
+	height:48px;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+}
+
+
+.DIV_ASSIGN_GROUP_1,.DIV_ASSIGN_GROUP_2,.DIV_ASSIGN_GROUP_3,.DIV_ASSIGN_GROUP_4,.DIV_ASSIGN_GROUP_5,.DIV_ASSIGN_GROUP_6,.DIV_ASSIGN_GROUP_7,.DIV_ASSIGN_GROUP_8,.DIV_ASSIGN_GROUP_9,.DIV_ASSIGN_GROUP_10
+{
+	position:absolute;
+	width:240px;
+	height:48px;
+	background:url(../../WebCommon/images/Parts_CR_T_CC_Assign_Base_Normal.png) repeat-x;
+}
+
+.DIV_SWITCH_1,.DIV_SWITCH_2,.DIV_SWITCH_3,.DIV_SWITCH_4,.DIV_SWITCH_5,.DIV_SWITCH_6,.DIV_SWITCH_7,.DIV_SWITCH_8,.DIV_SWITCH_9,.DIV_SWITCH_10
+{
+	position:absolute;
+	font-family:Verdana, Geneva, sans-serif;
+	height:42px;/*48*/
+	line-height:48px;
+	background-repeat:no-repeat;
+	background-image:url(../images/Parts_CR_T_CC_Assign_Button_InActive_Normal.png);
+	text-align:center;
+	cursor:pointer;
+	width: 48px;
+	color:rgb(51,51,51);
+	padding-top:6px;
+	font-size:18px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /****************************************************************
+ *					Card				        *
+ ****************************************************************/
+.DIV_CARD_MAIN{
+	position:absolute;
+	top:10px;
+	left:822px;
+	height:87px;
+	width:100px;
+	background-color:rgb(26, 26, 26);
+/*	border:solid 1px red;*/
+}
+
+.DIV_CARD_BUTTON{
+	position:absolute;
+	left:1px;
+	width:52px;
+	height:34px;
+	background-repeat:no-repeat;
+	/*background-image:url(../images/Parts_CR_T_CC_Status_MediaCard_Label_SxSA.png);*/
+}
+
+.DIV_CARD_BC{
+	position:absolute;
+	left:1px;
+	width:52px;
+	height:34px;
+	background-repeat:no-repeat;
+	/*background-image:url(../images/Parts_CR_T_CC_Status_MediaCard_P.png);*/
+
+ }
+
+.DIV_CARD_TIME{
+	position:absolute;
+	left:37px;
+	width:68px;
+	height:21px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	text-align:right;
+	color:rgb(230, 230, 230);
+}
+
+ /****************************************************************
+ *					Audio Display  				            *
+ ****************************************************************/
+ .DIV_AUDIO_MAIN{
+	position:absolute;
+	top:28px;
+	left:391px;
+	height:70px;
+	width:166px;
+	background-color:rgb(26, 26, 26);
+/*	border:solid 1px red;*/
+	
+}
+
+.DIV_AUDIO_BUTTON{
+	position:absolute;
+	width:32px;
+	height:10px;
+/*	border:1px solid #0F6;*/
+}
+
+.DIV_AUDIO_VALUE{
+	position:absolute;
+	left:68px;
+	width:28px;
+	height:10px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:10pt;
+	text-align:center;
+	line-height:10px;
+	color:rgb(153, 153, 153);
+/*	border:1px solid #00F;*/
+}
+
+.DIV_AUDIO_BUTTONNUM{
+	position:absolute;
+	top:50px;
+	width:32px;
+	height:20px;	
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:16pt;
+	text-align:center;
+	line-height:20px;
+	color:rgb(250, 250, 250);
+}
+
+.DIV_SEPRATE_LINE
+{
+	position:absolute;
+	top:176px;
+	height:48px;
+	left:241px;
+	width:624px;
+	background:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Tab_Separator.png);
+}
+
+/**************************************************
+	SQFPS Dialog
+***************************************************/
+.DIV_DLG_FPS_CURRENT_DATA,.DIV_DLG_GAMMA_CURRENT_DATA, .DIV_DLG_ECS_CURRENT_DATA
+{
+	position:absolute;
+	top:0px;
+	left:90px;
+	width:148px;
+	height:48px;
+	font-size:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	color:rgb(255,170,0);
+	text-align:right;
+	line-height:48px;
+	letter-spacing:-1px;
+	/*border:1px solid #FFF;*/
+}
+
+.DIV_DLG_WHITE_CURRENT_DATA
+{
+	position:absolute;
+	top:0px;
+	left:90px;
+	width:148px;
+	height:48px;
+	font-size:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	color:rgb(230,230,230);
+	text-align:right;
+	line-height:48px;
+	letter-spacing:-1px;
+	/*border:1px solid #FFF;*/
+}
+
+.DIV_DLG_PREWHITE_CURRENT_DATA
+{
+	position:absolute;
+	top:0;
+	left:164px;
+	width:75px;
+	height:48px;
+	font-size:21px;
+	font-family:Verdana, Geneva, sans-serif;
+	color:rgb(255,170,0);
+	text-align:right;
+	line-height:48px;
+	letter-spacing:-1px;
+}
+
+.DIV_DLG_SEC_PAGE_ARROW
+{
+	position:absolute;
+	top:8px;
+	left:242px;
+	width:auto;
+	height:auto;
+	font-size:24px;
+	font-family:Verdana, Geneva, sans-serif;
+	color:rgb(153,153,153);
+	text-align:left;
+	line-height:normal;
+	/*border:1px solid #FFF;*/
+}
+
+
+
+/******************************************************
+*              GAMMA  MODULES                         *
+*******************************************************/
+
+.DIV_DLG_GAMMA_ITEM 
+{
+	position: absolute;
+    font-family:Verdana, Geneva, sans-serif;
+    font-size: 20px;
+    color: #CCC;
+	background:#333333;
+    cursor: pointer;
+    text-align: left;
+}
+
+.GAMMA_DLG_HG_TITLE, .GAMMA_DLG_STD_TITLE
+{
+	color:#000;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size: 18px;
+	text-align: left;
+	background-color:#999;
+}
+
+.GAMMA_DLG_BTN
+{
+	color:#000;
+	font-family:Verdana, Geneva, sans-serif;
+    font-size: 30px;
+	line-height:30px;
+	text-align:center;
+	cursor: default;
+}
+
+
+
+/********************************************************
+*		AUTO_BAN_DIALOG CSS
+********************************************************/
+.AUTO_BAN_DIALOG
+{
+	position:absolute;
+	top:264px;
+	left:335px;
+	width:356px;
+	height:260px;
+	background-image:url(../images/Parts_CR_T_CC_Dialog_Base.png);
+	z-index:20;
+	display:none;
+}
+.AUTO_BAN_DIALOG_TITLE
+{
+	position:absolute;
+	top:16px;
+	left:16px;
+	width:356px;
+	height:18px;
+	color:rgb(230,230, 230);
+	font-size:18px;
+	font-family:Verdana, Geneva, sans-serif;
+	line-height:18px;
+	text-align:left;
+}
+
+.AUTO_BAN_DIALOG_TEXTFIELD
+{
+	position:absolute;
+	top:37px;
+	left:16px;
+	width:322px; 
+	height:149px;
+	color:rgb(230, 230, 230);
+	font-family:Verdana, Geneva, sans-serif;
+	font-weight:500;
+	font-size:18px;
+	letter-spacing:0px;
+	line-height:20px;
+	text-align:center;
+}
+
+.DIV_MASKDIALOG,.DIV_STATUS_MASKDIALOG
+{
+	position:absolute;
+	top:0px;
+	width:1026px;
+	height:696px;
+	background-color:#000;
+	display:none;
+}
+
+
+/*Touch*/
+
+.DIV_ZOOM_NUM
+{
+	background-image:url(../images/Parts_CR_T_CC_Rec_FunctionValue_Base_L_Normal.png);
+	background-repeat:repeat-x;
+	position:absolute;
+	width:120px; /*width:96px;*/
+	height:56px; /*44*/
+	left:0px;
+	color:rgb(255,170,0);
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:36px;
+	top:21px;
+	/*margin-top:2px;
+	letter-spacing:-1px;*/
+	cursor:pointer;
+	text-align:center;
+	line-height:56px;
+}
+.DIV_ND_DOTS
+{
+	position:absolute;
+	width:456px;
+	left:162px;
+	top:14px;
+	height:40px;
+	background-image:url(../../WebCommon/images/Parts_CR_S_CC_Rec_Slider_Scale_ND.png );
+}
+.DIV_IRIS_DOTS
+{
+	position:absolute;
+	width:456px;
+	left:162px;
+	top:125px;
+	height:40px;
+	background-image:url(../../WebCommon/images/Parts_PFXR_T_CC_Rec_Slider_Scale_Iris.png );
+}
+
+.DIV_IRIS_DOTS_TOW
+{
+	position:absolute;
+	width:456px;
+	left:212px;
+	top:125px;
+	height:40px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Scale_Iris_OpenClose.png);
+}
+
+.DIV_ZOOM_TEXT
+{
+	position:absolute;
+	width:120px; /*width:96px;*/
+	height:18px; /*44*/
+	color:rgb(230,230,230);
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	/*text-align:left;*/
+	line-height:18px;
+}
+
+.DIV_ZOOM_SLIDER_HANDLE
+{
+	position:absolute;
+	top:8px;
+	left:348px;
+	width:84px;
+	height:84px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png);
+	cursor:pointer;
+	background-repeat:no-repeat;
+	z-index:2;
+}
+
+.DIV_ZOOM_BAR
+{
+	position:absolute;
+	top:22px;
+	left:160px;
+}
+
+.DIV_ZOOM_DOT
+{
+	position:absolute;
+	left:162px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Scale_FocusZoom.png);
+	background-repeat:no-repeat;
+	top:4px;
+	width:456px;
+	height:40px;
+}
+
+.DIV_ZOOM_TICK
+{
+	position:absolute;
+	width:456px; /*width:96px;*/
+	height:12px; /*44*/
+	left:162px;
+	top:43px;
+	color:rgb(0,0,0);
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Groove.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_SLIDER_ZOOM
+{
+	position:absolute;
+	width:304px;
+	top:342px;
+	height:74px;
+}
+
+.DIV_FOCUS_SLIDER_HANDLE
+{
+	position:absolute;
+	top:8px;
+	left:348px;
+	width:84px;
+	height:84px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_FocusZoom.png);
+	cursor:pointer;
+	background-repeat:no-repeat;
+	z-index:2;
+}
+
+.DIV_SLIDER_FOCUS
+{
+	position:absolute;
+	width:618px;
+	top:231px;
+	height:96px;
+}
+
+.DIV_SLIDER_CTRL
+{
+	position:absolute; 
+ 	top:-17px; 
+	left:328px;
+	width:631px;
+	height:310px;  /*278*/
+/*	border:solid 1px red;*/
+	
+}
+
+.DIV_TICK_ND_CONTAINER
+{
+	position:absolute;
+	left:80px;
+	top:9px;
+	width:204px;
+	height:31px;
+}
+
+.DIV_TICK_CONTAINER
+{
+	position:absolute;
+	left:80px;
+	top:120px;
+	width:204px;
+	height:31px;
+}
+
+.DIV_TICK_TEXT
+{
+	position:absolute;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	width:20px;
+	line-height:18px;
+	text-align:center;
+	color:rgb(230,230,230);
+}
+
+.DIV_TICK_POINT
+{
+	position:absolute;
+	width:6px;
+	height:6px;
+}
+
+.DIV_ND_SLIDER_GROOVE
+{
+	position:absolute;
+	width:456px;
+	height:40px;
+	top:53px;
+	left:162px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Groove.png);
+	background-repeat:no-repeat;
+}
+.DIV_SLIDER_GROOVE
+{
+	position:absolute;
+	width:456px;
+	height:40px;
+	top:164px;
+	left:162px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Groove.png);
+	background-repeat:no-repeat;
+}
+
+.DIV_SLIDER_ND_BUTTON
+{
+	position:absolute;
+	width:84px;
+	height:84px;
+	top:19px;
+	left:348px;
+	cursor:pointer;
+	/*background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png);*/
+}
+
+.DIV_SLIDER_BUTTON
+{
+	position:absolute;
+	width:84px;
+	height:84px;
+	top:130px;
+	left:348px;
+	cursor:pointer;
+	/*background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_Knob_Iris.png);*/
+}
+
+.DIV_SLIDER_TEXTFIELD
+{
+	position:absolute;
+	left:0; 
+	top:14px; 
+	width:56px; 
+	background-image:url(../images/Parts_CR_S_CC_Rec_FunctionValue_Base_Normal.png);
+	background-repeat:repeat-x;
+	height:34px; /*44*/
+	color:rgb(255,170,0);
+	padding:5px 2px;
+	font-family:Verdana, Geneva, sans-serif;
+	font-size:24px;
+	cursor:pointer;
+	text-align:left;
+}
+
+.DIV_SEPARATOR_LIGHT
+{
+	position:absolute;
+	height:8px;
+	width:632px;
+	background:url(../images/Parts_CR_T_CC_Separator_Light.png) repeat-x;
+
+}
+
+.LBL_PICKER_SPIRNG_SCALE_MIDDLE ,.LBL_PICKER_SPIRNG_SCALE_MIDDLE_DLG
+{
+	position:absolute;
+	top:178px;
+	left:134px;
+	width:4px;
+	height:16px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Scale_Limit.png);
+/*	border:1px solid #F00;*/
+}
+
+.DIV_PICKER_SPE_GROOVE,.DIV_PICKER_SPE_GROOVE_DLG
+{
+	position:absolute;
+	left:24px;
+	width:224px;
+	height:12px;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Groove.png);
+	background-repeat:repeat-x;
+}
+
+.DIV_PICKER_SPRING_SLIDER,.DIV_PICKER_SPRING_SLIDER_DLG
+{
+	position:absolute;
+	width:64px;
+	height:48px;
+	background-repeat:no-repeat;
+	background-image:url(../../WebCommon/images/Parts_CR_T_CC_Rec_Slider_M_Knob_Spring.png);
+	/*border: 1px solid #093;*/
+}
+
+.DIV_DLG_ANGLE_IMAGE
+{
+	position:absolute;
+	top:29px;
+	left:256px;
+	width:28px; 
+	height:40px;
+	background:URL(../../WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle_Std.png) no-repeat;
+}
+
+.DIV_ANGLE_IMAGE
+{
+	position:absolute;
+	top:29px;
+	left:246px;
+	width:28px; 
+	height:40px;
+	background:URL(../../WebCommon/images/Parts_CR_T_CC_Rec_ShutterSpeed_Angle.png) no-repeat;
+	display:none;
+}

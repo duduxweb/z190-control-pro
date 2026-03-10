@@ -1,0 +1,275 @@
+// JavaScript Document
+function RecLockSlider(objSrc , objCallback) 
+{
+	this.Parent = GetParent(objSrc);
+	this.AttachSrc = objSrc;
+	this.CallbackFunc = objCallback;
+	this.Type = "LOCK";
+	
+	var m_IsRecLock = false;
+	var m_objSelf = null;
+	var s_position = -1;
+	var m_position = -1;
+	var e_position = -1;
+	var m_lockSilder = null;
+	var m_IsMouseDown = false;
+	
+	this.Create = function ()
+	{
+		var divLock = document.createElement("DIV");
+		divLock.className = "DIV_LOCK_BTN_SILDER";
+		divLock.id = "DIV_LOCK_BTN_SILDER";
+		m_lockSilder = divLock;
+		
+		this.AttachSrc.appendChild(divLock);
+		if (!m_objSelf)
+		{
+			m_objSelf = this;
+			AddEvent(divLock, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(divLock, "mousemove", this.CallbackBtnMouseMove);
+			AddEvent(divLock, "mouseup", this.CallbackBtnMouseUp);
+			AddEvent(divLock, "mouseout", this.CallbackBtnMouseUp);
+			AddEvent(divLock, "touchstart", this.CallbackBtnTouchStart);	
+			AddEvent(divLock, "touchmove", this.CallbackBtnTouchMove);	
+			AddEvent(divLock, "touchend", this.CallbackBtnTouchEnd);
+			AddEvent(divLock, "touchcancel", this.CallbackBtnTouchEnd);
+		}
+	}
+	
+	this.CallbackBtnMouseDown = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if (-1 == s_position) 
+		{
+			s_position = objEvent.clientX;
+		}
+		$("DIV_LOCK_BTN_SILDER").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Pressed.png)";
+		objEvent.preventDefault();		
+		m_IsMouseDown = true;
+	}
+
+	this.CallbackBtnMouseMove = function(objEvent)
+	{
+		if (!m_IsMouseDown)
+		{
+			return;
+		}
+
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+
+		m_position += objEvent.clientX - s_position;
+					
+		s_position = objEvent.clientX;
+
+		if (m_position < 0) 
+		{
+		   m_position = 0;
+		}
+		else if (m_position > 44) 
+		{
+	    	  m_position = 44;
+	    }
+		
+
+		var bgImagePath = g_objRecLockSlider.style.backgroundImage;
+		if (m_position >= 22)
+		{	
+			if((bgImagePath.substr(bgImagePath.length-18) != "k_Base_Locked.png)") || 
+			(bgImagePath.substr(bgImagePath.length-18) == ""))
+			{
+				g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_Locked.png)";	
+			}
+		}
+		else
+		{	
+			if((bgImagePath.substr(bgImagePath.length-18) != "Base_UnLocked.png)") || 
+			(bgImagePath.substr(bgImagePath.length-18) == ""))
+			{
+				g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_UnLocked.png)";
+			}
+		}
+
+		$("DIV_LOCK_BTN_SILDER").style.left = m_position + "px";
+		//event.preventDefault();
+		objEvent.preventDefault();	
+	}
+
+	this.CallbackBtnMouseUp = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		s_position = -1;
+		if (m_position >= 22)
+		{		
+			m_position = 44;
+			g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_Locked.png)";
+			m_IsRecLock = true;
+		}
+		else
+		{
+			m_position = 0;
+			g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_UnLock_Normal.png)";
+			m_IsRecLock = false;
+		}
+		$("DIV_LOCK_BTN_SILDER").style.left = m_position + "px";
+		$("DIV_LOCK_BTN_SILDER").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Normal.png)";
+		
+
+		if (m_objSelf.CallbackFunc)
+		{
+			m_objSelf.CallbackFunc(m_IsRecLock);
+		}	
+		m_IsMouseDown = false;	
+	}
+
+	this.CallbackBtnTouchStart = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		if (-1 == s_position) 
+		{
+			s_position = objEvent.changedTouches[0].clientX;
+		}
+		$("DIV_LOCK_BTN_SILDER").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Pressed.png)";
+		objEvent.preventDefault();
+	};
+	
+	this.CallbackBtnTouchMove = function(objEvent){
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+
+		m_position += objEvent.changedTouches[0].clientX - s_position;
+					
+		s_position = objEvent.changedTouches[0].clientX;
+
+		if (m_position < 0) 
+		{
+		   m_position = 0;
+		}
+		else if (m_position > 44) 
+		{
+	    	  m_position = 44;
+	    }
+		
+		var bgImagePath = g_objRecLockSlider.style.backgroundImage;
+		if (m_position >= 22)
+		{	
+			if((bgImagePath.substr(bgImagePath.length-18) != "k_Base_Locked.png)") || 
+			(bgImagePath.substr(bgImagePath.length-18) == ""))
+			{
+				g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_Locked.png)";	
+			}
+		}
+		else
+		{	
+			if((bgImagePath.substr(bgImagePath.length-18) != "Base_UnLocked.png)") || 
+			(bgImagePath.substr(bgImagePath.length-18) == ""))
+			{
+				g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_UnLocked.png)";
+			}
+		}
+		
+		$("DIV_LOCK_BTN_SILDER").style.left = m_position + "px";
+		//event.preventDefault();
+		objEvent.preventDefault();	
+	};
+	
+	this.CallbackBtnTouchEnd = function(objEvent)
+	{
+		var objSrc = GetEventSource(objEvent);
+		if ("" == objSrc.id)
+		{
+			objSrc = GetParent(objSrc);
+		}
+		
+		s_position = -1;
+		if (m_position >= 22)
+		{		
+			m_position = 44;
+			g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_Locked.png)";
+			m_IsRecLock = true;
+		}
+		else
+		{
+			m_position = 0;
+			g_objRecLockSlider.style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_UnLock_Normal.png)";
+			m_IsRecLock = false;
+		}
+		$("DIV_LOCK_BTN_SILDER").style.left = m_position + "px";
+		$("DIV_LOCK_BTN_SILDER").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Normal.png)";
+		
+
+		if (m_objSelf.CallbackFunc)
+		{
+			m_objSelf.CallbackFunc(m_IsRecLock);
+		}
+	};
+	
+	this.SetDisabled = function(bDisabled)
+	{
+		if (bDisabled)
+		{
+			RemoveEvent(m_lockSilder, "mousedown", this.CallbackBtnMouseDown);
+			RemoveEvent(m_lockSilder, "mousemove", this.CallbackBtnMouseMove);
+			RemoveEvent(m_lockSilder, "mouseup", this.CallbackBtnMouseUp);
+			RemoveEvent(m_lockSilder, "mouseout", this.CallbackBtnMouseUp);
+			RemoveEvent(m_lockSilder, "touchstart", this.CallbackBtnTouchStart);	
+			RemoveEvent(m_lockSilder, "touchmove", this.CallbackBtnTouchMove);	
+			RemoveEvent(m_lockSilder, "touchend", this.CallbackBtnTouchEnd);
+			RemoveEvent(m_lockSilder, "touchcancel", this.CallbackBtnTouchEnd);
+		}
+		else
+		{
+			AddEvent(m_lockSilder, "mousedown", this.CallbackBtnMouseDown);
+			AddEvent(m_lockSilder, "mousemove", this.CallbackBtnMouseMove);
+			AddEvent(m_lockSilder, "mouseup", this.CallbackBtnMouseUp);
+			AddEvent(m_lockSilder, "mouseout", this.CallbackBtnMouseUp);
+			AddEvent(m_lockSilder, "touchstart", this.CallbackBtnTouchStart);
+			AddEvent(m_lockSilder, "touchmove", this.CallbackBtnTouchMove);
+			AddEvent(m_lockSilder, "touchend", this.CallbackBtnTouchEnd);
+			AddEvent(m_lockSilder, "touchcancel", this.CallbackBtnTouchEnd);
+		}
+	}
+	
+	this.SetRecLockStatus = function (bStatus)
+	{
+		if (bStatus == "true" || bStatus == true)
+		{
+			m_position = 44;
+			$("DIV_LOCK_BTN").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Base_Locked.png)";
+			m_IsRecLock = true;
+		}
+		else if (bStatus == "false" || bStatus == false)
+		{
+			m_position = 0;
+			$("DIV_LOCK_BTN").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_UnLock_Normal.png)";
+			m_IsRecLock = false;
+		}
+		else
+		{
+			return;
+		}
+		$("DIV_LOCK_BTN_SILDER").style.left = m_position + "px";
+		$("DIV_LOCK_BTN_SILDER").style.backgroundImage = "URL(WebCommon/images/Parts_CR_T_CC_Rec_Switch_RecLock_Knob_Normal.png)";
+	};
+	
+	this.Create();
+}

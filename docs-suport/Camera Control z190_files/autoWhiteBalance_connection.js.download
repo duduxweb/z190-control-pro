@@ -1,0 +1,76 @@
+// JavaScript Document
+var g_bAWBGray = null;
+
+var AWBCtrl = {
+
+	GetStatus: function()
+	{
+		var names = {"Camera.WhiteBalance.AutoAdjust.Enabled":null}; 
+		var id = client.property.GetValue({params: names, onresponse: function(resp) {
+			var respStatus= JSON.stringify(resp.error || resp.result);
+			var statusData = JSON.parse(respStatus);
+			if (statusData == "timeout")
+			{
+				//TODO timeout
+			}
+			else
+			{
+				var grayAWB = statusData["Camera.WhiteBalance.AutoAdjust.Enabled"] || {};
+				var enableAWB = grayAWB.cam;
+
+				if (enableAWB == false )
+				{
+					g_bAWBGray = true;
+					g_objAWBDialog.userData.ShowDialog(false);
+				}
+				else
+				{
+					g_bAWBGray = false;
+				}
+				g_objAWBButton.userData.SetDisabled(g_bAWBGray || g_LockFlag);
+			}	
+		}});
+	},
+
+    NotifyAWBtatusData : function (objArrItem)
+    {
+        j.each(objArrItem,function(key,value){
+            switch(key)
+            {
+                case "Camera.WhiteBalance.AutoAdjust.Enabled":
+                    AWBCtrl.GetStatus();
+                    break;
+                default:
+                    break;
+            }
+        })
+    },
+
+	NotifySetAWBData : function(objArrItem)
+	{
+		j.each(objArrItem, function(key, value) {
+			switch(key)
+			{
+				// case "P.Menu.pmw-f5x.Event.EventID":
+				// 	if ((EVENT_PLAY_UPDATE == value)
+				// 		|| (EVENT_THUMBNAIL_UPDATE == value)
+				// 		|| (EVENT_RECORDE_UPDATE == value)
+				// 		|| (EVENT_VIEW_UPDATE == value)
+				// 		|| (EVENT_COLORBAR_ON == value)
+				// 		|| (EVENT_ABB_EXECUTE_FOR_GREY_OUT == value)
+				// 		|| (EVENT_AWB_MODE_DISPLAY == value)
+				// 		|| (EVENTKIND_POOLFEED_REFRESH == value)
+				// 		|| (EVENT_700P_CONNECTION_STATUS_REFRESH_WIFI == value))
+				// 		{
+				// 			AWBCtrl.GetStatus();
+				// 		}
+				// 	break;
+                case "Camera.WhiteBalance.AutoAdjust.Enabled":
+                    AWBCtrl.GetStatus();
+                    break;
+				default:
+					break;
+			}
+		})
+	}
+}
