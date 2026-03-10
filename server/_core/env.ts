@@ -7,4 +7,7 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  cameraIp: process.env.CAMERA_IP ?? "192.168.100.41",
+  cameraUser: process.env.CAMERA_USER ?? "admin",
+  cameraPassword: process.env.CAMERA_PASSWORD ?? "",
 };
