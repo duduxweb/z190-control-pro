@@ -22,7 +22,7 @@ const { chromium } = require('playwright');
 
 // ===== CAMERAS =====
 const CAMS = [
-  { ip: '192.168.9.105', user: 'admin', pass: 'ABCD1234' },
+  { ip: '192.168.100.41', user: 'admin', pass: 'ABCD1234' },
   // { ip: '192.168.9.106', user: 'admin', pass: 'ABCD1234' },
 ];
 

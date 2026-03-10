@@ -10,10 +10,10 @@
     "update": "git pull origin main"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "http-proxy-middleware": "^3.0.5",
     "chokidar": "^4.0.3",
     "cross-spawn": "^7.0.6",
+    "express": "^4.21.0",
+    "http-proxy-middleware": "^3.0.5",
     "minimist": "^1.2.8"
   },
   "optionalDependencies": {

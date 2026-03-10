@@ -1,701 +1,601 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Z190 Control Madruga v2.0</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Z190 Control Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg-primary: #0a0f1a;
-      --bg-secondary: #111827;
-      --bg-card: #1a2332;
-      --bg-card-hover: #1f2b3d;
-      --bg-input: #0d1420;
-      --border: #2a3548;
-      --border-focus: #3b82f6;
-      --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --success: #10b981;
-      --success-bg: rgba(16,185,129,0.1);
-      --warning: #f59e0b;
-      --warning-bg: rgba(245,158,11,0.1);
-      --danger: #ef4444;
-      --danger-bg: rgba(239,68,68,0.1);
-      --rec-red: #ef4444;
-      --rec-glow: rgba(239,68,68,0.4);
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg0:#070a10;--bg1:#0d1220;--bg2:#131c2e;--bg3:#1a253c;--bg4:#21304a;
+      --bdr:rgba(45,80,140,.3);--bdr-hi:rgba(60,130,255,.5);
+      --blue:#3d8fff;--cyan:#00d4e8;--green:#00e87a;--amber:#ffb830;--red:#ff3f3f;--purple:#b06fff;
+      --t1:#ddeeff;--t2:#7090b8;--t3:#3a5070;
+      --mono:'Share Tech Mono',monospace;
+      --cond:'Barlow Condensed',sans-serif;
+      --sans:'Barlow',sans-serif;
     }
-    body {
-      font-family: var(--font-sans);
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-
-    /* ── Layout ── */
-    .app-container { max-width: 1400px; margin: 0 auto; padding: 16px; }
-    .header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 0; margin-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-    .header .version { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-
-    /* ── Status Indicator ── */
-    .status-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      display: inline-block; margin-right: 6px;
-    }
-    .status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-    .status-dot.offline { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
-    .status-dot.checking { background: var(--warning); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-    @keyframes rec-pulse { 0%,100% { box-shadow: 0 0 4px var(--rec-glow); } 50% { box-shadow: 0 0 16px var(--rec-glow); } }
-
-    /* ── Tabs ── */
-    .tabs {
-      display: flex; gap: 4px; background: var(--bg-secondary);
-      border-radius: var(--radius); padding: 4px; margin-bottom: 24px;
-    }
-    .tab {
-      flex: 1; padding: 10px 16px; border: none; background: transparent;
-      color: var(--text-secondary); font-family: var(--font-sans); font-size: 0.875rem;
-      font-weight: 500; cursor: pointer; border-radius: var(--radius-sm);
-      transition: all 0.2s;
-    }
-    .tab:hover { color: var(--text-primary); background: var(--bg-card); }
-    .tab.active { color: var(--text-primary); background: var(--accent); }
-
-    /* ── Cards ── */
-    .card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
-      box-shadow: var(--shadow);
-    }
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .card-title { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-    .card-icon { width: 20px; height: 20px; opacity: 0.7; }
-
-    /* ── Grid ── */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
-    @media (max-width: 768px) {
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-    }
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* ── Form Elements ── */
-    .form-group { margin-bottom: 16px; }
-    .form-label {
-      display: block; font-size: 0.8rem; font-weight: 500;
-      color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .form-input, .form-select {
-      width: 100%; padding: 10px 14px; background: var(--bg-input);
-      border: 1px solid var(--border); border-radius: var(--radius-sm);
-      color: var(--text-primary); font-family: var(--font-sans); font-size: 0.9rem;
-      transition: border-color 0.2s;
-    }
-    .form-input:focus, .form-select:focus {
-      outline: none; border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-    }
-    .form-input::placeholder { color: var(--text-muted); }
-
-    /* ── Buttons ── */
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 20px; border: none; border-radius: var(--radius-sm);
-      font-family: var(--font-sans); font-size: 0.875rem; font-weight: 500;
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-success { background: var(--success); color: white; }
-    .btn-success:hover { background: #059669; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-outline {
-      background: transparent; color: var(--text-secondary);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover { color: var(--text-primary); border-color: var(--text-secondary); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-
-    /* ── Status Value Display ── */
-    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-    .stat-item {
-      background: var(--bg-input); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 14px;
-      transition: border-color 0.2s;
-    }
-    .stat-item:hover { border-color: var(--accent); }
-    .stat-label {
-      font-size: 0.7rem; font-weight: 500; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
-    }
-    .stat-value {
-      font-size: 1.25rem; font-weight: 700; font-family: var(--font-mono);
-      color: var(--text-primary);
-    }
-    .stat-value.highlight { color: var(--accent); }
-    .stat-value.success { color: var(--success); }
-    .stat-value.warning { color: var(--warning); }
-    .stat-value.danger { color: var(--danger); }
-
-    /* ── Toast ── */
-    .toast-container {
-      position: fixed; top: 20px; right: 20px; z-index: 9999;
-      display: flex; flex-direction: column; gap: 8px;
-    }
-    .toast {
-      padding: 12px 20px; border-radius: var(--radius-sm);
-      font-size: 0.875rem; font-weight: 500;
-      animation: slideIn 0.3s ease;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    }
-    .toast.success { background: var(--success); color: white; }
-    .toast.error { background: var(--danger); color: white; }
-    .toast.info { background: var(--accent); color: white; }
-    @keyframes slideIn { from { transform: translateX(100%); opacity:0; } to { transform: translateX(0); opacity:1; } }
-
-    /* ── Loading Spinner ── */
-    .spinner {
-      width: 16px; height: 16px; border: 2px solid var(--border);
-      border-top-color: var(--accent); border-radius: 50%;
-      animation: spin 0.6s linear infinite; display: inline-block;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Divider ── */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-
-    /* ── Badge ── */
-    .badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500;
-    }
-    .badge-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
-    .badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid rgba(245,158,11,0.3); }
-    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
-
-    /* ── Empty State ── */
-    .empty-state {
-      text-align: center; padding: 40px 20px; color: var(--text-muted);
-    }
-    .empty-state svg { width: 48px; height: 48px; margin: 0 auto 12px; opacity: 0.3; }
-    .empty-state p { font-size: 0.9rem; }
-
-    /* ── Refresh indicator ── */
-    .refresh-bar {
-      height: 3px; background: var(--bg-secondary); border-radius: 2px;
-      margin-bottom: 16px; overflow: hidden;
-    }
-    .refresh-bar-inner {
-      height: 100%; background: var(--accent); border-radius: 2px;
-      transition: width 1s linear;
-    }
+    body{font-family:var(--sans);background:var(--bg0);color:var(--t1);min-height:100vh;
+      background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px)}
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg0)}
+    ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+    /* ── Layout ── */
+    .wrap{max-width:1360px;margin:0 auto;padding:0 16px 48px}
+
+    /* ── Header ── */
+    .header{display:flex;align-items:center;justify-content:space-between;padding:16px 0 12px;
+      border-bottom:1px solid var(--bdr);margin-bottom:20px;position:relative}
+    .header::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:2px;
+      background:linear-gradient(90deg,var(--blue),transparent)}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-rec{width:11px;height:11px;border-radius:50%;background:var(--red);
+      box-shadow:0 0 10px var(--red)}
+    .brand-rec.idle{background:var(--t3);box-shadow:none}
+    .brand h1{font-family:var(--cond);font-size:1.6rem;font-weight:700;letter-spacing:.04em;
+      color:var(--t1)}
+    .brand-sub{font-family:var(--mono);font-size:.68rem;color:var(--t3);margin-top:1px}
+    .hstatus{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--t2)}
+    .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+    .dot.online{background:var(--green);box-shadow:0 0 7px var(--green)}
+    .dot.offline{background:var(--red);box-shadow:0 0 7px var(--red)}
+    .dot.loading{background:var(--amber);animation:blink 1s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;gap:3px;margin-bottom:20px;background:var(--bg1);
+      border:1px solid var(--bdr);border-radius:8px;padding:4px}
+    .tab{flex:1;padding:9px 12px;background:transparent;border:none;
+      font-family:var(--cond);font-size:.95rem;font-weight:500;letter-spacing:.04em;
+      color:var(--t3);cursor:pointer;border-radius:5px;transition:all .2s;text-transform:uppercase}
+    .tab:hover{color:var(--t2);background:var(--bg3)}
+    .tab.active{background:var(--blue);color:#fff}
+
+    /* ── Section title ── */
+    .sec-title{font-family:var(--cond);font-size:.72rem;font-weight:600;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--t3);margin-bottom:10px;
+      display:flex;align-items:center;gap:6px}
+    .sec-title::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+    /* ── Main grid ── */
+    .main-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    @media(max-width:900px){.main-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.main-grid{grid-template-columns:1fr}}
+    .col-span2{grid-column:span 2}
+    @media(max-width:900px){.col-span2{grid-column:span 1}}
+
+    /* ── Exposure block (big panels) ── */
+    .panel{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;
+      padding:14px 16px;transition:border-color .2s}
+    .panel:hover{border-color:var(--bdr-hi)}
+    .panel-label{font-family:var(--cond);font-size:.68rem;font-weight:600;letter-spacing:.12em;
+      text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+    .panel-value{font-family:var(--mono);font-size:2rem;font-weight:400;line-height:1;
+      color:var(--t1)}
+    .panel-value.big{font-size:2.6rem}
+    .panel-value.med{font-size:1.5rem}
+    .panel-sub{font-size:.75rem;color:var(--t2);margin-top:5px;font-family:var(--mono)}
+    .panel-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;
+      border-radius:20px;font-size:.7rem;font-family:var(--cond);font-weight:600;
+      letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+    .badge-manual{background:rgba(61,143,255,.12);color:var(--blue);border:1px solid rgba(61,143,255,.3)}
+    .badge-auto{background:rgba(0,232,122,.12);color:var(--green);border:1px solid rgba(0,232,122,.3)}
+    .badge-atw{background:rgba(176,111,255,.12);color:var(--purple);border:1px solid rgba(176,111,255,.3)}
+
+    /* ── Status row (rec, tc, etc) ── */
+    .status-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .status-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+      border-radius:5px;font-family:var(--cond);font-size:.82rem;font-weight:600;
+      letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--bdr);
+      background:var(--bg2)}
+    .status-chip.rec-on{background:rgba(255,63,63,.15);border-color:rgba(255,63,63,.5);
+      color:var(--red);animation:rec-pulse 1.2s infinite}
+    @keyframes rec-pulse{0%,100%{box-shadow:0 0 4px rgba(255,63,63,.3)}50%{box-shadow:0 0 12px rgba(255,63,63,.6)}}
+    .status-chip.idle{color:var(--t3)}
+    .status-chip.ok{background:rgba(0,232,122,.1);border-color:rgba(0,232,122,.3);color:var(--green)}
+
+    /* ── Data table ── */
+    .data-table{width:100%;border-collapse:collapse}
+    .data-table tr{border-bottom:1px solid rgba(45,80,140,.2)}
+    .data-table tr:last-child{border-bottom:none}
+    .data-table td{padding:7px 4px;font-size:.82rem}
+    .data-table td:first-child{color:var(--t3);font-family:var(--cond);font-size:.72rem;
+      font-weight:600;letter-spacing:.06em;text-transform:uppercase;width:48%;padding-right:8px}
+    .data-table td:last-child{font-family:var(--mono);color:var(--t1);font-size:.82rem}
+
+    /* ── WB Kelvin memories ── */
+    .wb-memories{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+    .wb-mem{flex:1;min-width:60px;background:var(--bg3);border:1px solid var(--bdr);
+      border-radius:6px;padding:6px 8px;text-align:center}
+    .wb-mem.active{border-color:var(--cyan);background:rgba(0,212,232,.08)}
+    .wb-mem-label{font-family:var(--cond);font-size:.62rem;font-weight:600;
+      letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:2px}
+    .wb-mem-val{font-family:var(--mono);font-size:.95rem;color:var(--t1)}
+    .wb-mem.active .wb-mem-val{color:var(--cyan)}
+
+    /* ── Audio bars ── */
+    .audio-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+    .audio-ch{text-align:center}
+    .audio-label{font-family:var(--cond);font-size:.62rem;color:var(--t3);
+      font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+    .audio-bar-wrap{height:48px;background:var(--bg1);border:1px solid var(--bdr);
+      border-radius:4px;overflow:hidden;display:flex;flex-direction:column-reverse}
+    .audio-bar{width:100%;background:var(--green);border-radius:2px;transition:height .15s}
+    .audio-bar.peak{background:var(--red)}
+
+    /* ── Refresh bar ── */
+    .refresh-bar{height:2px;background:var(--bg3);border-radius:1px;
+      margin-bottom:14px;overflow:hidden}
+    .refresh-inner{height:100%;background:var(--blue);border-radius:1px;
+      transition:width 1s linear}
+
+    /* ── Toast ── */
+    .toasts{position:fixed;top:16px;right:16px;z-index:999;display:flex;flex-direction:column;gap:6px}
+    .toast{padding:10px 16px;border-radius:6px;font-size:.83rem;font-weight:500;
+      animation:tin .25s ease;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+    .toast.success{background:var(--green);color:#000}
+    .toast.error{background:var(--red);color:#fff}
+    .toast.info{background:var(--blue);color:#fff}
+    @keyframes tin{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+    /* ── Form ── */
+    .form-group{margin-bottom:14px}
+    .form-label{display:block;font-family:var(--cond);font-size:.7rem;font-weight:600;
+      letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+    .form-input{width:100%;padding:9px 12px;background:var(--bg1);border:1px solid var(--bdr);
+      border-radius:6px;color:var(--t1);font-family:var(--sans);font-size:.88rem;transition:border-color .2s}
+    .form-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(61,143,255,.15)}
+    .form-input::placeholder{color:var(--t3)}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border:none;
+      border-radius:6px;font-family:var(--cond);font-size:.9rem;font-weight:600;
+      letter-spacing:.04em;cursor:pointer;transition:all .2s}
+    .btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#2a7cf5}
+    .btn-outline{background:transparent;color:var(--t2);border:1px solid var(--bdr)}
+    .btn-outline:hover{color:var(--t1);border-color:var(--t2)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+    .spinner{width:14px;height:14px;border:2px solid var(--bdr);border-top-color:var(--blue);
+      border-radius:50%;animation:spin .5s linear infinite;display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── Empty / Error ── */
+    .empty{text-align:center;padding:48px 20px;color:var(--t3)}
+    .empty p{font-size:.9rem;margin-top:8px}
+
+    /* ── Tag ── */
+    .tag{display:inline-block;padding:2px 6px;border-radius:3px;
+      font-family:var(--mono);font-size:.72rem;background:var(--bg3);color:var(--t2);
+      border:1px solid var(--bdr)}
+    .tag.on{background:rgba(0,232,122,.1);color:var(--green);border-color:rgba(0,232,122,.3)}
+    .tag.off{background:rgba(255,63,63,.08);color:var(--red);border-color:rgba(255,63,63,.25)}
   </style>
 </head>
 <body>
-  <div id="root"></div>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
 
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+/* ── Toast ──────────────────────────────────────────────────────────────── */
+let _tid = 0; const _tl = new Set();
+function toast(msg, type='info') {
+  const id = ++_tid;
+  _tl.forEach(f => f({id,msg,type}));
+  setTimeout(()=> _tl.forEach(f => f({rm:id})), 3200);
+}
+function Toasts() {
+  const [list, setList] = useState([]);
+  useEffect(()=>{
+    const h = ev => { if(ev.rm) setList(l=>l.filter(x=>x.id!==ev.rm)); else setList(l=>[...l.slice(-3),ev]); };
+    _tl.add(h); return ()=>_tl.delete(h);
+  },[]);
+  return <div className="toasts">{list.map(t=><div key={t.id} className={`toast ${t.type}`}>{t.msg}</div>)}</div>;
+}
 
-  <script type="text/babel">
-    const { useState, useEffect, useRef, useCallback, useMemo } = React;
+/* ── Helpers ─────────────────────────────────────────────────────────────── */
+const fmt = v => (v==null||v===''||v===undefined) ? '—' : String(v);
+const fmtBool = v => v==null ? '—' : (v ? <span className="tag on">ON</span> : <span className="tag off">OFF</span>);
+const badge = (method) => {
+  if (!method) return null;
+  const m = String(method).toLowerCase();
+  if (m==='automatic'||m==='auto') return <span className="panel-badge badge-auto">Auto</span>;
+  if (m==='atw') return <span className="panel-badge badge-atw">ATW</span>;
+  return <span className="panel-badge badge-manual">{method}</span>;
+};
 
-    // ─── Toast System ────────────────────────────────────────────────────────
-    let toastId = 0;
-    const toastListeners = new Set();
-    function showToast(msg, type = 'info') {
-      const id = ++toastId;
-      toastListeners.forEach(fn => fn({ id, msg, type }));
-      setTimeout(() => toastListeners.forEach(fn => fn({ remove: id })), 3500);
+/* ── Dashboard ───────────────────────────────────────────────────────────── */
+function Dashboard() {
+  const [s, setS] = useState(null);
+  const [err, setErr] = useState(null);
+  const [prog, setProg] = useState(100);
+  const [auto, setAuto] = useState(true);
+  const iv = useRef(null);
+  const INTERVAL = 4000;
+
+  const load = useCallback(async () => {
+    try {
+      const r = await fetch('/api/camera/status');
+      const d = await r.json();
+      if (d.error && !d.connected) { setErr(d.error); setS(null); }
+      else { setS(d); setErr(null); }
+    } catch(e) { setErr('Sem resposta do servidor'); }
+  }, []);
+
+  useEffect(()=>{
+    load();
+    if (auto) {
+      iv.current = setInterval(()=>{ load(); setProg(0); setTimeout(()=>setProg(100),80); }, INTERVAL);
+      return ()=>clearInterval(iv.current);
     }
+  },[auto, load]);
 
-    function ToastContainer() {
-      const [toasts, setToasts] = useState([]);
-      useEffect(() => {
-        const handler = (ev) => {
-          if (ev.remove) setToasts(t => t.filter(x => x.id !== ev.remove));
-          else setToasts(t => [...t.slice(-4), ev]);
-        };
-        toastListeners.add(handler);
-        return () => toastListeners.delete(handler);
-      }, []);
-      return (
-        <div className="toast-container">
-          {toasts.map(t => <div key={t.id} className={`toast ${t.type}`}>{t.msg}</div>)}
+  if (!s && !err) return <div className="empty"><div className="spinner" style={{width:28,height:28,margin:'0 auto 12px'}}></div><p>Conectando à câmera...</p></div>;
+
+  if (err) return (
+    <div className="panel" style={{borderColor:'rgba(255,63,63,.4)'}}>
+      <div style={{color:'var(--red)',fontFamily:'var(--cond)',fontSize:'1rem',fontWeight:700,marginBottom:8}}>⚠ Câmera inacessível</div>
+      <p style={{color:'var(--t2)',fontSize:'.85rem',marginBottom:12}}>{err}</p>
+      <button className="btn btn-outline" onClick={load}>↻ Tentar novamente</button>
+    </div>
+  );
+
+  // Rec status
+  const recMain = fmt(s.rec_main);
+  const isRec   = recMain.toLowerCase().includes('rec') || recMain.toLowerCase() === 'recording';
+  const mbStatus = fmt(s.mediabox_status);
+
+  // Audio bars pct (0-4 → 0-100%)
+  const audioPct = ch => { const v = s.audio?.[ch]; if(v==null)return 0; return Math.min(100, (v/4)*100); };
+
+  return (
+    <div>
+      {/* Status bar */}
+      <div className="status-row">
+        <div className={`status-chip ${isRec?'rec-on':'idle'}`}>
+          {isRec ? '● REC' : '○ IDLE'}
         </div>
-      );
-    }
+        {s.mediabox_mode && <div className="status-chip">{s.mediabox_mode}</div>}
+        {s.timecode && <div className="status-chip ok" style={{fontFamily:'var(--mono)',fontSize:'.78rem'}}>{s.timecode}</div>}
+        {s.colorbars && <div className="status-chip" style={{color:'var(--amber)',borderColor:'rgba(255,184,48,.4)'}}>◈ BARS {s.colorbars_type}</div>}
+        {s.shooting_mode && <div className="status-chip">{s.shooting_mode}</div>}
+      </div>
 
-    // ─── SVG Icons ───────────────────────────────────────────────────────────
-    const Icons = {
-      camera: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>,
-      settings: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-      wifi: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>,
-      refresh: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>,
-      sun: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
-      aperture: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="14.31" y1="8" x2="20.05" y2="17.94"/><line x1="9.69" y1="8" x2="21.17" y2="8"/><line x1="7.38" y1="12" x2="13.12" y2="2.06"/><line x1="9.69" y1="16" x2="3.95" y2="6.06"/><line x1="14.31" y1="16" x2="2.83" y2="16"/><line x1="16.62" y1="12" x2="10.88" y2="21.94"/></svg>,
-      video: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>,
-      mic: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>,
-      zap: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
-      check: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-      x: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-      disc: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>,
-    };
+      {/* Refresh bar */}
+      {auto && <div className="refresh-bar"><div className="refresh-inner" style={{width:prog+'%'}}></div></div>}
 
-    // ─── Configuration Page ──────────────────────────────────────────────────
-    function ConfigPage({ config, onSave }) {
-      const [ip, setIp] = useState(config?.camera?.ip || '192.168.100.41');
-      const [user, setUser] = useState(config?.camera?.user || 'admin');
-      const [pass, setPass] = useState('');
-      const [port, setPort] = useState(config?.camera?.port || 80);
-      const [testing, setTesting] = useState(false);
-      const [testResult, setTestResult] = useState(null);
-      const [saving, setSaving] = useState(false);
+      {/* Controls bar */}
+      <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',gap:8,marginBottom:12}}>
+        <label style={{fontSize:'.78rem',color:'var(--t3)',cursor:'pointer',display:'flex',alignItems:'center',gap:4}}>
+          <input type="checkbox" checked={auto} onChange={e=>setAuto(e.target.checked)}/> Auto {INTERVAL/1000}s
+        </label>
+        <button className="btn btn-outline" style={{padding:'5px 12px',fontSize:'.78rem'}} onClick={load}>↻</button>
+      </div>
 
-      useEffect(() => {
-        // Carregar config completa
-        fetch('/api/config/full').then(r => r.json()).then(cfg => {
-          setIp(cfg.camera?.ip || '192.168.100.41');
-          setUser(cfg.camera?.user || 'admin');
-          setPass(cfg.camera?.password || '');
-          setPort(cfg.camera?.port || 80);
-        }).catch(() => {});
-      }, []);
-
-      async function testConnection() {
-        setTesting(true);
-        setTestResult(null);
-        try {
-          const res = await fetch('/api/config/test', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ip, user, password: pass, port })
-          });
-          const data = await res.json();
-          setTestResult(data);
-          if (data.ok) showToast('Conexao com a camera OK!', 'success');
-          else showToast(data.message, 'error');
-        } catch (e) {
-          setTestResult({ ok: false, message: e.message });
-          showToast('Erro ao testar conexao', 'error');
-        }
-        setTesting(false);
-      }
-
-      async function saveConfiguration() {
-        setSaving(true);
-        try {
-          const res = await fetch('/api/config', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              camera: { ip, user, password: pass, port: Number(port) }
-            })
-          });
-          const data = await res.json();
-          if (data.ok) {
-            showToast('Configuracao salva com sucesso!', 'success');
-            if (onSave) onSave();
-          } else {
-            showToast('Erro ao salvar', 'error');
-          }
-        } catch (e) {
-          showToast('Erro: ' + e.message, 'error');
-        }
-        setSaving(false);
-      }
-
-      return (
-        <div>
-          <div className="card">
-            <div className="card-header">
-              <div className="card-title">
-                <span className="card-icon">{Icons.settings}</span>
-                Configuracao da Camera
+      {/* ── Exposição ── */}
+      <div className="sec-title">Exposição</div>
+      <div className="main-grid" style={{marginBottom:16}}>
+        {/* Iris */}
+        <div className="panel">
+          <div className="panel-label">Iris</div>
+          <div className="panel-value big">f{fmt(s.iris)}</div>
+          {badge(s.iris_method)}
+          {s.iris_closed && <span className="panel-badge badge-manual" style={{marginLeft:4}}>FECHADA</span>}
+        </div>
+        {/* Gain */}
+        <div className="panel">
+          <div className="panel-label">Ganho</div>
+          <div className="panel-value big">{fmt(s.gain)}</div>
+          {badge(s.gain_method)}
+          {s.gain_mode && <div className="panel-sub">Modo: {s.gain_mode}</div>}
+        </div>
+        {/* Shutter */}
+        <div className="panel">
+          <div className="panel-label">Shutter</div>
+          <div className="panel-value big">{fmt(s.shutter)}</div>
+          {badge(s.shutter_method)}
+          <div className="panel-sub">
+            {s.shutter_mode && `Modo: ${s.shutter_mode}`}
+            {s.shutter_ecs ? ' · ECS ON' : ''}
+          </div>
+        </div>
+        {/* ND */}
+        <div className="panel">
+          <div className="panel-label">Filtro ND</div>
+          <div className="panel-value">{fmt(s.nd)}</div>
+          {badge(s.nd_method)}
+        </div>
+        {/* WB */}
+        <div className="panel col-span2">
+          <div className="panel-label">White Balance</div>
+          <div style={{display:'flex',alignItems:'baseline',gap:12}}>
+            <div className="panel-value">{fmt(s.wb_mode)}</div>
+            <div style={{fontFamily:'var(--mono)',fontSize:'1.4rem',color:'var(--cyan)'}}>{s.wb_kelvin ? s.wb_kelvin+'K' : '—'}</div>
+          </div>
+          {badge(s.wb_method)}
+          <div className="wb-memories">
+            {[['Preset', s.wb_kelvin_preset],['Mem A', s.wb_kelvin_memA],['Mem B', s.wb_kelvin_memB]].map(([lbl,val])=>(
+              <div key={lbl} className={`wb-mem ${s.wb_mode===( lbl==='Mem A'?'Memory A':lbl==='Mem B'?'Memory B':lbl)?'active':''}`}>
+                <div className="wb-mem-label">{lbl}</div>
+                <div className="wb-mem-val">{val ? val+'K' : '—'}</div>
               </div>
+            ))}
+            <div className={`wb-mem ${s.wb_mode==='ATW'?'active':''}`}>
+              <div className="wb-mem-label">ATW</div>
+              <div className="wb-mem-val" style={{fontSize:'.75rem'}}>{s.wb_atw_active===true ? 'ativo' : s.wb_mode==='ATW'?'ativo':'—'}</div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div className="grid-2">
-              <div className="form-group">
-                <label className="form-label">Endereco IP da Camera</label>
-                <input className="form-input" type="text" value={ip}
-                  onChange={e => setIp(e.target.value)}
-                  placeholder="192.168.100.41" />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Porta</label>
-                <input className="form-input" type="number" value={port}
-                  onChange={e => setPort(e.target.value)}
-                  placeholder="80" />
-              </div>
-            </div>
+      {/* ── Ótica ── */}
+      <div className="sec-title">Ótica / Foco</div>
+      <div className="main-grid" style={{marginBottom:16}}>
+        <div className="panel">
+          <div className="panel-label">Zoom</div>
+          <div className="panel-value big">{fmt(s.zoom)}</div>
+          <div className="panel-sub">velocidade: {fmt(s.zoom_velocity)}</div>
+        </div>
+        <div className="panel">
+          <div className="panel-label">Foco</div>
+          <div className="panel-value med">{s.focus_distance ? s.focus_distance + (s.focus_unit ? ' '+s.focus_unit : '') : '—'}</div>
+          {badge(s.focus_method)}
+        </div>
+        <div className="panel">
+          <div className="panel-label">Lente</div>
+          <div className="panel-value med" style={{fontSize:'1rem',paddingTop:4}}>{fmt(s.lens_mount)}</div>
+          <div className="panel-sub">S&Q: {fmtBool(s.sqmotion)} {s.sqmotion_fps ? s.sqmotion_fps+'fps' : ''}</div>
+        </div>
+      </div>
 
-            <div className="grid-2">
-              <div className="form-group">
-                <label className="form-label">Usuario</label>
-                <input className="form-input" type="text" value={user}
-                  onChange={e => setUser(e.target.value)}
-                  placeholder="admin" />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Senha</label>
-                <input className="form-input" type="password" value={pass}
-                  onChange={e => setPass(e.target.value)}
-                  placeholder="Senha da camera" />
-              </div>
-            </div>
-
-            <hr className="divider" />
-
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <button className="btn btn-outline" onClick={testConnection} disabled={testing}>
-                {testing ? <span className="spinner"></span> : <span className="card-icon">{Icons.wifi}</span>}
-                {testing ? 'Testando...' : 'Testar Conexao'}
-              </button>
-              <button className="btn btn-primary" onClick={saveConfiguration} disabled={saving}>
-                {saving ? <span className="spinner"></span> : <span className="card-icon">{Icons.check}</span>}
-                {saving ? 'Salvando...' : 'Salvar Configuracao'}
-              </button>
-
-              {testResult && (
-                <span className={`badge ${testResult.ok ? 'badge-success' : 'badge-danger'}`}>
-                  {testResult.ok ? 'Conectado' : testResult.message}
-                </span>
+      {/* ── Gravação ── */}
+      <div className="sec-title">Gravação & Clip</div>
+      <div className="main-grid" style={{marginBottom:16}}>
+        <div className="panel">
+          <div className="panel-label">Status</div>
+          <table className="data-table">
+            <tbody>
+              {[['Main',s.rec_main],['Proxy',s.rec_proxy],['SD',s.rec_sd],['Stream',s.rec_streaming]].map(([l,v])=>v?
+                <tr key={l}><td>{l}</td><td><span className={`tag ${String(v).toLowerCase().includes('rec')?'on':''}`}>{v}</span></td></tr>:null
               )}
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header">
-              <div className="card-title">
-                <span className="card-icon">{Icons.zap}</span>
-                Informacoes do Sistema
-              </div>
-            </div>
-            <div className="stat-grid">
-              <div className="stat-item">
-                <div className="stat-label">Servidor</div>
-                <div className="stat-value success" style={{fontSize:'1rem'}}>Rodando</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-label">Versao</div>
-                <div className="stat-value" style={{fontSize:'1rem'}}>v2.0.0</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-label">Proxy</div>
-                <div className="stat-value highlight" style={{fontSize:'1rem'}}>{ip}:{port}</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-label">Config</div>
-                <div className="stat-value" style={{fontSize:'1rem'}}>config.json</div>
-              </div>
-            </div>
+            </tbody>
+          </table>
+        </div>
+        <div className="panel">
+          <div className="panel-label">Timecode</div>
+          <div className="panel-value" style={{fontSize:'1.4rem',letterSpacing:'.04em'}}>{s.timecode||'—'}</div>
+          <div className="panel-sub">
+            {s.timecode_type && `Tipo: ${s.timecode_type}`}
+            {s.timecode_locked!=null && (s.timecode_locked ? ' · LOCKED' : ' · FREE')}
           </div>
         </div>
-      );
-    }
+        <div className="panel">
+          <div className="panel-label">Formato de Vídeo</div>
+          <table className="data-table">
+            <tbody>
+              {[
+                ['FPS', s.video_fps],
+                ['Codec', s.video_codec],
+                ['Resolução', s.video_width&&s.video_height ? `${s.video_width}×${s.video_height}` : null],
+                ['Scan', s.video_scan],
+                ['Bitrate', s.video_bitrate ? s.video_bitrate+'Mbps' : null],
+                ['Chroma', s.video_chroma],
+              ].filter(([,v])=>v).map(([l,v])=>(
+                <tr key={l}><td>{l}</td><td>{v}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-    // ─── Dashboard Page ──────────────────────────────────────────────────────
-    function DashboardPage() {
-      const [status, setStatus] = useState(null);
-      const [loading, setLoading] = useState(true);
-      const [error, setError] = useState(null);
-      const [refreshProgress, setRefreshProgress] = useState(100);
-      const [autoRefresh, setAutoRefresh] = useState(true);
-      const intervalRef = useRef(null);
-      const REFRESH_INTERVAL = 3000; // 3 segundos
-
-      const fetchStatus = useCallback(async () => {
-        try {
-          const res = await fetch('/api/camera/status');
-          const data = await res.json();
-          if (data.error) {
-            setError(data.error);
-            setStatus(null);
-          } else {
-            setStatus(data);
-            setError(null);
-          }
-        } catch (e) {
-          setError('Sem conexao com o servidor');
-          setStatus(null);
-        }
-        setLoading(false);
-      }, []);
-
-      useEffect(() => {
-        fetchStatus();
-        if (autoRefresh) {
-          intervalRef.current = setInterval(() => {
-            fetchStatus();
-            setRefreshProgress(0);
-            setTimeout(() => setRefreshProgress(100), 50);
-          }, REFRESH_INTERVAL);
-          return () => clearInterval(intervalRef.current);
-        }
-      }, [autoRefresh, fetchStatus]);
-
-      function formatValue(val) {
-        if (val === null || val === undefined) return '—';
-        if (typeof val === 'object') {
-          // Tentar extrair valor útil de objetos complexos
-          if (val.cam !== undefined) return String(val.cam);
-          if (val._n !== undefined) return String(val._n);
-          const keys = Object.keys(val);
-          if (keys.length === 1) return String(val[keys[0]]);
-          return JSON.stringify(val);
-        }
-        return String(val);
-      }
-
-      function getValueClass(label, val) {
-        const v = String(val).toLowerCase();
-        if (v === 'true' || v === 'on' || v === 'enabled') return 'success';
-        if (v === 'false' || v === 'off' || v === 'disabled') return 'danger';
-        if (label.toLowerCase().includes('rec') && v === 'recording') return 'danger';
-        return '';
-      }
-
-      if (loading) {
-        return (
-          <div className="empty-state">
-            <div className="spinner" style={{width:'32px',height:'32px',margin:'0 auto 16px'}}></div>
-            <p>Carregando status da camera...</p>
+      {/* ── Paint / Sistema ── */}
+      <div className="sec-title">Paint & Sistema</div>
+      <div className="main-grid" style={{marginBottom:16}}>
+        <div className="panel">
+          <div className="panel-label">Gamma</div>
+          <div className="panel-value med">{s.gamma_value || s.gamma_type || '—'}</div>
+          <div className="panel-sub">HDR: {fmt(s.gamma_hdr_value)} · Enabled: {fmt(String(s.gamma_enabled))}</div>
+        </div>
+        <div className="panel">
+          <div className="panel-label">Bateria</div>
+          <div className="panel-value big" style={{color: s.battery_pct<20 ? 'var(--red)' : s.battery_pct<40 ? 'var(--amber)' : 'var(--green)'}}>
+            {s.battery_pct!=null ? s.battery_pct+'%' : '—'}
           </div>
-        );
-      }
+          <div className="panel-sub">
+            {s.battery_min!=null ? `${s.battery_min}min` : ''}
+            {s.battery_v!=null ? ` · ${s.battery_v}V` : ''}
+            {s.battery_type ? ` · ${s.battery_type}` : ''}
+          </div>
+        </div>
+        <div className="panel">
+          <div className="panel-label">Storage</div>
+          <table className="data-table">
+            <tbody>
+              {s.storage_avail && Object.entries(s.storage_avail).map(([k,v])=>(
+                <tr key={k}><td>{k}</td><td>{v}</td></tr>
+              ))}
+              {s.storage_status && Object.entries(s.storage_status).map(([k,v])=>(
+                <tr key={'st_'+k}><td>Status {k}</td><td><span className={`tag ${v==='Ready'?'on':''}`}>{v}</span></td></tr>
+              ))}
+              {!s.storage_avail && !s.storage_status && <tr><td colSpan="2" style={{color:'var(--t3)'}}>—</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      if (error) {
-        return (
+      {/* ── Áudio ── */}
+      <div className="sec-title">Nível de Áudio (VU)</div>
+      <div className="panel" style={{marginBottom:16}}>
+        <div className="audio-grid">
+          {['ch1','ch2','ch3','ch4'].map(ch => {
+            const pct = audioPct(ch);
+            return (
+              <div className="audio-ch" key={ch}>
+                <div className="audio-label">{ch.toUpperCase()}</div>
+                <div className="audio-bar-wrap">
+                  <div className="audio-bar" style={{height:pct+'%',background:pct>=100?'var(--red)':pct>=75?'var(--amber)':'var(--green)'}}></div>
+                </div>
+                <div style={{fontFamily:'var(--mono)',fontSize:'.65rem',color:'var(--t3)',marginTop:3,textAlign:'center'}}>
+                  {s.audio?.[ch]!=null ? s.audio[ch] : '—'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Last update ── */}
+      <div style={{textAlign:'right',fontSize:'.68rem',color:'var(--t3)',fontFamily:'var(--mono)'}}>
+        última atualização: {s.lastUpdate ? new Date(s.lastUpdate).toLocaleTimeString('pt-BR') : '—'}
+      </div>
+    </div>
+  );
+}
+
+/* ── Config ──────────────────────────────────────────────────────────────── */
+function Config({ onSave }) {
+  const [ip,setIp]=useState('192.168.100.41');
+  const [user,setUser]=useState('admin');
+  const [pass,setPass]=useState('');
+  const [port,setPort]=useState(80);
+  const [testing,setTesting]=useState(false);
+  const [saving,setSaving]=useState(false);
+  const [result,setResult]=useState(null);
+
+  useEffect(()=>{
+    fetch('/api/config/full').then(r=>r.json()).then(c=>{
+      setIp(c.camera?.ip||'192.168.100.41');
+      setUser(c.camera?.user||'admin');
+      setPass(c.camera?.password||'');
+      setPort(c.camera?.port||80);
+    }).catch(()=>{});
+  },[]);
+
+  const test = async () => {
+    setTesting(true); setResult(null);
+    try {
+      const r = await fetch('/api/config/test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ip,user,password:pass})});
+      const d = await r.json();
+      setResult(d);
+      toast(d.ok ? '✓ Camera acessível!' : d.message, d.ok?'success':'error');
+    } catch(e){ toast('Erro: '+e.message,'error'); }
+    setTesting(false);
+  };
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      const r = await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({camera:{ip,user,password:pass,port:Number(port)}})});
+      const d = await r.json();
+      if(d.ok){ toast('✓ Salvo!','success'); if(onSave)onSave(); }
+      else toast('Erro ao salvar','error');
+    } catch(e){ toast(e.message,'error'); }
+    setSaving(false);
+  };
+
+  return (
+    <div>
+      <div className="panel">
+        <div className="sec-title" style={{marginBottom:14}}>Câmera</div>
+        <div className="grid2">
+          <div className="form-group">
+            <label className="form-label">IP da Câmera</label>
+            <input className="form-input" value={ip} onChange={e=>setIp(e.target.value)} placeholder="192.168.100.41"/>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Porta</label>
+            <input className="form-input" type="number" value={port} onChange={e=>setPort(e.target.value)} placeholder="80"/>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Usuário</label>
+            <input className="form-input" value={user} onChange={e=>setUser(e.target.value)} placeholder="admin"/>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Senha</label>
+            <input className="form-input" type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="Senha"/>
+          </div>
+        </div>
+        <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap',marginTop:4}}>
+          <button className="btn btn-outline" onClick={test} disabled={testing}>
+            {testing?<span className="spinner"></span>:null} {testing?'Testando...':'Testar Conexão'}
+          </button>
+          <button className="btn btn-primary" onClick={save} disabled={saving}>
+            {saving?<span className="spinner"></span>:null} {saving?'Salvando...':'Salvar'}
+          </button>
+          {result && (
+            <span style={{fontSize:'.8rem',color:result.ok?'var(--green)':'var(--red)',fontFamily:'var(--mono)'}}>
+              {result.ok ? '✓ OK' : '✗ '+result.message}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ─────────────────────────────────────────────────────────────────── */
+function App() {
+  const [tab, setTab] = useState('dashboard');
+  const [online, setOnline] = useState('loading');
+
+  useEffect(()=>{
+    const check = async () => {
+      try {
+        const r = await fetch('/api/camera/status');
+        const d = await r.json();
+        setOnline(d.connected ? 'online' : 'offline');
+      } catch { setOnline('offline'); }
+    };
+    check();
+    const iv = setInterval(check, 8000);
+    return ()=>clearInterval(iv);
+  },[]);
+
+  // Rec dot — read from status
+  const [recActive, setRecActive] = useState(false);
+  useEffect(()=>{
+    const iv = setInterval(async ()=>{
+      try { const r=await fetch('/api/camera/status'); const d=await r.json();
+        setRecActive(d.connected && String(d.rec_main||'').toLowerCase().includes('rec')); } catch {}
+    },2000);
+    return ()=>clearInterval(iv);
+  },[]);
+
+  return (
+    <div className="wrap">
+      <Toasts/>
+      <div className="header">
+        <div className="brand">
+          <div className={`brand-rec ${recActive?'':'idle'}`}></div>
           <div>
-            <div className="card" style={{borderColor: 'var(--danger)'}}>
-              <div className="card-header">
-                <div className="card-title" style={{color:'var(--danger)'}}>
-                  <span className="card-icon">{Icons.x}</span>
-                  Erro de Conexao
-                </div>
-                <button className="btn btn-outline btn-sm" onClick={fetchStatus}>
-                  <span className="card-icon">{Icons.refresh}</span> Tentar novamente
-                </button>
-              </div>
-              <p style={{color:'var(--text-secondary)'}}>{error}</p>
-              <p style={{color:'var(--text-muted)', marginTop:'8px', fontSize:'0.85rem'}}>
-                Verifique a configuracao da camera na aba "Configuracao".
-              </p>
-            </div>
+            <h1>Z190 Control Pro</h1>
+            <div className="brand-sub">Sony PXW-Z190 · Savona 2.8.1</div>
           </div>
-        );
-      }
-
-      const sections = [
-        {
-          title: 'White Balance',
-          icon: Icons.sun,
-          items: [
-            { label: 'Modo WB', key: 'wb_mode' },
-            { label: 'Metodo WB', key: 'wb_method' },
-            { label: 'Temperatura (K)', key: 'wb_kelvin' },
-          ]
-        },
-        {
-          title: 'Exposicao',
-          icon: Icons.aperture,
-          items: [
-            { label: 'Iris', key: 'iris_value' },
-            { label: 'Iris Metodo', key: 'iris_method' },
-            { label: 'Ganho', key: 'gain_value' },
-            { label: 'Ganho Metodo', key: 'gain_method' },
-            { label: 'Shutter', key: 'shutter_value' },
-            { label: 'Shutter Modo', key: 'shutter_mode' },
-          ]
-        },
-        {
-          title: 'Filtro ND',
-          icon: Icons.disc,
-          items: [
-            { label: 'ND Metodo', key: 'nd_method' },
-            { label: 'ND Valor', key: 'nd_value' },
-          ]
-        },
-        {
-          title: 'Gravacao',
-          icon: Icons.video,
-          items: [
-            { label: 'Color Bars', key: 'colorbars_enabled' },
-            { label: 'Color Bars Tipo', key: 'colorbars_type' },
-          ]
-        },
-      ];
-
-      return (
-        <div>
-          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px' }}>
-            <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
-              <span className="status-dot online"></span>
-              <span style={{fontSize:'0.9rem',color:'var(--text-secondary)'}}>Camera conectada</span>
-            </div>
-            <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-              <label style={{fontSize:'0.8rem',color:'var(--text-muted)',cursor:'pointer',display:'flex',alignItems:'center',gap:'4px'}}>
-                <input type="checkbox" checked={autoRefresh} onChange={e => setAutoRefresh(e.target.checked)} />
-                Auto-refresh ({REFRESH_INTERVAL/1000}s)
-              </label>
-              <button className="btn btn-outline btn-sm" onClick={fetchStatus}>
-                <span className="card-icon">{Icons.refresh}</span> Atualizar
-              </button>
-            </div>
-          </div>
-
-          {autoRefresh && (
-            <div className="refresh-bar">
-              <div className="refresh-bar-inner" style={{width: refreshProgress + '%'}}></div>
-            </div>
-          )}
-
-          {sections.map((section, si) => (
-            <div className="card" key={si}>
-              <div className="card-header">
-                <div className="card-title">
-                  <span className="card-icon">{section.icon}</span>
-                  {section.title}
-                </div>
-              </div>
-              <div className="stat-grid">
-                {section.items.map((item, ii) => {
-                  const val = status?.[item.key];
-                  const display = formatValue(val);
-                  const cls = getValueClass(item.label, display);
-                  return (
-                    <div className="stat-item" key={ii}>
-                      <div className="stat-label">{item.label}</div>
-                      <div className={`stat-value ${cls}`}>{display}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-
-          {status?.raw && (
-            <div className="card">
-              <div className="card-header">
-                <div className="card-title">
-                  <span className="card-icon">{Icons.zap}</span>
-                  Dados Brutos (JSON)
-                </div>
-              </div>
-              <pre style={{
-                background:'var(--bg-input)', padding:'12px', borderRadius:'var(--radius-sm)',
-                fontSize:'0.8rem', fontFamily:'var(--font-mono)', color:'var(--text-secondary)',
-                overflow:'auto', maxHeight:'300px', border:'1px solid var(--border)'
-              }}>
-                {JSON.stringify(status.raw, null, 2)}
-              </pre>
-            </div>
-          )}
         </div>
-      );
-    }
-
-    // ─── Main App ────────────────────────────────────────────────────────────
-    function App() {
-      const [tab, setTab] = useState('dashboard');
-      const [cameraStatus, setCameraStatus] = useState('checking');
-
-      // Check camera connectivity
-      useEffect(() => {
-        async function check() {
-          setCameraStatus('checking');
-          try {
-            const res = await fetch('/api/config/test', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({})
-            });
-            const data = await res.json();
-            setCameraStatus(data.ok ? 'online' : 'offline');
-          } catch {
-            setCameraStatus('offline');
-          }
-        }
-        check();
-        const iv = setInterval(check, 15000);
-        return () => clearInterval(iv);
-      }, []);
-
-      return (
-        <div className="app-container">
-          <ToastContainer />
-
-          <div className="header">
-            <div className="header-left">
-              <span style={{width:'28px',height:'28px',color:'var(--accent)'}}>{Icons.camera}</span>
-              <div>
-                <h1>Z190 Control Madruga</h1>
-                <span className="version">v2.0.0 — Sony PXW-Z190</span>
-              </div>
-            </div>
-            <div className="header-right">
-              <span className={`status-dot ${cameraStatus}`}></span>
-              <span style={{fontSize:'0.85rem',color:'var(--text-secondary)'}}>
-                {cameraStatus === 'online' ? 'Camera Online' :
-                 cameraStatus === 'offline' ? 'Camera Offline' : 'Verificando...'}
-              </span>
-            </div>
-          </div>
-
-          <div className="tabs">
-            <button className={`tab ${tab === 'dashboard' ? 'active' : ''}`}
-              onClick={() => setTab('dashboard')}>
-              Dashboard
-            </button>
-            <button className={`tab ${tab === 'config' ? 'active' : ''}`}
-              onClick={() => setTab('config')}>
-              Configuracao
-            </button>
-          </div>
-
-          {tab === 'dashboard' && <DashboardPage />}
-          {tab === 'config' && <ConfigPage onSave={() => setCameraStatus('checking')} />}
+        <div className="hstatus">
+          <span className={`dot ${online}`}></span>
+          {online==='online'?'Online':online==='offline'?'Offline':'Verificando...'}
         </div>
-      );
-    }
+      </div>
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-  </script>
+      <div className="tabs">
+        <button className={`tab ${tab==='dashboard'?'active':''}`} onClick={()=>setTab('dashboard')}>Dashboard</button>
+        <button className={`tab ${tab==='config'?'active':''}`} onClick={()=>setTab('config')}>Configuração</button>
+      </div>
+
+      {tab==='dashboard' && <Dashboard/>}
+      {tab==='config'    && <Config onSave={()=>setOnline('loading')}/>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
 </html>
