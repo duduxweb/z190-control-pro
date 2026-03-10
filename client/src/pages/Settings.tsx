@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import {
   Card,
@@ -17,92 +17,53 @@ import {
   WifiOff,
   CheckCircle2,
   XCircle,
-  Settings2,
   Network,
   Shield,
+  Cable,
+  Copy,
+  Terminal,
 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function SettingsPage() {
-  const [form, setForm] = useState({
-    ip: "192.168.100.41",
-    user: "admin",
-    password: "",
-    port: 80,
+  const [showToken, setShowToken] = useState(false);
+
+  // Bridge info
+  const bridgeInfo = trpc.bridge.info.useQuery(undefined, {
+    refetchInterval: 5000,
   });
-  const [testResult, setTestResult] = useState<{
-    ok: boolean;
-    message: string;
-  } | null>(null);
-  const [isTesting, setIsTesting] = useState(false);
-
-  // Load current config
-  const configQuery = trpc.config.get.useQuery();
-
-  useEffect(() => {
-    if (configQuery.data) {
-      setForm({
-        ip: configQuery.data.ip,
-        user: configQuery.data.user,
-        password: "",
-        port: configQuery.data.port,
-      });
-    }
-  }, [configQuery.data]);
-
-  // Mutations
-  const saveMut = trpc.config.save.useMutation({
-    onSuccess: () => {
-      configQuery.refetch();
-      toast.success("Configuração salva com sucesso");
-    },
-    onError: () => {
-      toast.error("Erro ao salvar configuração");
-    },
+  const bridgeStatus = trpc.bridge.status.useQuery(undefined, {
+    refetchInterval: 3000,
+  });
+  const bridgeToken = trpc.bridge.token.useQuery(undefined, {
+    enabled: showToken,
   });
 
-  const testMut = trpc.config.testConnection.useMutation({
-    onSuccess: (result) => {
-      setTestResult(result);
-      setIsTesting(false);
-      if (result.ok) {
-        toast.success("Conexão com a câmera estabelecida!");
-      } else {
-        toast.error(result.message);
-      }
-    },
-    onError: (err) => {
-      setTestResult({ ok: false, message: err.message });
-      setIsTesting(false);
-      toast.error("Erro ao testar conexão");
-    },
-  });
+  const isConnected = bridgeInfo.data?.connected ?? false;
+  const uptime = bridgeInfo.data?.uptime ?? 0;
 
-  const handleSave = () => {
-    saveMut.mutate({
-      ip: form.ip,
-      user: form.user,
-      password: form.password || undefined,
-      port: form.port,
-    });
+  const formatUptime = (ms: number) => {
+    if (ms <= 0) return "—";
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    if (hours > 0) return `${hours}h ${minutes % 60}m`;
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    return `${seconds}s`;
   };
 
-  const handleTest = () => {
-    if (!form.ip || !form.user) {
-      toast.error("Preencha IP e usuário");
-      return;
+  const copyToken = () => {
+    if (bridgeToken.data?.token) {
+      navigator.clipboard.writeText(bridgeToken.data.token);
+      toast.success("Token copiado para a área de transferência");
     }
-    setIsTesting(true);
-    setTestResult(null);
-    const passwordToTest =
-      form.password || (configQuery.data?.hasPassword ? "use-saved" : "");
-    testMut.mutate({
-      ip: form.ip,
-      user: form.user,
-      password: passwordToTest,
-      port: form.port,
-    });
   };
+
+  // Determine the WebSocket URL for the bridge
+  const wsUrl =
+    typeof window !== "undefined"
+      ? `${window.location.protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}/ws/bridge`
+      : "ws://localhost:3000/ws/bridge";
 
   return (
     <div className="space-y-6">
@@ -110,196 +71,266 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Configuração</h1>
         <p className="text-muted-foreground mt-1">
-          Configurar conexão com a câmera Sony Z190
+          Configurar conexão Bridge com a câmera Sony Z190
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Connection Form */}
+        {/* Bridge Status */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Connection Status Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Network className="h-5 w-5" />
-                Conexão da Câmera
+                <Cable className="h-5 w-5" />
+                Status do Bridge
               </CardTitle>
               <CardDescription>
-                Configure o endereço IP e credenciais de acesso à câmera na rede
-                local
+                O Bridge é um agente local que roda na mesma rede da câmera e se
+                conecta a este painel via WebSocket
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5">
-              {/* IP Address */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Endereço IP
-                </label>
-                <Input
-                  placeholder="192.168.100.41"
-                  value={form.ip}
-                  onChange={(e) => setForm({ ...form, ip: e.target.value })}
-                  className="font-mono"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Endereço IP da câmera na rede local
-                </p>
-              </div>
-
-              {/* Port */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">
-                  Porta
-                </label>
-                <Input
-                  type="number"
-                  placeholder="80"
-                  value={form.port}
-                  onChange={(e) =>
-                    setForm({ ...form, port: parseInt(e.target.value) || 80 })
-                  }
-                  className="font-mono w-32"
-                />
-                <p className="text-xs text-muted-foreground">
-                  Porta HTTP da câmera (padrão: 80)
-                </p>
-              </div>
-
-              {/* Credentials */}
-              <div className="border-t pt-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Credenciais</span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">
-                      Usuário
-                    </label>
-                    <Input
-                      placeholder="admin"
-                      value={form.user}
-                      onChange={(e) =>
-                        setForm({ ...form, user: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">
-                      Senha
-                    </label>
-                    <Input
-                      type="password"
-                      placeholder={
-                        configQuery.data?.hasPassword
-                          ? "••••••••  (salva)"
-                          : "Digite a senha"
-                      }
-                      value={form.password}
-                      onChange={(e) =>
-                        setForm({ ...form, password: e.target.value })
-                      }
-                    />
-                    {configQuery.data?.hasPassword && !form.password && (
-                      <p className="text-xs text-muted-foreground">
-                        Senha já configurada. Deixe em branco para manter a
-                        atual.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex items-center gap-3 pt-4 border-t">
-                <Button
-                  onClick={handleTest}
-                  variant="outline"
-                  disabled={isTesting || !form.ip}
-                >
-                  {isTesting ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Wifi className="mr-2 h-4 w-4" />
-                  )}
-                  Testar Conexão
-                </Button>
-                <Button
-                  onClick={handleSave}
-                  disabled={saveMut.isPending || !form.ip || !form.user}
-                >
-                  {saveMut.isPending ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="mr-2 h-4 w-4" />
-                  )}
-                  Salvar Configuração
-                </Button>
-              </div>
-
-              {/* Test Result */}
-              {testResult && (
+              {/* Status Indicator */}
+              <div
+                className={`flex items-center gap-4 p-4 rounded-lg border ${
+                  isConnected
+                    ? "bg-green-500/10 border-green-500/30"
+                    : "bg-yellow-500/10 border-yellow-500/30"
+                }`}
+              >
                 <div
-                  className={`flex items-center gap-3 p-4 rounded-lg border ${
-                    testResult.ok
-                      ? "bg-green-500/10 border-green-500/30 text-green-400"
-                      : "bg-red-500/10 border-red-500/30 text-red-400"
+                  className={`h-4 w-4 rounded-full ${
+                    isConnected
+                      ? "bg-green-500 shadow-lg shadow-green-500/50"
+                      : "bg-yellow-500 animate-pulse"
                   }`}
-                >
-                  {testResult.ok ? (
-                    <CheckCircle2 className="h-5 w-5 shrink-0" />
-                  ) : (
-                    <XCircle className="h-5 w-5 shrink-0" />
-                  )}
-                  <span className="text-sm font-medium">
-                    {testResult.message}
-                  </span>
+                />
+                <div className="flex-1">
+                  <p
+                    className={`font-semibold ${isConnected ? "text-green-400" : "text-yellow-400"}`}
+                  >
+                    {isConnected
+                      ? "Bridge Conectado"
+                      : "Aguardando conexão do Bridge..."}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {isConnected
+                      ? `Versão ${bridgeInfo.data?.version || "?"} | Uptime: ${formatUptime(uptime)}`
+                      : "Inicie o bridge local na rede da câmera"}
+                  </p>
+                </div>
+                {isConnected ? (
+                  <Wifi className="h-6 w-6 text-green-500" />
+                ) : (
+                  <WifiOff className="h-6 w-6 text-yellow-500" />
+                )}
+              </div>
+
+              {/* Camera Status from Bridge */}
+              {isConnected && bridgeStatus.data && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground">
+                      Câmera
+                    </span>
+                    <p className="text-sm font-medium">
+                      {bridgeStatus.data.connected
+                        ? "Conectada"
+                        : "Desconectada"}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground">
+                      Modelo
+                    </span>
+                    <p className="text-sm font-medium">
+                      {bridgeStatus.data.system?.model || "PXW-Z190"}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground">
+                      Firmware
+                    </span>
+                    <p className="text-sm font-medium">
+                      {bridgeStatus.data.system?.firmware || "—"}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground">
+                      Comandos pendentes
+                    </span>
+                    <p className="text-sm font-medium">
+                      {bridgeInfo.data?.pendingCommands ?? 0}
+                    </p>
+                  </div>
                 </div>
               )}
             </CardContent>
           </Card>
+
+          {/* Setup Instructions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Terminal className="h-5 w-5" />
+                Como Instalar o Bridge
+              </CardTitle>
+              <CardDescription>
+                Siga estes passos para configurar o bridge na rede local da
+                câmera
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              {/* Step 1 */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="h-6 w-6 p-0 justify-center text-xs">
+                    1
+                  </Badge>
+                  <span className="font-medium text-sm">
+                    Clone o repositório no computador da rede local
+                  </span>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-3 font-mono text-xs overflow-x-auto">
+                  <code>git clone https://github.com/duduxweb/z190-control-pro.git</code>
+                  <br />
+                  <code>cd z190-control-pro/bridge</code>
+                  <br />
+                  <code>npm install</code>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="h-6 w-6 p-0 justify-center text-xs">
+                    2
+                  </Badge>
+                  <span className="font-medium text-sm">
+                    Configure as variáveis de ambiente
+                  </span>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-3 font-mono text-xs overflow-x-auto">
+                  <code>
+                    # Crie o arquivo .env no diretório bridge/
+                  </code>
+                  <br />
+                  <code>CAMERA_IP=192.168.100.41</code>
+                  <br />
+                  <code>CAMERA_USER=admin</code>
+                  <br />
+                  <code>CAMERA_PASSWORD=SuaSenha</code>
+                  <br />
+                  <code>BRIDGE_SERVER_URL={wsUrl}</code>
+                  <br />
+                  <code>BRIDGE_TOKEN=</code>
+                  <span className="text-muted-foreground">
+                    (veja token abaixo)
+                  </span>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="h-6 w-6 p-0 justify-center text-xs">
+                    3
+                  </Badge>
+                  <span className="font-medium text-sm">
+                    Inicie o bridge
+                  </span>
+                </div>
+                <div className="bg-muted/50 rounded-lg p-3 font-mono text-xs">
+                  <code>node bridge.mjs</code>
+                </div>
+              </div>
+
+              {/* Token Section */}
+              <div className="border-t pt-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Shield className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm font-medium">
+                    Token de Autenticação
+                  </span>
+                </div>
+                {showToken && bridgeToken.data ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      readOnly
+                      value={bridgeToken.data.token}
+                      className="font-mono text-xs"
+                    />
+                    <Button size="icon" variant="outline" onClick={copyToken}>
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowToken(true)}
+                  >
+                    Mostrar Token
+                  </Button>
+                )}
+                <p className="text-xs text-muted-foreground mt-2">
+                  Use este token no arquivo .env do bridge para autenticação
+                  segura.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Status Sidebar */}
+        {/* Right Sidebar */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-sm font-medium">
-                Status Atual
+                Arquitetura
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">IP</span>
-                  <span className="text-sm font-mono font-medium">
-                    {configQuery.data?.ip || "—"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Porta</span>
-                  <span className="text-sm font-mono font-medium">
-                    {configQuery.data?.port || "—"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Usuário
-                  </span>
-                  <span className="text-sm font-medium">
-                    {configQuery.data?.user || "—"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Senha</span>
-                  <Badge
-                    variant={
-                      configQuery.data?.hasPassword ? "default" : "destructive"
-                    }
+            <CardContent>
+              <div className="space-y-4">
+                {/* Diagram */}
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center gap-2 p-2 rounded bg-blue-500/10 border border-blue-500/20">
+                    <div className="h-2 w-2 rounded-full bg-blue-500" />
+                    <span className="text-blue-400 font-medium">
+                      Painel Web (Nuvem)
+                    </span>
+                  </div>
+                  <div className="flex justify-center">
+                    <span className="text-muted-foreground">↕ WebSocket</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-2 p-2 rounded border ${isConnected ? "bg-green-500/10 border-green-500/20" : "bg-muted/50 border-border"}`}
                   >
-                    {configQuery.data?.hasPassword
-                      ? "Configurada"
-                      : "Não definida"}
-                  </Badge>
+                    <div
+                      className={`h-2 w-2 rounded-full ${isConnected ? "bg-green-500" : "bg-muted-foreground"}`}
+                    />
+                    <span
+                      className={`font-medium ${isConnected ? "text-green-400" : "text-muted-foreground"}`}
+                    >
+                      Bridge Local
+                    </span>
+                  </div>
+                  <div className="flex justify-center">
+                    <span className="text-muted-foreground">↕ HTTP/CGI</span>
+                  </div>
+                  <div
+                    className={`flex items-center gap-2 p-2 rounded border ${isConnected && bridgeStatus.data?.connected ? "bg-red-500/10 border-red-500/20" : "bg-muted/50 border-border"}`}
+                  >
+                    <div
+                      className={`h-2 w-2 rounded-full ${isConnected && bridgeStatus.data?.connected ? "bg-red-500" : "bg-muted-foreground"}`}
+                    />
+                    <span
+                      className={`font-medium ${isConnected && bridgeStatus.data?.connected ? "text-red-400" : "text-muted-foreground"}`}
+                    >
+                      Sony PXW-Z190
+                    </span>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -308,28 +339,20 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-sm font-medium">
-                Informações
+                Atualização Automática
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm text-muted-foreground">
                 <p>
-                  A câmera Sony PXW-Z190 deve estar conectada na mesma rede
-                  local que este servidor.
+                  O bridge pode ser atualizado automaticamente via GitHub. Na
+                  máquina local, configure um cron job:
                 </p>
+                <div className="bg-muted/50 rounded p-2 font-mono text-xs">
+                  <code>cd /path/to/bridge && git pull</code>
+                </div>
                 <p>
-                  As credenciais padrão de fábrica são: usuário{" "}
-                  <code className="text-xs bg-muted px-1 py-0.5 rounded">
-                    admin
-                  </code>{" "}
-                  e senha definida no menu da câmera.
-                </p>
-                <p>
-                  Após salvar, a configuração é persistida em{" "}
-                  <code className="text-xs bg-muted px-1 py-0.5 rounded">
-                    config.json
-                  </code>{" "}
-                  no servidor.
+                  Ou use o script de auto-update incluso no diretório do bridge.
                 </p>
               </div>
             </CardContent>

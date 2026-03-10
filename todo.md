@@ -30,3 +30,13 @@
 - [x] Adicionar rota tRPC para testar conexão com a câmera
 - [x] Adicionar menu "Configuração" na sidebar
 - [x] Push automático para GitHub via user_github remote
+
+## Bridge/Agente Local (WebSocket)
+
+- [ ] Implementar servidor WebSocket no backend para receber conexão do bridge
+- [ ] Criar script bridge local (Node.js) que conecta à câmera e ao WebSocket do servidor
+- [ ] Adaptar rotas tRPC para enviar/receber comandos via bridge WebSocket
+- [ ] Adaptar frontend para mostrar status de conexão do bridge
+- [ ] Criar sistema de autenticação do bridge (token seguro)
+- [ ] Documentar instalação e uso do bridge local
+- [ ] Testes unitários do bridge

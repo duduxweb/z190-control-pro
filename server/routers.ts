@@ -3,263 +3,232 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import * as camera from "./camera";
 import { getDb } from "./db";
 import { cameraPresets } from "../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 import { ENV } from "./_core/env";
-import fs from "fs";
-import path from "path";
-import axios from "axios";
+import { bridgeManager } from "./bridge";
 
-// ─── Config file path ───────────────────────────────────────────
+// ─── Bridge Router (status e info do bridge) ────────────────────
 
-const CONFIG_PATH = path.join(process.cwd(), "config.json");
-
-function readConfig() {
-  try {
-    if (fs.existsSync(CONFIG_PATH)) {
-      return JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
-    }
-  } catch {}
-  return {
-    camera: {
-      ip: ENV.cameraIp || "192.168.100.41",
-      user: ENV.cameraUser || "admin",
-      password: ENV.cameraPassword || "",
-      port: 80,
-    },
-  };
-}
-
-function writeConfig(config: any) {
-  fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), "utf8");
-}
-
-// ─── Config Router ──────────────────────────────────────────────
-
-const configRouter = router({
-  get: publicProcedure.query(() => {
-    const config = readConfig();
-    return {
-      ip: config.camera?.ip || "192.168.100.41",
-      user: config.camera?.user || "admin",
-      password: config.camera?.password ? "****" : "",
-      port: config.camera?.port || 80,
-      hasPassword: !!config.camera?.password,
-    };
+const bridgeRouter = router({
+  status: publicProcedure.query(() => {
+    return bridgeManager.getStatus();
   }),
-  save: publicProcedure
-    .input(
-      z.object({
-        ip: z.string().min(1),
-        user: z.string().min(1),
-        password: z.string().optional(),
-        port: z.number().min(1).max(65535).default(80),
-      })
-    )
-    .mutation(async ({ input }) => {
-      const currentConfig = readConfig();
-      const newConfig = {
-        ...currentConfig,
-        camera: {
-          ip: input.ip,
-          user: input.user,
-          password: input.password || currentConfig.camera?.password || "",
-          port: input.port,
-        },
-      };
-      writeConfig(newConfig);
-      // Reset camera client to use new config
-      camera.resetCameraClient();
-      return { success: true };
-    }),
-  testConnection: publicProcedure
-    .input(
-      z.object({
-        ip: z.string().min(1),
-        user: z.string().min(1),
-        password: z.string().min(1),
-        port: z.number().min(1).max(65535).default(80),
-      })
-    )
-    .mutation(async ({ input }) => {
-      try {
-        const auth = Buffer.from(`${input.user}:${input.password}`).toString("base64");
-        const url = `http://${input.ip}:${input.port}/`;
-        const response = await axios.get(url, {
-          headers: { Authorization: `Basic ${auth}` },
-          timeout: 5000,
-          validateStatus: () => true,
-        });
-        if (response.status === 200) {
-          return { ok: true, status: response.status, message: "Camera acessivel!" };
-        } else if (response.status === 401) {
-          return { ok: false, status: 401, message: "Credenciais invalidas (401)" };
-        } else {
-          return { ok: false, status: response.status, message: `Resposta: ${response.status}` };
-        }
-      } catch (e: any) {
-        return { ok: false, status: 0, message: `Erro de conexao: ${e.message}` };
-      }
-    }),
+  info: publicProcedure.query(() => {
+    return bridgeManager.getBridgeInfo();
+  }),
+  token: publicProcedure.query(() => {
+    // Retorna o token para configurar o bridge local
+    const token = process.env.BRIDGE_TOKEN || ENV.cookieSecret || "z190-bridge-default";
+    return { token };
+  }),
 });
 
-// ─── Camera Control Router ───────────────────────────────────────
+// ─── Camera Control Router (via Bridge) ─────────────────────────
 
 const cameraRouter = router({
   ping: publicProcedure.query(async () => {
-    const reachable = await camera.pingCamera();
-    return { reachable, timestamp: Date.now() };
-  }),
-  status: publicProcedure.query(async () => {
-    const [status, systemInfo, lensStatus] = await Promise.allSettled([
-      camera.getCameraStatus(),
-      camera.getSystemInfo(),
-      camera.getLensStatus(),
-    ]);
+    const status = bridgeManager.getStatus();
     return {
-      camera: status.status === "fulfilled" ? status.value : { connected: false },
-      system: systemInfo.status === "fulfilled" ? systemInfo.value : {},
-      lens: lensStatus.status === "fulfilled" ? lensStatus.value : {},
+      reachable: status.bridgeConnected && status.connected,
+      bridgeConnected: status.bridgeConnected,
       timestamp: Date.now(),
     };
   }),
+  status: publicProcedure.query(async () => {
+    const status = bridgeManager.getStatus();
+    return {
+      ...status,
+      timestamp: Date.now(),
+    };
+  }),
+  // Comando genérico para enviar qualquer ação ao bridge
+  command: publicProcedure
+    .input(
+      z.object({
+        action: z.string().min(1),
+        params: z.record(z.string(), z.unknown()).optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const result = await bridgeManager.sendCommand(
+        input.action,
+        input.params as Record<string, any>
+      );
+      return { success: true, data: result };
+    }),
 });
 
-// ─── Lens Control Router ─────────────────────────────────────────
+// ─── Lens Control Router (via Bridge) ───────────────────────────
 
 const lensRouter = router({
   setZoom: publicProcedure
     .input(z.object({ position: z.number().min(0).max(16384) }))
     .mutation(async ({ input }) => {
-      await camera.setZoomPosition(input.position);
+      await bridgeManager.sendCommand("setZoom", { position: input.position });
       return { success: true };
     }),
   zoomContinuous: publicProcedure
     .input(z.object({ speed: z.number().min(-7).max(7) }))
     .mutation(async ({ input }) => {
-      await camera.setZoomDirect(input.speed);
+      await bridgeManager.sendCommand("zoomContinuous", {
+        speed: input.speed,
+      });
       return { success: true };
     }),
   setFocusMode: publicProcedure
     .input(z.object({ mode: z.enum(["auto", "manual"]) }))
     .mutation(async ({ input }) => {
-      await camera.setFocusMode(input.mode);
+      await bridgeManager.sendCommand("setFocusMode", { mode: input.mode });
       return { success: true };
     }),
   setFocusPosition: publicProcedure
     .input(z.object({ position: z.number().min(0).max(16384) }))
     .mutation(async ({ input }) => {
-      await camera.setFocusPosition(input.position);
+      await bridgeManager.sendCommand("setFocusPosition", {
+        position: input.position,
+      });
       return { success: true };
     }),
   focusContinuous: publicProcedure
     .input(z.object({ speed: z.number().min(-7).max(7) }))
     .mutation(async ({ input }) => {
-      await camera.setFocusContinuous(input.speed);
+      await bridgeManager.sendCommand("focusContinuous", {
+        speed: input.speed,
+      });
       return { success: true };
     }),
   onePushFocus: publicProcedure.mutation(async () => {
-    await camera.triggerOnePushFocus();
+    await bridgeManager.sendCommand("onePushFocus");
     return { success: true };
   }),
   setIris: publicProcedure
     .input(z.object({ position: z.number().min(0).max(255) }))
     .mutation(async ({ input }) => {
-      await camera.setIrisPosition(input.position);
+      await bridgeManager.sendCommand("setIris", {
+        position: input.position,
+      });
       return { success: true };
     }),
 });
 
-// ─── Image Control Router ────────────────────────────────────────
+// ─── Image Control Router (via Bridge) ──────────────────────────
 
 const imageRouter = router({
   setWhiteBalance: publicProcedure
     .input(z.object({ mode: z.string() }))
     .mutation(async ({ input }) => {
-      await camera.setWhiteBalanceMode(input.mode);
+      await bridgeManager.sendCommand("setWhiteBalance", { mode: input.mode });
       return { success: true };
     }),
   setGain: publicProcedure
     .input(z.object({ value: z.number().min(-6).max(33) }))
     .mutation(async ({ input }) => {
-      await camera.setGain(input.value);
+      await bridgeManager.sendCommand("setGain", { value: input.value });
       return { success: true };
     }),
   setShutter: publicProcedure
     .input(z.object({ value: z.string() }))
     .mutation(async ({ input }) => {
-      await camera.setShutterSpeed(input.value);
+      await bridgeManager.sendCommand("setShutter", { value: input.value });
       return { success: true };
     }),
   setNDFilter: publicProcedure
     .input(z.object({ position: z.number().min(0).max(4) }))
     .mutation(async ({ input }) => {
-      await camera.setNDFilter(input.position);
+      await bridgeManager.sendCommand("setNDFilter", {
+        position: input.position,
+      });
       return { success: true };
     }),
   setColorBars: publicProcedure
     .input(z.object({ enabled: z.boolean(), type: z.string().optional() }))
     .mutation(async ({ input }) => {
-      await camera.setColorBars(input.enabled, input.type);
+      await bridgeManager.sendCommand("setColorBars", {
+        enabled: input.enabled,
+        type: input.type,
+      });
       return { success: true };
     }),
 });
 
-// ─── Recording Control Router ────────────────────────────────────
+// ─── Recording Control Router (via Bridge) ──────────────────────
 
 const recordingRouter = router({
   start: publicProcedure.mutation(async () => {
-    await camera.startRecording();
+    await bridgeManager.sendCommand("startRecording");
     return { success: true, timestamp: Date.now() };
   }),
   stop: publicProcedure.mutation(async () => {
-    await camera.stopRecording();
+    await bridgeManager.sendCommand("stopRecording");
     return { success: true, timestamp: Date.now() };
   }),
   status: publicProcedure.query(async () => {
-    try {
-      const text = await camera.getRecordingStatus();
-      return { recording: text.includes("recording"), status: text, timestamp: Date.now() };
-    } catch {
-      return { recording: false, status: "unknown", timestamp: Date.now() };
-    }
+    const status = bridgeManager.getStatus();
+    return {
+      recording: status.recording?.active ?? false,
+      timecode: status.recording?.timecode ?? "",
+      status: status.recording?.active ? "recording" : "stopped",
+      timestamp: Date.now(),
+    };
   }),
 });
 
-// ─── Audio Control Router ────────────────────────────────────────
+// ─── Audio Control Router (via Bridge) ──────────────────────────
 
 const audioRouter = router({
   setLevel: publicProcedure
-    .input(z.object({ channel: z.number().min(1).max(4), level: z.number().min(0).max(100) }))
+    .input(
+      z.object({
+        channel: z.number().min(1).max(4),
+        level: z.number().min(0).max(100),
+      })
+    )
     .mutation(async ({ input }) => {
-      await camera.setAudioLevel(input.channel, input.level);
+      await bridgeManager.sendCommand("setAudioLevel", {
+        channel: input.channel,
+        level: input.level,
+      });
       return { success: true };
     }),
   setInputSource: publicProcedure
-    .input(z.object({ channel: z.number().min(1).max(4), source: z.string() }))
+    .input(
+      z.object({
+        channel: z.number().min(1).max(4),
+        source: z.string(),
+      })
+    )
     .mutation(async ({ input }) => {
-      await camera.setAudioInputSelect(input.channel, input.source);
+      await bridgeManager.sendCommand("setAudioInputSource", {
+        channel: input.channel,
+        source: input.source,
+      });
       return { success: true };
     }),
 });
 
-// ─── Presets Router ──────────────────────────────────────────────
+// ─── Presets Router ─────────────────────────────────────────────
 
 const presetsRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
     const db = await getDb();
     if (!db) return [];
-    return db.select().from(cameraPresets).where(eq(cameraPresets.userId, ctx.user.id)).orderBy(cameraPresets.name);
+    return db
+      .select()
+      .from(cameraPresets)
+      .where(eq(cameraPresets.userId, ctx.user.id))
+      .orderBy(cameraPresets.name);
   }),
   create: protectedProcedure
-    .input(z.object({
-      name: z.string().min(1).max(128),
-      description: z.string().optional(),
-      category: z.string().optional(),
-      settings: z.record(z.string(), z.unknown()),
-    }))
+    .input(
+      z.object({
+        name: z.string().min(1).max(128),
+        description: z.string().optional(),
+        category: z.string().optional(),
+        settings: z.record(z.string(), z.unknown()),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
@@ -273,23 +242,33 @@ const presetsRouter = router({
       return { success: true, id: result[0].insertId };
     }),
   update: protectedProcedure
-    .input(z.object({
-      id: z.number(),
-      name: z.string().min(1).max(128).optional(),
-      description: z.string().optional(),
-      category: z.string().optional(),
-      settings: z.record(z.string(), z.unknown()).optional(),
-    }))
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1).max(128).optional(),
+        description: z.string().optional(),
+        category: z.string().optional(),
+        settings: z.record(z.string(), z.unknown()).optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const updateData: Record<string, unknown> = {};
       if (input.name) updateData.name = input.name;
-      if (input.description !== undefined) updateData.description = input.description;
+      if (input.description !== undefined)
+        updateData.description = input.description;
       if (input.category) updateData.category = input.category;
       if (input.settings) updateData.settings = input.settings;
-      await db.update(cameraPresets).set(updateData)
-        .where(and(eq(cameraPresets.id, input.id), eq(cameraPresets.userId, ctx.user.id)));
+      await db
+        .update(cameraPresets)
+        .set(updateData)
+        .where(
+          and(
+            eq(cameraPresets.id, input.id),
+            eq(cameraPresets.userId, ctx.user.id)
+          )
+        );
       return { success: true };
     }),
   delete: protectedProcedure
@@ -297,13 +276,40 @@ const presetsRouter = router({
     .mutation(async ({ ctx, input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      await db.delete(cameraPresets)
-        .where(and(eq(cameraPresets.id, input.id), eq(cameraPresets.userId, ctx.user.id)));
+      await db
+        .delete(cameraPresets)
+        .where(
+          and(
+            eq(cameraPresets.id, input.id),
+            eq(cameraPresets.userId, ctx.user.id)
+          )
+        );
+      return { success: true };
+    }),
+  // Aplicar preset: envia todas as configurações para a câmera via bridge
+  applyPreset: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const presets = await db
+        .select()
+        .from(cameraPresets)
+        .where(
+          and(
+            eq(cameraPresets.id, input.id),
+            eq(cameraPresets.userId, ctx.user.id)
+          )
+        )
+        .limit(1);
+      if (!presets.length) throw new Error("Preset not found");
+      const settings = presets[0].settings as Record<string, any>;
+      await bridgeManager.sendCommand("applyPreset", { settings });
       return { success: true };
     }),
 });
 
-// ─── Main App Router ─────────────────────────────────────────────
+// ─── Main App Router ────────────────────────────────────────────
 
 export const appRouter = router({
   system: systemRouter,
@@ -315,7 +321,7 @@ export const appRouter = router({
       return { success: true } as const;
     }),
   }),
-  config: configRouter,
+  bridge: bridgeRouter,
   camera: cameraRouter,
   lens: lensRouter,
   image: imageRouter,

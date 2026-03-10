@@ -1,0 +1,18 @@
+# ─── Configuração da Câmera ─────────────────────────
+# Copie este arquivo para .env e ajuste os valores
+
+CAMERA_IP=192.168.100.41
+CAMERA_USER=admin
+CAMERA_PASSWORD=SuaSenha
+CAMERA_PORT=80
+
+# ─── Configuração do Servidor (Painel na Nuvem) ─────
+# URL WebSocket do painel (substitua pelo seu domínio)
+BRIDGE_SERVER_URL=wss://seudominio.manus.space/ws/bridge
+
+# Token de autenticação (obtenha na página de Configuração do painel)
+BRIDGE_TOKEN=
+
+# ─── Opções ─────────────────────────────────────────
+# Intervalo de polling do status da câmera (ms)
+STATUS_INTERVAL=2000

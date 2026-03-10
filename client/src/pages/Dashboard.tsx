@@ -79,6 +79,9 @@ export default function Dashboard() {
   const [isConnected, setIsConnected] = useState(false);
 
   // Queries - polling em tempo real
+  const bridgeInfo = trpc.bridge.info.useQuery(undefined, {
+    refetchInterval: 5000,
+  });
   const cameraPing = trpc.camera.ping.useQuery(undefined, {
     refetchInterval: 5000,
   });
@@ -88,6 +91,8 @@ export default function Dashboard() {
   const recordingStatus = trpc.recording.status.useQuery(undefined, {
     refetchInterval: 1000,
   });
+
+  const bridgeConnected = bridgeInfo.data?.connected ?? false;
 
   // Mutations
   const lensZoomMut = trpc.lens.setZoom.useMutation();
@@ -106,9 +111,7 @@ export default function Dashboard() {
     setIsConnected(cameraPing.data?.reachable ?? false);
   }, [cameraPing.data]);
 
-  const cameraData = cameraStatus.data?.camera as Record<string, any> | undefined;
-  const systemData = cameraStatus.data?.system as Record<string, any> | undefined;
-  const lensData = cameraStatus.data?.lens as Record<string, any> | undefined;
+  const statusData = cameraStatus.data;
   const isRecording = recordingStatus.data?.recording ?? false;
 
   const handleZoomChange = async (value: number[]) => {
@@ -181,15 +184,19 @@ export default function Dashboard() {
             Controle remoto profissional da câmera
           </p>
         </div>
-        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            {isConnected ? (
+            {bridgeConnected ? (
               <Wifi className="h-4 w-4 text-green-500" />
             ) : (
               <WifiOff className="h-4 w-4 text-red-500" />
             )}
-            <Badge variant={isConnected ? "default" : "destructive"}>
-              {isConnected ? "Conectado" : "Desconectado"}
+            <Badge variant={bridgeConnected ? "default" : "destructive"}>
+              {bridgeConnected
+                ? isConnected
+                  ? "Bridge + Câmera"
+                  : "Bridge OK"
+                : "Bridge Offline"}
             </Badge>
           </div>
           {isRecording && (
@@ -218,11 +225,11 @@ export default function Dashboard() {
             <div className="space-y-0">
               <StatusValue
                 label="Modo"
-                value={cameraData?.WhiteBalanceMode || cameraData?.["WhiteBalance.Mode"]}
+                value={statusData?.whiteBalance?.mode}
               />
               <StatusValue
                 label="Kelvin"
-                value={cameraData?.ColorTemperature || cameraData?.["WhiteBalance.ColorTemperature"]}
+                value={statusData?.whiteBalance?.colorTemperature}
                 unit="K"
               />
             </div>
@@ -241,16 +248,16 @@ export default function Dashboard() {
             <div className="space-y-0">
               <StatusValue
                 label="Íris"
-                value={cameraData?.IrisPosition || cameraData?.Iris || lensData?.IrisPosition}
+                value={statusData?.exposure?.iris}
               />
               <StatusValue
                 label="Ganho"
-                value={cameraData?.GainValue || cameraData?.Gain}
+                value={statusData?.exposure?.gain}
                 unit="dB"
               />
               <StatusValue
                 label="Shutter"
-                value={cameraData?.ShutterSpeed || cameraData?.Shutter}
+                value={statusData?.exposure?.shutter}
               />
             </div>
           </CardContent>
@@ -268,11 +275,11 @@ export default function Dashboard() {
             <div className="space-y-0">
               <StatusValue
                 label="Posição"
-                value={cameraData?.NDFilterPosition || cameraData?.NDFilter || cameraData?.ND}
+                value={statusData?.ndFilter?.position}
               />
               <StatusValue
                 label="Modo"
-                value={cameraData?.NDFilterMode || "—"}
+                value={statusData?.ndFilter?.mode || "—"}
               />
             </div>
           </CardContent>
@@ -294,11 +301,11 @@ export default function Dashboard() {
               />
               <StatusValue
                 label="Modelo"
-                value={systemData?.Model || systemData?.ModelName || "PXW-Z190"}
+                value={statusData?.system?.model || "PXW-Z190"}
               />
               <StatusValue
                 label="Firmware"
-                value={systemData?.Version || systemData?.Firmware}
+                value={statusData?.system?.firmware}
               />
             </div>
           </CardContent>
