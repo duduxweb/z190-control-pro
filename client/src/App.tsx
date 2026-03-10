@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import DashboardLayout from "./components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Presets from "./pages/Presets";
+import Settings from "./pages/Settings";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Dashboard} />
         <Route path="/presets" component={Presets} />
+        <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
@@ -24,10 +26,7 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="dark"
-        switchable
-      >
+      <ThemeProvider defaultTheme="dark" switchable>
         <TooltipProvider>
           <Toaster />
           <Router />

@@ -1,23 +1,93 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Circle, Radio, Mic2, Settings, Save } from "lucide-react";
+import {
+  Loader2,
+  Circle,
+  Radio,
+  Mic2,
+  Camera,
+  Aperture,
+  Sun,
+  Thermometer,
+  Gauge,
+  Timer,
+  Filter,
+  Wifi,
+  WifiOff,
+  Eye,
+  ZoomIn,
+  Focus,
+} from "lucide-react";
 import { toast } from "sonner";
-import StatusMonitor from "@/components/StatusMonitor";
+
+// ─── Status Display Component ───────────────────────────────────
+
+function StatusValue({
+  label,
+  value,
+  icon: Icon,
+  unit,
+}: {
+  label: string;
+  value: string | number | null | undefined;
+  icon?: any;
+  unit?: string;
+}) {
+  return (
+    <div className="flex items-center justify-between py-2.5 border-b border-border/50 last:border-0">
+      <div className="flex items-center gap-2 text-muted-foreground">
+        {Icon && <Icon className="h-4 w-4" />}
+        <span className="text-sm">{label}</span>
+      </div>
+      <span className="text-sm font-semibold tabular-nums">
+        {value !== null && value !== undefined ? (
+          <>
+            {value}
+            {unit && (
+              <span className="text-xs text-muted-foreground ml-1">
+                {unit}
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
+      </span>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [cameraStatus, setCameraStatus] = useState<any>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  // Queries
-  const cameraPing = trpc.camera.ping.useQuery(undefined, { refetchInterval: 5000 });
-  const cameraStatusQuery = trpc.camera.status.useQuery(undefined, { refetchInterval: 3000 });
-  const recordingStatus = trpc.recording.status.useQuery(undefined, { refetchInterval: 1000 });
+  // Queries - polling em tempo real
+  const cameraPing = trpc.camera.ping.useQuery(undefined, {
+    refetchInterval: 5000,
+  });
+  const cameraStatus = trpc.camera.status.useQuery(undefined, {
+    refetchInterval: 3000,
+  });
+  const recordingStatus = trpc.recording.status.useQuery(undefined, {
+    refetchInterval: 1000,
+  });
 
   // Mutations
   const lensZoomMut = trpc.lens.setZoom.useMutation();
@@ -33,19 +103,18 @@ export default function Dashboard() {
   const audioLevelMut = trpc.audio.setLevel.useMutation();
 
   useEffect(() => {
-    if (cameraStatusQuery.data) {
-      setCameraStatus(cameraStatusQuery.data);
-    }
-  }, [cameraStatusQuery.data]);
-
-  useEffect(() => {
     setIsConnected(cameraPing.data?.reachable ?? false);
   }, [cameraPing.data]);
+
+  const cameraData = cameraStatus.data?.camera as Record<string, any> | undefined;
+  const systemData = cameraStatus.data?.system as Record<string, any> | undefined;
+  const lensData = cameraStatus.data?.lens as Record<string, any> | undefined;
+  const isRecording = recordingStatus.data?.recording ?? false;
 
   const handleZoomChange = async (value: number[]) => {
     try {
       await lensZoomMut.mutateAsync({ position: value[0] });
-    } catch (err) {
+    } catch {
       toast.error("Falha ao ajustar zoom");
     }
   };
@@ -53,7 +122,7 @@ export default function Dashboard() {
   const handleFocusChange = async (value: number[]) => {
     try {
       await lensFocusPosMut.mutateAsync({ position: value[0] });
-    } catch (err) {
+    } catch {
       toast.error("Falha ao ajustar foco");
     }
   };
@@ -61,7 +130,7 @@ export default function Dashboard() {
   const handleIrisChange = async (value: number[]) => {
     try {
       await lensIrisMut.mutateAsync({ position: value[0] });
-    } catch (err) {
+    } catch {
       toast.error("Falha ao ajustar íris");
     }
   };
@@ -69,7 +138,7 @@ export default function Dashboard() {
   const handleGainChange = async (value: number[]) => {
     try {
       await imageGainMut.mutateAsync({ value: value[0] });
-    } catch (err) {
+    } catch {
       toast.error("Falha ao ajustar ganho");
     }
   };
@@ -78,7 +147,7 @@ export default function Dashboard() {
     try {
       await recordStartMut.mutateAsync();
       toast.success("Gravação iniciada");
-    } catch (err) {
+    } catch {
       toast.error("Falha ao iniciar gravação");
     }
   };
@@ -87,7 +156,7 @@ export default function Dashboard() {
     try {
       await recordStopMut.mutateAsync();
       toast.success("Gravação parada");
-    } catch (err) {
+    } catch {
       toast.error("Falha ao parar gravação");
     }
   };
@@ -95,56 +164,186 @@ export default function Dashboard() {
   const handleAudioLevel = async (channel: number, level: number) => {
     try {
       await audioLevelMut.mutateAsync({ channel, level });
-    } catch (err) {
+    } catch {
       toast.error(`Falha ao ajustar áudio canal ${channel}`);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Status Monitor */}
-      <StatusMonitor />
-
-      {/* Header com Status */}
+      {/* ─── Header com Status ─── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Sony Z190 Control</h1>
-          <p className="text-muted-foreground mt-1">Controle remoto profissional da câmera</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Sony Z190 Control
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Controle remoto profissional da câmera
+          </p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Circle
-              className={`h-3 w-3 ${isConnected ? "fill-green-500 text-green-500" : "fill-red-500 text-red-500"}`}
-            />
-            <span className="text-sm font-medium">
+            {isConnected ? (
+              <Wifi className="h-4 w-4 text-green-500" />
+            ) : (
+              <WifiOff className="h-4 w-4 text-red-500" />
+            )}
+            <Badge variant={isConnected ? "default" : "destructive"}>
               {isConnected ? "Conectado" : "Desconectado"}
-            </span>
+            </Badge>
           </div>
-          {cameraPing.isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+          {isRecording && (
+            <Badge variant="destructive" className="animate-pulse gap-1.5">
+              <Circle className="h-2 w-2 fill-current" />
+              REC
+            </Badge>
+          )}
+          {cameraPing.isLoading && (
+            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+          )}
         </div>
       </div>
 
-      {/* Tabs Principais */}
+      {/* ─── Status Cards (Valores Atuais da Câmera) ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {/* White Balance */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Thermometer className="h-4 w-4 text-blue-400" />
+              Balanço de Branco
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              <StatusValue
+                label="Modo"
+                value={cameraData?.WhiteBalanceMode || cameraData?.["WhiteBalance.Mode"]}
+              />
+              <StatusValue
+                label="Kelvin"
+                value={cameraData?.ColorTemperature || cameraData?.["WhiteBalance.ColorTemperature"]}
+                unit="K"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Exposure */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Sun className="h-4 w-4 text-yellow-400" />
+              Exposição
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              <StatusValue
+                label="Íris"
+                value={cameraData?.IrisPosition || cameraData?.Iris || lensData?.IrisPosition}
+              />
+              <StatusValue
+                label="Ganho"
+                value={cameraData?.GainValue || cameraData?.Gain}
+                unit="dB"
+              />
+              <StatusValue
+                label="Shutter"
+                value={cameraData?.ShutterSpeed || cameraData?.Shutter}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ND Filter */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Filter className="h-4 w-4 text-purple-400" />
+              Filtro ND
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              <StatusValue
+                label="Posição"
+                value={cameraData?.NDFilterPosition || cameraData?.NDFilter || cameraData?.ND}
+              />
+              <StatusValue
+                label="Modo"
+                value={cameraData?.NDFilterMode || "—"}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recording / System */}
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Camera className="h-4 w-4 text-red-400" />
+              Gravação
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-0">
+              <StatusValue
+                label="Status"
+                value={isRecording ? "Gravando" : "Parado"}
+              />
+              <StatusValue
+                label="Modelo"
+                value={systemData?.Model || systemData?.ModelName || "PXW-Z190"}
+              />
+              <StatusValue
+                label="Firmware"
+                value={systemData?.Version || systemData?.Firmware}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ─── Tabs de Controle ─── */}
       <Tabs defaultValue="lens" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="lens">Lente</TabsTrigger>
-          <TabsTrigger value="image">Imagem</TabsTrigger>
-          <TabsTrigger value="recording">Gravação</TabsTrigger>
-          <TabsTrigger value="audio">Áudio</TabsTrigger>
+          <TabsTrigger value="lens" className="gap-1.5">
+            <ZoomIn className="h-3.5 w-3.5" />
+            Lente
+          </TabsTrigger>
+          <TabsTrigger value="image" className="gap-1.5">
+            <Sun className="h-3.5 w-3.5" />
+            Imagem
+          </TabsTrigger>
+          <TabsTrigger value="recording" className="gap-1.5">
+            <Radio className="h-3.5 w-3.5" />
+            Gravação
+          </TabsTrigger>
+          <TabsTrigger value="audio" className="gap-1.5">
+            <Mic2 className="h-3.5 w-3.5" />
+            Áudio
+          </TabsTrigger>
         </TabsList>
 
         {/* ─── Lens Controls ─── */}
         <TabsContent value="lens" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Zoom */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Zoom</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <ZoomIn className="h-5 w-5" />
+                  Zoom
+                </CardTitle>
                 <CardDescription>Controle de zoom óptico</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Posição: 0 - 16384</label>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Wide</span>
+                    <span className="text-muted-foreground">Tele</span>
+                  </div>
                   <Slider
                     min={0}
                     max={16384}
@@ -159,6 +358,7 @@ export default function Dashboard() {
                   <Button
                     size="sm"
                     variant="outline"
+                    className="flex-1"
                     onClick={() => lensZoomMut.mutateAsync({ position: 0 })}
                   >
                     Wide
@@ -166,7 +366,10 @@ export default function Dashboard() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => lensZoomMut.mutateAsync({ position: 16384 })}
+                    className="flex-1"
+                    onClick={() =>
+                      lensZoomMut.mutateAsync({ position: 16384 })
+                    }
                   >
                     Tele
                   </Button>
@@ -177,31 +380,42 @@ export default function Dashboard() {
             {/* Focus */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Foco</CardTitle>
-                <CardDescription>Controle de foco manual e automático</CardDescription>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Focus className="h-5 w-5" />
+                  Foco
+                </CardTitle>
+                <CardDescription>
+                  Controle de foco manual e automático
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Modo</label>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => lensFocusModeMut.mutateAsync({ mode: "auto" })}
-                    >
-                      Auto
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => lensFocusModeMut.mutateAsync({ mode: "manual" })}
-                    >
-                      Manual
-                    </Button>
-                  </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() =>
+                      lensFocusModeMut.mutateAsync({ mode: "auto" })
+                    }
+                  >
+                    Auto
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() =>
+                      lensFocusModeMut.mutateAsync({ mode: "manual" })
+                    }
+                  >
+                    Manual
+                  </Button>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Posição: 0 - 16384</label>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Perto</span>
+                    <span className="text-muted-foreground">Longe</span>
+                  </div>
                   <Slider
                     min={0}
                     max={16384}
@@ -217,12 +431,18 @@ export default function Dashboard() {
             {/* Iris */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Íris</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Aperture className="h-5 w-5" />
+                  Íris
+                </CardTitle>
                 <CardDescription>Controle de abertura</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Posição: 0 - 255</label>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Fechada</span>
+                    <span className="text-muted-foreground">Aberta</span>
+                  </div>
                   <Slider
                     min={0}
                     max={255}
@@ -243,11 +463,18 @@ export default function Dashboard() {
             {/* White Balance */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Balanço de Branco</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Thermometer className="h-5 w-5" />
+                  Balanço de Branco
+                </CardTitle>
                 <CardDescription>Presets e ajuste manual</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Select onValueChange={(value) => imageWBMut.mutateAsync({ mode: value })}>
+                <Select
+                  onValueChange={(value) =>
+                    imageWBMut.mutateAsync({ mode: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione preset" />
                   </SelectTrigger>
@@ -266,12 +493,18 @@ export default function Dashboard() {
             {/* Gain */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Ganho</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Gauge className="h-5 w-5" />
+                  Ganho
+                </CardTitle>
                 <CardDescription>Sensibilidade do sensor</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Valor: -6 a 33 dB</label>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">-6 dB</span>
+                    <span className="text-muted-foreground">33 dB</span>
+                  </div>
                   <Slider
                     min={-6}
                     max={33}
@@ -287,12 +520,17 @@ export default function Dashboard() {
             {/* Shutter Speed */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Velocidade do Obturador</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Timer className="h-5 w-5" />
+                  Velocidade do Obturador
+                </CardTitle>
                 <CardDescription>Controle de exposição</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Select
-                  onValueChange={(value) => imageShutterMut.mutateAsync({ value })}
+                  onValueChange={(value) =>
+                    imageShutterMut.mutateAsync({ value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione velocidade" />
@@ -304,6 +542,9 @@ export default function Dashboard() {
                     <SelectItem value="1/60">1/60</SelectItem>
                     <SelectItem value="1/100">1/100</SelectItem>
                     <SelectItem value="1/120">1/120</SelectItem>
+                    <SelectItem value="1/250">1/250</SelectItem>
+                    <SelectItem value="1/500">1/500</SelectItem>
+                    <SelectItem value="1/1000">1/1000</SelectItem>
                   </SelectContent>
                 </Select>
               </CardContent>
@@ -312,7 +553,10 @@ export default function Dashboard() {
             {/* ND Filter */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Filtro ND</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Filter className="h-5 w-5" />
+                  Filtro ND
+                </CardTitle>
                 <CardDescription>Densidade neutra</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -326,10 +570,10 @@ export default function Dashboard() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="0">Desligado</SelectItem>
-                    <SelectItem value="1">ND1</SelectItem>
-                    <SelectItem value="2">ND2</SelectItem>
-                    <SelectItem value="3">ND3</SelectItem>
-                    <SelectItem value="4">ND4</SelectItem>
+                    <SelectItem value="1">ND 1/4</SelectItem>
+                    <SelectItem value="2">ND 1/16</SelectItem>
+                    <SelectItem value="3">ND 1/64</SelectItem>
+                    <SelectItem value="4">ND 1/128</SelectItem>
                   </SelectContent>
                 </Select>
               </CardContent>
@@ -341,23 +585,28 @@ export default function Dashboard() {
         <TabsContent value="recording" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Controle de Gravação</CardTitle>
-              <CardDescription>Iniciar e parar gravação de vídeo</CardDescription>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Radio className="h-5 w-5" />
+                Controle de Gravação
+              </CardTitle>
+              <CardDescription>
+                Iniciar e parar gravação de vídeo
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <Radio
-                      className={`h-6 w-6 ${
-                        recordingStatus.data?.recording
-                          ? "fill-red-500 text-red-500"
-                          : "text-muted-foreground"
+                    <div
+                      className={`h-4 w-4 rounded-full ${
+                        isRecording
+                          ? "bg-red-500 animate-pulse shadow-lg shadow-red-500/50"
+                          : "bg-muted-foreground/30"
                       }`}
                     />
                     <div>
-                      <p className="font-semibold">
-                        {recordingStatus.data?.recording ? "Gravando" : "Parado"}
+                      <p className="font-semibold text-lg">
+                        {isRecording ? "Gravando" : "Parado"}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {recordingStatus.data?.status || "Status desconhecido"}
@@ -370,14 +619,16 @@ export default function Dashboard() {
               <div className="flex gap-3">
                 <Button
                   size="lg"
-                  className="flex-1 bg-red-600 hover:bg-red-700"
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white"
                   onClick={handleRecordStart}
-                  disabled={recordStartMut.isPending || recordingStatus.data?.recording}
+                  disabled={
+                    recordStartMut.isPending || isRecording
+                  }
                 >
                   {recordStartMut.isPending ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
-                    <Radio className="mr-2 h-4 w-4" />
+                    <Circle className="mr-2 h-4 w-4 fill-current" />
                   )}
                   Iniciar Gravação
                 </Button>
@@ -386,7 +637,9 @@ export default function Dashboard() {
                   variant="outline"
                   className="flex-1"
                   onClick={handleRecordStop}
-                  disabled={recordStopMut.isPending || !recordingStatus.data?.recording}
+                  disabled={
+                    recordStopMut.isPending || !isRecording
+                  }
                 >
                   {recordStopMut.isPending ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -405,20 +658,27 @@ export default function Dashboard() {
               <Card key={channel}>
                 <CardHeader>
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Mic2 className="h-4 w-4" />
+                    <Mic2 className="h-5 w-5" />
                     Canal {channel}
                   </CardTitle>
-                  <CardDescription>Nível de entrada de áudio</CardDescription>
+                  <CardDescription>
+                    Nível de entrada de áudio
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Nível: 0 - 100</label>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">0</span>
+                      <span className="text-muted-foreground">100</span>
+                    </div>
                     <Slider
                       min={0}
                       max={100}
                       step={1}
                       defaultValue={[50]}
-                      onValueChange={(value) => handleAudioLevel(channel, value[0])}
+                      onValueChange={(value) =>
+                        handleAudioLevel(channel, value[0])
+                      }
                       disabled={audioLevelMut.isPending}
                     />
                   </div>
@@ -426,6 +686,7 @@ export default function Dashboard() {
                     <Button
                       size="sm"
                       variant="outline"
+                      className="flex-1"
                       onClick={() => handleAudioLevel(channel, 0)}
                     >
                       Mudo
@@ -433,6 +694,7 @@ export default function Dashboard() {
                     <Button
                       size="sm"
                       variant="outline"
+                      className="flex-1"
                       onClick={() => handleAudioLevel(channel, 100)}
                     >
                       Máximo
@@ -443,8 +705,6 @@ export default function Dashboard() {
             ))}
           </div>
         </TabsContent>
-
-
       </Tabs>
     </div>
   );

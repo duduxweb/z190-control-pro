@@ -7,6 +7,103 @@ import * as camera from "./camera";
 import { getDb } from "./db";
 import { cameraPresets } from "../drizzle/schema";
 import { eq, and } from "drizzle-orm";
+import { ENV } from "./_core/env";
+import fs from "fs";
+import path from "path";
+import axios from "axios";
+
+// ─── Config file path ───────────────────────────────────────────
+
+const CONFIG_PATH = path.join(process.cwd(), "config.json");
+
+function readConfig() {
+  try {
+    if (fs.existsSync(CONFIG_PATH)) {
+      return JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
+    }
+  } catch {}
+  return {
+    camera: {
+      ip: ENV.cameraIp || "192.168.100.41",
+      user: ENV.cameraUser || "admin",
+      password: ENV.cameraPassword || "",
+      port: 80,
+    },
+  };
+}
+
+function writeConfig(config: any) {
+  fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2), "utf8");
+}
+
+// ─── Config Router ──────────────────────────────────────────────
+
+const configRouter = router({
+  get: publicProcedure.query(() => {
+    const config = readConfig();
+    return {
+      ip: config.camera?.ip || "192.168.100.41",
+      user: config.camera?.user || "admin",
+      password: config.camera?.password ? "****" : "",
+      port: config.camera?.port || 80,
+      hasPassword: !!config.camera?.password,
+    };
+  }),
+  save: publicProcedure
+    .input(
+      z.object({
+        ip: z.string().min(1),
+        user: z.string().min(1),
+        password: z.string().optional(),
+        port: z.number().min(1).max(65535).default(80),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const currentConfig = readConfig();
+      const newConfig = {
+        ...currentConfig,
+        camera: {
+          ip: input.ip,
+          user: input.user,
+          password: input.password || currentConfig.camera?.password || "",
+          port: input.port,
+        },
+      };
+      writeConfig(newConfig);
+      // Reset camera client to use new config
+      camera.resetCameraClient();
+      return { success: true };
+    }),
+  testConnection: publicProcedure
+    .input(
+      z.object({
+        ip: z.string().min(1),
+        user: z.string().min(1),
+        password: z.string().min(1),
+        port: z.number().min(1).max(65535).default(80),
+      })
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const auth = Buffer.from(`${input.user}:${input.password}`).toString("base64");
+        const url = `http://${input.ip}:${input.port}/`;
+        const response = await axios.get(url, {
+          headers: { Authorization: `Basic ${auth}` },
+          timeout: 5000,
+          validateStatus: () => true,
+        });
+        if (response.status === 200) {
+          return { ok: true, status: response.status, message: "Camera acessivel!" };
+        } else if (response.status === 401) {
+          return { ok: false, status: 401, message: "Credenciais invalidas (401)" };
+        } else {
+          return { ok: false, status: response.status, message: `Resposta: ${response.status}` };
+        }
+      } catch (e: any) {
+        return { ok: false, status: 0, message: `Erro de conexao: ${e.message}` };
+      }
+    }),
+});
 
 // ─── Camera Control Router ───────────────────────────────────────
 
@@ -218,6 +315,7 @@ export const appRouter = router({
       return { success: true } as const;
     }),
   }),
+  config: configRouter,
   camera: cameraRouter,
   lens: lensRouter,
   image: imageRouter,

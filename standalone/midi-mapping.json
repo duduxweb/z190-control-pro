@@ -1,0 +1,26 @@
+{
+  "$schema": "inline",
+  "global": {
+    "ips": [
+      "192.168.9.105"
+    ],
+    "z190Cli": "./z190-multi.js",
+    "debounceMs": 30
+  },
+  "bindings": [
+    {
+      "type": "note",
+      "channel": 0,
+      "number": 44,
+      "label": "Color Bars",
+      "on": {
+        "cmd": "colorbars on",
+        "throttleMs": 100
+      },
+      "off": {
+        "cmd": "colorbars off",
+        "throttleMs": 100
+      }
+    }
+  ]
+}

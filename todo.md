@@ -20,3 +20,13 @@
 - [x] Implementar feedback visual em tempo real
 - [x] Otimizar para desktop e tablets
 - [x] Escrever testes unitários
+
+## Migração para Standalone + GitHub
+
+- [x] Copiar arquivos standalone (camera-api.js, z190-multi.js, z190-midi.js, etc.) para o projeto
+- [x] Criar página de Configuração (IP, usuário, senha) no frontend React
+- [x] Criar Dashboard com valores atuais da câmera (WB, Iris, Gain, Shutter, ND) em tempo real
+- [x] Adicionar rota tRPC para salvar/carregar configuração da câmera
+- [x] Adicionar rota tRPC para testar conexão com a câmera
+- [x] Adicionar menu "Configuração" na sidebar
+- [x] Push automático para GitHub via user_github remote
