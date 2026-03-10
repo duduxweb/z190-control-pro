@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Z190 MIDI Control • v0.3.3</title>
+
+  <!-- Tailwind (DEV: recomendável instalar local na produção) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 (DEV) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel Standalone (JSX no navegador em DEV) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100">
+  <div id="root" class="p-4 max-w-7xl mx-auto"></div>
+
+  <script type="text/babel">
+    const { useEffect, useState, useMemo, useRef } = React;
+
+    function Section({title, children, right}) {
+      return (
+        <div className="rounded-2xl bg-slate-900/60 border border-slate-800 shadow p-4 mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">{title}</h2>
+            {right}
+          </div>
+          {children}
+        </div>
+      );
+    }
+
+    function Badge({children, color}) {
+      const map = {
+        green: 'bg-emerald-900/50 text-emerald-300 border-emerald-800',
+        blue: 'bg-sky-900/50 text-sky-300 border-sky-800',
+        amber: 'bg-amber-900/50 text-amber-300 border-amber-800',
+        rose: 'bg-rose-900/50 text-rose-300 border-rose-800',
+        slate: 'bg-slate-800/70 text-slate-300 border-slate-700'
+      }[color] || 'bg-slate-800/70 text-slate-300 border-slate-700';
+      return <span className={`px-2 py-0.5 text-xs rounded border ${map}`}>{children}</span>;
+    }
+
+    /* ========= Catálogo de Funções (presets guiados) ========= */
+    const PRESETS = [
+      // SISTEMA
+      {
+        id: 'colorbars_toggle',
+        group: 'Sistema',
+        label: 'Color Bars — on/off (NOTE)',
+        kind: 'toggle',
+        noteOnly: true,
+        fields: [],
+        build: () => ({
+          on:  { cmd: 'colorbars on',  throttleMs: 100 },
+          off: { cmd: 'colorbars off', throttleMs: 100 },
+          label: 'Color Bars'
+        })
+      },
+      {
+        id: 'colorbars_toggle_cc',
+        group: 'Sistema',
+        label: 'Color Bars — on/off (CC via threshold)',
+        kind: 'toggle_cc',
+        fields: [
+          { key:'threshold',  label:'Threshold',  type:'number', def:64 },
+          { key:'hysteresis', label:'Hysteresis', type:'number', def:2 },
+          { key:'invert',     label:'Inverter lógica', type:'select', options:['não','sim'] }
+        ],
+        build: (vals) => ({
+          on:  { cmd: 'colorbars on',  throttleMs: 100 },
+          off: { cmd: 'colorbars off', throttleMs: 100 },
+          ccToggle: {
+            threshold: Number(vals.threshold??64),
+            hysteresis: Number(vals.hysteresis??2),
+            invert: (vals.invert==='sim')
+          },
+          label: 'Color Bars (CC→Toggle)'
+        })
+      },
+      {
+        id: 'rec_toggle',
+        group: 'Sistema',
+        label: 'REC — on/off (NOTE)',
+        kind: 'toggle',
+        noteOnly: true,
+        fields: [],
+        build: () => ({
+          on:  { cmd: 'rec on',  throttleMs: 100 },
+          off: { cmd: 'rec off', throttleMs: 100 },
+          label: 'REC'
+        })
+      },
+      {
+        id: 'rec_toggle_cc',
+        group: 'Sistema',
+        label: 'REC — on/off (CC via threshold)',
+        kind: 'toggle_cc',
+        fields: [
+          { key:'threshold',  label:'Threshold',  type:'number', def:64 },
+          { key:'hysteresis', label:'Hysteresis', type:'number', def:2 },
+          { key:'invert',     label:'Inverter lógica', type:'select', options:['não','sim'] }
+        ],
+        build: (vals) => ({
+          on:  { cmd: 'rec on',  throttleMs: 100 },
+          off: { cmd: 'rec off', throttleMs: 100 },
+          ccToggle: {
+            threshold: Number(vals.threshold??64),
+            hysteresis: Number(vals.hysteresis??2),
+            invert: (vals.invert==='sim')
+          },
+          label: 'REC (CC→Toggle)'
+        })
+      },
+
+      // WHITE BALANCE
+      {
+        id: 'wb_mode',
+        group: 'White Balance',
+        label: 'WB Mode (Memory/ATW) — on/off',
+        kind: 'toggle',
+        fields: [
+          { key:'aLabel', label:'Modo A', type:'select', options:['Memory A','Memory B','ATW','Preset'] },
+          { key:'bLabel', label:'Modo B', type:'select', options:['Memory A','Memory B','ATW','Preset'] }
+        ],
+        build: (vals) => ({
+          on:  { cmd: `wb-mode "${vals.aLabel||'Memory A'}"`, throttleMs: 120 },
+          off: { cmd: `wb-mode "${vals.bLabel||'Memory B'}"`, throttleMs: 120 },
+          label: `WB Mode (${vals.aLabel||'A'}↔${vals.bLabel||'B'})`
+        })
+      },
+      {
+        id: 'wb_k_snap',
+        group: 'White Balance',
+        label: 'WB Kelvin (snap — contínuo)',
+        kind: 'change',
+        fields: [
+          { key:'outMin', label:'outMin (K step)', type:'number', def:-300 },
+          { key:'outMax', label:'outMax (K step)', type:'number', def:300 },
+          { key:'round',  label:'round', type:'number', def:1 },
+          { key:'throttleMs', label:'throttleMs', type:'number', def:120 }
+        ],
+        build: (vals) => ({
+          onChange: { cmd: 'wb-k-snap {scaled}', throttleMs: Number(vals.throttleMs||120) },
+          scale: { inMin:0, inMax:127, outMin:Number(vals.outMin??-300), outMax:Number(vals.outMax??300), round:Number(vals.round??1) },
+          label: 'WB Kelvin Snap (±)'
+        })
+      },
+
+      // EXPOSIÇÃO
+      {
+        id: 'iris_step',
+        group: 'Exposição',
+        label: 'Iris Step (direção pelo sinal)',
+        kind: 'change',
+        fields: [
+          { key:'deadzone', label:'deadzone', type:'number', def:2 },
+          { key:'throttleMs', label:'throttleMs', type:'number', def:80 }
+        ],
+        build: (vals) => ({
+          onChange: { cmd: 'iris-step {sign}', throttleMs: Number(vals.throttleMs||80) },
+          scale: { inMin:0, inMax:127, outMin:-1, outMax:1, round:1 },
+          deadzone: Number(vals.deadzone||2),
+          label: 'Iris Step'
+        })
+      },
+
+      // FOCO/ZOOM
+      {
+        id: 'af_toggle',
+        group: 'Foco/Zoom',
+        label: 'AutoFocus — toggle',
+        kind: 'toggle',
+        fields: [],
+        build: () => ({
+          on: { cmd: 'af-toggle', throttleMs: 120 },
+          off:{ cmd: 'af-toggle', throttleMs: 120 },
+          label: 'AF Toggle'
+        })
+      },
+      {
+        id: 'zoom_var',
+        group: 'Foco/Zoom',
+        label: 'Zoom variável (contínuo)',
+        kind: 'change',
+        fields: [
+          { key:'outMin', label:'outMin (vel)', type:'number', def:-30 },
+          { key:'outMax', label:'outMax (vel)', type:'number', def:30 },
+          { key:'throttleMs', label:'throttleMs', type:'number', def:60 }
+        ],
+        build: (vals) => ({
+          onChange: { cmd: 'zoom-var {scaled}', throttleMs: Number(vals.throttleMs||60) },
+          scale: { inMin:0, inMax:16383, outMin:Number(vals.outMin??-30), outMax:Number(vals.outMax??30), round:1 },
+          label: 'Zoom Var'
+        })
+      },
+
+      // CUSTOM
+      {
+        id: 'custom_toggle',
+        group: 'Custom',
+        label: 'Custom — toggle',
+        kind: 'toggle',
+        fields: [
+          { key:'cmdOn',  label:'Cmd ON',  type:'text', def:'' },
+          { key:'cmdOff', label:'Cmd OFF', type:'text', def:'' },
+          { key:'throttleMs', label:'throttleMs', type:'number', def:100 }
+        ],
+        build: (vals) => ({
+          on:  vals.cmdOn  ? { cmd: vals.cmdOn,  throttleMs: Number(vals.throttleMs||100) } : undefined,
+          off: vals.cmdOff ? { cmd: vals.cmdOff, throttleMs: Number(vals.throttleMs||100) } : undefined,
+          label: 'Custom Toggle'
+        })
+      },
+      {
+        id: 'custom_change',
+        group: 'Custom',
+        label: 'Custom — onChange (contínuo)',
+        kind: 'change',
+        fields: [
+          { key:'cmd', label:'Cmd onChange', type:'text', def:'' },
+          { key:'inMin', label:'inMin', type:'number', def:0 },
+          { key:'inMax', label:'inMax', type:'number', def:127 },
+          { key:'outMin', label:'outMin', type:'number', def:-300 },
+          { key:'outMax', label:'outMax', type:'number', def:300 },
+          { key:'round', label:'round', type:'number', def:1 },
+          { key:'throttleMs', label:'throttleMs', type:'number', def:120 }
+        ],
+        build: (vals) => ({
+          onChange: vals.cmd ? { cmd: vals.cmd, throttleMs: Number(vals.throttleMs||120) } : undefined,
+          scale: { inMin:Number(vals.inMin||0), inMax:Number(vals.inMax||127), outMin:Number(vals.outMin||-300), outMax:Number(vals.outMax||300), round:Number(vals.round||1) },
+          label: 'Custom Change'
+        })
+      }
+    ];
+
+    function PresetBuilder({ onAdd, disabledLearn, inPort }) {
+      const groups = [...new Set(PRESETS.map(p=>p.group))];
+      const [group, setGroup] = useState(groups[0] || '');
+      const [sel, setSel] = useState(PRESETS.find(p=>p.group===group)?.id || '');
+      const [vals, setVals] = useState({});
+      const [midiType, setMidiType] = useState('cc');
+      const [channel, setChannel] = useState(0);
+      const [number, setNumber] = useState(0);
+      const [learnOn, setLearnOn] = useState(false);
+      const learnEsRef = useRef(null);
+
+      useEffect(()=>{
+        const first = PRESETS.find(p=>p.group===group);
+        setSel(first?.id || '');
+      }, [group]);
+
+      useEffect(()=>{
+        const p = PRESETS.find(x=>x.id===sel);
+        const obj = {};
+        (p?.fields||[]).forEach(f => obj[f.key] = f.def ?? (f.type==='number'?0:''));
+        setVals(obj);
+        // sugestão de tipo MIDI conforme preset
+        if (p?.noteOnly) setMidiType('note');
+        else if (p?.kind==='toggle_cc') setMidiType('cc');
+      }, [sel]);
+
+      function fieldInput(f) {
+        if (f.type==='select') {
+          return (
+            <select className="bg-slate-800 rounded p-2 text-sm" value={vals[f.key]??f.def??''}
+              onChange={e=>setVals({...vals, [f.key]: e.target.value})}>
+              {(f.options||[]).map(opt=><option key={opt} value={opt}>{opt}</option>)}
+            </select>
+          );
+        }
+        if (f.type==='number') {
+          return (
+            <input className="bg-slate-800 rounded p-2 text-sm" type="number"
+              value={vals[f.key]??f.def??0}
+              onChange={e=>setVals({...vals, [f.key]: Number(e.target.value)})}/>
+          );
+        }
+        return (
+          <input className="bg-slate-800 rounded p-2 text-sm"
+            value={vals[f.key]??''} onChange={e=>setVals({...vals, [f.key]: e.target.value})}/>
+        );
+      }
+
+      function startLearn() {
+        if (!inPort) { alert('Selecione uma porta MIDI de entrada no topo.'); return; }
+        fetch('/api/learn/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ inPort }) })
+          .then(r=>r.json()).then(resp=>{
+            if (!resp.ok && resp.error) { alert(resp.error); return; }
+            setLearnOn(true);
+            const es = new EventSource('/api/learn/events');
+            learnEsRef.current = es;
+            es.onmessage = (ev)=>{
+              try {
+                const data = JSON.parse(ev.data);
+                if (data.type==='cc')        { setMidiType('cc');   setChannel(data.payload.channel||0); setNumber(data.payload.number||0);  stopLearn(); }
+                else if (data.type==='noteon'){ setMidiType('note'); setChannel(data.payload.channel||0); setNumber(data.payload.number||0); stopLearn(); }
+                else if (data.type==='pitch') { setMidiType('pitch'); setChannel(data.payload.channel||0); stopLearn(); }
+              } catch {}
+            };
+          });
+      }
+      function stopLearn() {
+        fetch('/api/learn/stop', { method:'POST' });
+        if (learnEsRef.current) { learnEsRef.current.close(); learnEsRef.current = null; }
+        setLearnOn(false);
+      }
+
+      function add() {
+        const preset = PRESETS.find(p=>p.id===sel);
+        if (!preset) return;
+        const built = preset.build(vals) || {};
+        const binding = {
+          type: midiType,
+          channel: Number(channel),
+          ...(midiType!=='pitch' ? { number: Number(number) } : {}),
+          label: built.label || preset.label
+        };
+
+        if (preset.kind==='toggle') {
+          if (built.on)  binding.on  = built.on;
+          if (built.off) binding.off = built.off;
+        } else if (preset.kind==='toggle_cc') {
+          // Forçar CC + objeto ccToggle
+          binding.type = 'cc';
+          if (built.on)  binding.on  = built.on;
+          if (built.off) binding.off = built.off;
+          if (built.ccToggle) binding.ccToggle = built.ccToggle;
+        } else {
+          if (built.onChange) binding.onChange = built.onChange;
+          if (built.scale)    binding.scale    = built.scale;
+          if (typeof built.deadzone === 'number') binding.deadzone = built.deadzone;
+        }
+
+        onAdd(binding);
+      }
+
+      const currentPreset = PRESETS.find(p=>p.id===sel);
+
+      return (
+        <Section title="Catálogo de Funções (presets)">
+          <div className="grid md:grid-cols-3 gap-3 mb-3">
+            <div>
+              <label className="block text-sm mb-1">Categoria</label>
+              <select className="w-full bg-slate-800 rounded p-2" value={group} onChange={e=>setGroup(e.target.value)}>
+                {Array.from(new Set(PRESETS.map(p=>p.group))).map(g=><option key={g} value={g}>{g}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Função</label>
+              <select className="w-full bg-slate-800 rounded p-2" value={sel} onChange={e=>setSel(e.target.value)}>
+                {PRESETS.filter(p=>p.group===group).map(p=><option key={p.id} value={p.id}>{p.label}</option>)}
+              </select>
+            </div>
+            <div className="text-sm text-slate-400 flex items-end">
+              {currentPreset?.kind==='toggle_cc'
+                ? 'Acione via CC (threshold/histerese).'
+                : currentPreset?.kind==='toggle'
+                  ? (currentPreset?.noteOnly ? 'Sugerido: NOTE (botão). Você pode trocar se quiser.' : 'Acione com ON/OFF.')
+                  : 'Valor contínuo (knob/slider).'}
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-3 mb-3">
+            {(currentPreset?.fields||[]).map(f=>(
+              <div key={f.key}>
+                <label className="block text-sm mb-1">{f.label}</label>
+                { fieldInput(f) }
+              </div>
+            ))}
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-3 mb-3">
+            <div>
+              <label className="block text-sm mb-1">Tipo MIDI</label>
+              <select className="w-full bg-slate-800 rounded p-2" value={midiType} onChange={e=>setMidiType(e.target.value)}>
+                <option value="note">note</option>
+                <option value="cc">cc</option>
+                <option value="pitch">pitch</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm mb-1">Canal</label>
+              <input className="w-full bg-slate-800 rounded p-2" type="number" min="0" max="15" value={channel} onChange={e=>setChannel(Number(e.target.value))}/>
+            </div>
+            {midiType!=='pitch' && (
+              <div>
+                <label className="block text-sm mb-1">Número</label>
+                <input className="w-full bg-slate-800 rounded p-2" type="number" min="0" max="127" value={number} onChange={e=>setNumber(Number(e.target.value))}/>
+              </div>
+            )}
+            <div className="flex items-end gap-2">
+              {!disabledLearn ? (
+                <>
+                  <button className={"px-3 py-2 rounded-lg " + (learnOn ? "bg-rose-600 hover:bg-rose-500" : "bg-emerald-600 hover:bg-emerald-500")}
+                    onClick={learnOn ? stopLearn : startLearn}>{learnOn ? "Parar Learn" : "Aprender MIDI"}</button>
+                  <span className="text-xs text-slate-400">Pressione o botão/gire o knob…</span>
+                </>
+              ) : (
+                <span className="text-xs text-slate-400">Pare a execução para usar MIDI Learn.</span>
+              )}
+            </div>
+          </div>
+
+          <button className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500" onClick={add}>Adicionar mapping</button>
+        </Section>
+      );
+    }
+
+    // ---------- Logs avançados ----------
+    function parseLog(line) {
+      try { return { raw: line, json: JSON.parse(line) }; } catch {}
+      if (line.startsWith('[stderr] ')) return { raw: line, stderr: true };
+      return { raw: line };
+    }
+    function rowFromParsed(p) {
+      if (p.json?.tag === 'midi') {
+        const t = p.json.type;
+        return { kind:'midi', title:`${t} ch:${p.json.channel}${p.json.number!=null?` n:${p.json.number}`:''}`, detail:`value=${p.json.value} scaled=${p.json.scaled} sign=${p.json.sign}`, color:'blue' };
+      }
+      if (p.json?.tag === 'match') {
+        const b = p.json.binding || {};
+        return { kind:'match', title:`binding: ${p.json.label || '(sem label)'}`, detail:`(${b.type} ch:${b.channel}${b.number!=null?` n:${b.number}`:''}) → ${p.json.cmd}`, color:'green' };
+      }
+      if (p.json?.tag === 'exec') {
+        return { kind:'exec', title:`exec: ${p.json.cmd}`, detail:`ips: ${Array.isArray(p.json.ips)?p.json.ips.join(', '):''}`, color:'amber' };
+      }
+      if (p.json?.tag === 'skip') {
+        return { kind:'skip', title:`skip (${p.json.reason})`, detail:`key=${p.json.key} throttleMs=${p.json.ms}`, color:'rose' };
+      }
+      if (p.json?.tag === 'noaction') {
+        return { kind:'noaction', title:`sem ação`, detail:`${p.json.reason}; bind="${p.json.binding?.label}"`, color:'slate' };
+      }
+      if (p.json?.tag === 'config') {
+        return { kind:'config', title:'config', detail: JSON.stringify(p.json.info), color:'slate' };
+      }
+      if (p.stderr) return { kind:'stderr', title:'stderr', detail:p.raw.slice(9), color:'rose' };
+      return { kind:'raw', title:'log', detail:p.raw, color:'slate' };
+    }
+
+    function LogsPanel() {
+      const [items, setItems] = useState([]);
+      const [filters, setFilters] = useState({ midi:true, exec:true, match:true, skip:true, noaction:true, stderr:true, raw:false });
+      const [query, setQuery] = useState('');
+
+      useEffect(()=>{
+        const es = new EventSource('/api/events');
+        es.onmessage = ev => {
+          try {
+            const data = JSON.parse(ev.data);
+            const p = parseLog(data.line);
+            const row = rowFromParsed(p);
+            row.ts = data.ts || Date.now();
+            setItems(prev => (prev.length > 1500 ? [...prev.slice(-1200), row] : [...prev, row]));
+          } catch {}
+        };
+        return ()=> es.close();
+      }, []);
+
+      const visible = useMemo(()=>{
+        return items.filter(it => {
+          if (!filters[it.kind]) return false;
+          if (!query) return true;
+          const s = (it.title + ' ' + it.detail).toLowerCase();
+          return s.includes(query.toLowerCase());
+        });
+      }, [items, filters, query]);
+
+      async function clearLogs(){
+        await fetch('/api/logs/clear', { method:'POST' });
+        setItems([]);
+      }
+
+      return (
+        <Section
+          title="Logs em tempo real"
+          right={
+            <div className="flex gap-2 items-center">
+              <input className="bg-slate-800 rounded p-1.5 text-sm" placeholder="buscar…" value={query} onChange={e=>setQuery(e.target.value)} />
+              <button className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={clearLogs}>Limpar</button>
+            </div>
+          }
+        >
+          <div className="flex flex-wrap gap-2 mb-3 text-xs">
+            {Object.entries(filters).map(([k,v])=>(
+              <label key={k} className="flex items-center gap-1 cursor-pointer">
+                <input type="checkbox" checked={v} onChange={e=>setFilters({...filters, [k]: e.target.checked})}/>
+                <span>{k}</span>
+              </label>
+            ))}
+          </div>
+          <div className="h-72 overflow-auto bg-black/40 rounded-xl p-2 border border-slate-800">
+            {visible.map((it, i)=>(
+              <div key={i} className="flex items-start gap-2 py-0.5">
+                <Badge color={it.color}>{it.kind}</Badge>
+                <div className="text-xs">
+                  <div className="text-slate-200">{it.title}</div>
+                  {it.detail && <div className="text-slate-400">{it.detail}</div>}
+                </div>
+              </div>
+            ))}
+            {visible.length===0 && <div className="text-sm text-slate-400">Sem logs filtrados.</div>}
+          </div>
+        </Section>
+      );
+    }
+
+    // ---------- App ----------
+    function App() {
+      const [ports, setPorts] = useState({in:[], out:[]});
+      const [ips, setIps] = useState(['192.168.9.105']);
+      const [inPort, setInPort] = useState('');
+      const [outPort, setOutPort] = useState('');
+      const [mapping, setMapping] = useState(null);
+      const [mappingText, setMappingText] = useState('');
+      const [validJson, setValidJson] = useState(true);
+      const [running, setRunning] = useState(false);
+      const [showAdvanced, setShowAdvanced] = useState(false);
+
+      function fetchPorts() { fetch('/api/midi/ports').then(r=>r.json()).then(setPorts); }
+      function fetchConfig() {
+        fetch('/api/config').then(r=>r.json()).then(cfg=>{
+          setIps(cfg.ips || []); setInPort(cfg.inPort || ''); setOutPort(cfg.outPort || '');
+          const map = cfg.mapping || { $schema:'inline', global:{ ips:cfg.ips||[], z190Cli:'./z190-multi.js', debounceMs:40 }, bindings:[] };
+          setMapping(map);
+          setMappingText(JSON.stringify(map, null, 2));
+        });
+      }
+      useEffect(()=>{ fetchPorts(); fetchConfig(); }, []);
+
+      useEffect(()=>{ try { const j=JSON.parse(mappingText); setMapping(j); setValidJson(true);} catch { setValidJson(false);} }, [mappingText]);
+
+      useEffect(()=>{
+        const es = new EventSource('/api/events');
+        es.onmessage = (ev)=>{
+          try {
+            const data = JSON.parse(ev.data);
+            if (/processo finalizado/.test(data.line)) setRunning(false);
+          } catch {}
+        };
+        return ()=> es.close();
+      }, []);
+
+      function saveConfig() {
+        return fetch('/api/config', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ ips, inPort: inPort||null, outPort: outPort||null, mapping })
+        }).then(r=>r.json());
+      }
+      async function onStart(){ if(!validJson){alert('JSON inválido'); return;} await saveConfig(); await fetch('/api/run',{method:'POST'}); setRunning(true); }
+      async function onStop(){ await fetch('/api/stop',{method:'POST'}); setRunning(false); }
+
+      const ipsStr = useMemo(()=> ips.join(', '), [ips]);
+
+      function addBindingFromPreset(binding) {
+        const next = { ...(mapping||{}) };
+        next.bindings = Array.isArray(next.bindings) ? [...next.bindings, binding] : [binding];
+        setMapping(next);
+        setMappingText(JSON.stringify(next, null, 2));
+      }
+      function removeBinding(idx) {
+        const next = { ...(mapping||{}) };
+        next.bindings = (next.bindings||[]).filter((_,i)=>i!==idx);
+        setMapping(next);
+        setMappingText(JSON.stringify(next, null, 2));
+      }
+
+      return (
+        <div>
+          <h1 className="text-2xl font-bold mb-4">Z190 MIDI Control <span className="text-xs text-slate-400">v0.3.3</span></h1>
+
+          <Section title="Dispositivos MIDI" right={
+            <button className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={fetchPorts}>Recarregar</button>
+          }>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm mb-1">Entrada MIDI (controladora)</label>
+                <select className="w-full bg-slate-800 rounded-lg p-2" value={inPort} onChange={e=>setInPort(e.target.value)}>
+                  <option value="">(auto: primeira porta)</option>
+                  {ports.in.map((p,i)=><option key={i} value={p}>{p}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm mb-1">Saída MIDI (LED/feedback) — opcional</label>
+                <select className="w-full bg-slate-800 rounded-lg p-2" value={outPort} onChange={e=>setOutPort(e.target.value)}>
+                  <option value="">(nenhuma)</option>
+                  {ports.out.map((p,i)=><option key={i} value={p}>{p}</option>)}
+                </select>
+              </div>
+            </div>
+          </Section>
+
+          <Section title="Câmeras Z190 (IPs)">
+            <div className="flex flex-wrap gap-2">
+              {ips.map((ip,idx)=>(
+                <div className="flex items-center gap-2" key={idx}>
+                  <input className="bg-slate-800 rounded-lg p-2" value={ip} onChange={e=>{ const v=[...ips]; v[idx]=e.target.value; setIps(v); }}/>
+                  <button className="text-red-400 hover:text-red-300" onClick={()=>{ const v=ips.slice(); v.splice(idx,1); setIps(v); }}>remover</button>
+                </div>
+              ))}
+              <button className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={()=>setIps([...ips, '192.168.9.106'])}>+ adicionar IP</button>
+            </div>
+          </Section>
+
+          {/* Presets amigáveis + Learn */}
+          <PresetBuilder onAdd={addBindingFromPreset} disabledLearn={running} inPort={inPort} />
+
+          {/* Lista de bindings atuais */}
+          <Section title="Bindings atuais">
+            {(!mapping?.bindings || mapping.bindings.length===0) ? (
+              <div className="text-sm text-slate-400">Nenhum binding adicionado. Use os presets acima.</div>
+            ) : (
+              <div className="space-y-2">
+                {mapping.bindings.map((b,idx)=>(
+                  <div key={idx} className="rounded-lg border border-slate-800 p-2 bg-slate-900/50 flex items-center justify-between text-sm">
+                    <div>
+                      <div className="font-mono">
+                        <span className="text-slate-400">{b.type}</span> ch:{b.channel}{b.number!=null?` n:${b.number}`:''}
+                        <span className="text-slate-500"> • </span>
+                        <span>{b.label || '(sem label)'}</span>
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        {b.on?.cmd && <>ON: <code>{b.on.cmd}</code> </>}
+                        {b.off?.cmd && <>OFF: <code>{b.off.cmd}</code> </>}
+                        {b.onChange?.cmd && <>CHANGE: <code>{b.onChange.cmd}</code> </>}
+                        {b.ccToggle && <> • ccToggle: {JSON.stringify(b.ccToggle)} </>}
+                        {b.scale && <> • scale: {JSON.stringify(b.scale)} </>}
+                      </div>
+                    </div>
+                    <button className="text-rose-400 hover:text-rose-300" onClick={()=>removeBinding(idx)}>remover</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Section>
+
+          {/* Editor bruto (avançado) — opcional */}
+          <Section
+            title="Mapeamento avançado (JSON)"
+            right={<button className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={()=>setShowAdvanced(v=>!v)}>{showAdvanced?'Ocultar':'Mostrar'}</button>}
+          >
+            {showAdvanced && (
+              <>
+                <textarea className={"w-full h-64 font-mono text-sm rounded-lg p-3 bg-slate-900 border " + (validJson ? "border-slate-700" : "border-red-500")}
+                  value={mappingText} onChange={e=>setMappingText(e.target.value)} spellCheck={false}></textarea>
+                <div className="mt-2 flex gap-2">
+                  <button className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700" onClick={saveConfig}>Salvar</button>
+                  <span className={"text-sm " + (validJson ? "text-emerald-400" : "text-red-400")}>
+                    {validJson ? "JSON válido" : "JSON inválido"}
+                  </span>
+                </div>
+              </>
+            )}
+            {!showAdvanced && <div className="text-sm text-slate-400">Use os presets acima. O editor bruto é opcional.</div>}
+          </Section>
+
+          <Section title="Execução">
+            <div className="flex flex-wrap items-center gap-3">
+              <button className={"px-4 py-2 rounded-xl " + (running ? "bg-slate-700 cursor-not-allowed" : "bg-emerald-600 hover:bg-emerald-500")}
+                disabled={running} onClick={onStart}>Start</button>
+              <button className={"px-4 py-2 rounded-xl " + (!running ? "bg-slate-700 cursor-not-allowed" : "bg-rose-600 hover:bg-rose-500")}
+                disabled={!running} onClick={onStop}>Stop</button>
+              <span className="text-sm text-slate-400">In: <b>{inPort || "(auto)"}</b> • Out: <b>{outPort || "(nenhuma)"}</b> • IPs: <b>{ipsStr}</b></span>
+            </div>
+          </Section>
+
+          <LogsPanel />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

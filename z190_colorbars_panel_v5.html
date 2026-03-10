@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sony Z190 — Color Bars Panel v5 (robusto)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; margin:24px; background:#0b0c10; color:#eaeaea; }
+    .card { background:#15171c; padding:20px; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,.35); max-width:880px; }
+    h1 { font-size:20px; margin:0 0 12px; }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    button { padding:12px 16px; border-radius:12px; border:0; cursor:pointer; font-weight:600; background:#222632; color:#fff; }
+    button:hover { filter:brightness(1.08); }
+    .on { background:#2b7a2b; } .off { background:#8b2b2b; } .sec { background:#2b3a7a; }
+    .muted { opacity:.6; }
+    .status { margin-top:12px; font-size:14px; color:#c9d1d9; }
+    .small { font-size:12px; opacity:.8; }
+    code { background:#0f1115; padding:2px 6px; border-radius:6px; }
+    .ok { color:#5ad17a; } .err { color:#ff6b6b; }
+    pre { background:#0f1115; padding:10px; border-radius:10px; max-height:300px; overflow:auto; font-size:12px; }
+    input, select { padding:10px; border-radius:10px; border:1px solid #2b2f3a; background:#0f1115; color:#eaeaea; }
+    label { font-size:12px; opacity:.85; }
+    .kv { display:inline-block; margin-right:12px; }
+  </style>
+  <script src="./savona.min.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Sony PXW-Z190 — Color Bars (ON/OFF) v5</h1>
+
+    <div class="row" style="margin:12px 0 8px;">
+      <button id="btn-on"  class="on"  disabled>Color Bars ON</button>
+      <button id="btn-off" class="off" disabled>Color Bars OFF</button>
+      <button id="btn-refresh" class="sec">Refresh</button>
+      <button id="btn-ping" class="sec">Ping</button>
+      <span id="lamp" class="small muted">Estado: <span id="state">Carregando…</span></span>
+    </div>
+
+    <div class="row" style="margin:8px 0 8px;">
+      <div class="kv">Enabled: <code id="val-enabled">?</code></div>
+      <div class="kv">Type: <code id="val-type">?</code></div>
+      <label for="typeInput">Forçar Type:</label>
+      <input id="typeInput" placeholder="ex.: SMPTE / ARIB" style="min-width:220px;">
+      <button id="btn-apply-type" class="sec">Aplicar Type</button>
+    </div>
+
+    <div class="row" style="margin:8px 0 8px;">
+      <button id="btn-on-enabled-only"  class="sec">ON (só Enabled)</button>
+      <button id="btn-off-enabled-only" class="sec">OFF (só Enabled)</button>
+      <button id="btn-on-updatevalue"   class="sec">ON (UpdateValue)</button>
+      <button id="btn-off-updatevalue"  class="sec">OFF (UpdateValue)</button>
+    </div>
+
+    <div class="status" id="log">Inicializando…</div>
+    <div class="small" style="margin-top:8px;">Console:</div>
+    <pre id="console"></pre>
+
+    <div class="small" style="margin-top:8px; opacity:.75">
+      Dica: se aparecer erro <code>content_script.js</code>, isso costuma vir de extensões do Chrome. Teste em janela anônima sem extensões.
+    </div>
+  </div>
+
+  <script>
+    var client = new savona.client();
+    var logEl = document.getElementById("log");
+    var stateEl = document.getElementById("state");
+    var lampEl  = document.getElementById("lamp");
+    var btnOn   = document.getElementById("btn-on");
+    var btnOff  = document.getElementById("btn-off");
+    var btnRef  = document.getElementById("btn-refresh");
+    var btnPing = document.getElementById("btn-ping");
+    var typeInp = document.getElementById("typeInput");
+    var btnType = document.getElementById("btn-apply-type");
+    var btnOnE  = document.getElementById("btn-on-enabled-only");
+    var btnOffE = document.getElementById("btn-off-enabled-only");
+    var btnOnU  = document.getElementById("btn-on-updatevalue");
+    var btnOffU = document.getElementById("btn-off-updatevalue");
+
+    var valEnabled = document.getElementById("val-enabled");
+    var valType    = document.getElementById("val-type");
+    var term       = document.getElementById("console");
+
+    var currentType = null;
+    var ready = false;
+
+    function termLog(line) {
+      try { term.textContent += line + "\n"; term.scrollTop = term.scrollHeight; } catch(e){}
+    }
+    function log(m, cls) { logEl.innerHTML = (cls ? '<span class="'+cls+'">'+m+'</span>' : m); termLog(m); }
+    function setButtons(disabled) {
+      btnOn.disabled = btnOff.disabled = !!disabled;
+      if (disabled) { btnOn.classList.add("muted"); btnOff.classList.add("muted"); }
+      else { btnOn.classList.remove("muted"); btnOff.classList.remove("muted"); }
+    }
+    function setStatus(on) {
+      if (on) { stateEl.textContent = "ON"; lampEl.classList.remove("muted"); lampEl.classList.add("ok"); }
+      else    { stateEl.textContent = "OFF"; lampEl.classList.remove("ok"); lampEl.classList.add("muted"); }
+    }
+
+    function updateView(enabled, typeVal) {
+      valEnabled.textContent = String(enabled);
+      valType.textContent = String(typeVal);
+      setStatus(!!(enabled === true || enabled === "true" || enabled === "On" || enabled === "ON"));
+    }
+
+    function fetchStatus(cb) {
+      var names = {"Camera.ColorBar.Enabled":["*"], "Camera.ColorBar.Type":["*"]};
+      client.property.GetValue({
+        params: names,
+        onresponse: function(resp) {
+          var data = (resp && (resp.result || resp.error)) || null;
+          termLog("GetValue -> " + JSON.stringify(data));
+          if (!data || data === "timeout") { log("Timeout/sem dados no status.", "err"); if(cb) cb(false); return; }
+          try {
+            var enabled = data["Camera.ColorBar.Enabled"];
+            currentType = data["Camera.ColorBar.Type"] != null ? data["Camera.ColorBar.Type"] : currentType;
+            updateView(enabled, currentType);
+            if (!ready && currentType != null) { ready = true; setButtons(false); }
+            log("Status atualizado.");
+            if (cb) cb(true);
+          } catch(e) { log("Falha ao interpretar status: " + e, "err"); if(cb) cb(false); }
+        }
+      });
+    }
+
+    function setEnabledWithType(on) {
+      if (currentType == null) { log("Aguardando leitura do ColorBar Type…", "err"); return; }
+      setButtons(true);
+      var params = {
+        "Camera.ColorBar.Enabled": !!on,
+        "Camera.ColorBar.Type": currentType
+      };
+      termLog("SetValue -> " + JSON.stringify(params));
+      client.property.SetValue({
+        params: params,
+        onresponse: function(resp) {
+          var err = resp && resp.error;
+          termLog("SetValue resp -> " + JSON.stringify(resp));
+          setButtons(false);
+          if (err) log("Erro ao enviar: " + JSON.stringify(err), "err");
+          else { log("Comando enviado. Atualizando status…"); setTimeout(fetchStatus, 300); }
+        }
+      });
+    }
+
+    function setEnabledOnly(on) {
+      var params = { "Camera.ColorBar.Enabled": !!on };
+      termLog("SetValue (Enabled only) -> " + JSON.stringify(params));
+      client.property.SetValue({
+        params: params,
+        onresponse: function(resp) {
+          var err = resp && resp.error;
+          termLog("SetValue (Enabled only) resp -> " + JSON.stringify(resp));
+          if (err) log("Erro ao enviar: " + JSON.stringify(err), "err");
+          else { log("Enviado. Atualizando status…"); setTimeout(fetchStatus, 300); }
+        }
+      });
+    }
+
+    function updateValueEnabled(on) {
+      var params = { "Camera.ColorBar.Enabled": !!on };
+      termLog("UpdateValue (Enabled) -> " + JSON.stringify(params));
+      client.property.UpdateValue({
+        params: params,
+        onresponse: function(resp) {
+          var err = resp && resp.error;
+          termLog("UpdateValue resp -> " + JSON.stringify(resp));
+          if (err) log("Erro no UpdateValue: " + JSON.stringify(err), "err");
+          else { log("UpdateValue enviado. Atualizando status…"); setTimeout(fetchStatus, 300); }
+        }
+      });
+    }
+
+    function applyType() {
+      var t = typeInp.value && typeInp.value.trim();
+      if (!t) { log("Digite um valor de Type (ou copie o atual).", "err"); return; }
+      var params = { "Camera.ColorBar.Type": t };
+      termLog("SetValue(Type) -> " + JSON.stringify(params));
+      client.property.SetValue({
+        params: params,
+        onresponse: function(resp) {
+          var err = resp && resp.error;
+          termLog("SetValue(Type) resp -> " + JSON.stringify(resp));
+          if (err) log("Erro ao definir Type: " + JSON.stringify(err), "err");
+          else { log("Type aplicado. Atualizando status…"); setTimeout(fetchStatus, 300); }
+        }
+      });
+    }
+
+    btnOn.addEventListener("click",  function(){ setEnabledWithType(true); });
+    btnOff.addEventListener("click", function(){ setEnabledWithType(false); });
+    btnRef.addEventListener("click", function(){ fetchStatus(); });
+    btnPing.addEventListener("click", function(){
+      client.system.GetVersion({
+        params: {}, onresponse: function(resp) {
+          termLog("System.GetVersion -> " + JSON.stringify(resp && (resp.result || resp.error)));
+          if (resp && resp.result) log("Ping OK (System.GetVersion).");
+          else log("Ping falhou.", "err");
+        }
+      });
+    });
+
+    btnType.addEventListener("click", applyType);
+    btnOnE.addEventListener("click",  function(){ setEnabledOnly(true); });
+    btnOffE.addEventListener("click", function(){ setEnabledOnly(false); });
+    btnOnU.addEventListener("click",  function(){ updateValueEnabled(true); });
+    btnOffU.addEventListener("click", function(){ updateValueEnabled(false); });
+
+    client.onnotify = function(evt) {
+      try {
+        var payload = evt && (evt.result || evt.error);
+        if (!payload) return;
+        var p = payload["Notify.Property"] || payload["Notify.Properties"];
+        if (p && (p["Camera.ColorBar.Enabled"] !== undefined || p["Camera.ColorBar.Type"] !== undefined)) fetchStatus();
+      } catch(e){}
+    };
+
+    try {
+      client.connect();
+      client.notify.Subscribe({
+        params: ["Notify.Property","Notify.Properties","Notify.Process"],
+        onresponse: function(r) { termLog("Notify.Subscribe -> " + JSON.stringify(r && (r.result || r.error))); }
+      });
+      log("Conectado. Buscando status…");
+      fetchStatus();
+    } catch(e) { log("Falha ao conectar: " + e, "err"); }
+  </script>
+</body>
+</html>
