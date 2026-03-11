@@ -19,10 +19,39 @@ process.on('unhandledRejection', (r)=>console.error('[unhandledRejection]', r));
 process.on('uncaughtException', (e)=>console.error('[uncaughtException]', e));
 
 const { chromium } = require('playwright');
+const minimist = require('minimist');
+const fs = require('fs');
+const path = require('path');
+
+const argv = minimist(process.argv.slice(2), {
+  string: ['ip', 'user', 'password', 'pass'],
+  default: { port: 80 },
+});
+const positional = argv._;
 
 // ===== CAMERAS =====
+function getConfigCamera() {
+  try {
+    const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
+    if (cfg?.camera?.ip) {
+      return {
+        ip: cfg.camera.ip,
+        user: cfg.camera.user || 'admin',
+        pass: cfg.camera.password || cfg.camera.pass || '',
+        port: Number(cfg.camera.port || 80),
+      };
+    }
+  } catch {}
+  return { ip: '192.168.100.41', user: 'admin', pass: 'ABCD1234', port: 80 };
+}
+
 const CAMS = [
-  { ip: '192.168.100.41', user: 'admin', pass: 'ABCD1234' },
+  argv.ip ? {
+    ip: argv.ip,
+    user: argv.user || 'admin',
+    pass: argv.password || argv.pass || '',
+    port: Number(argv.port || 80),
+  } : getConfigCamera(),
   // { ip: '192.168.9.106', user: 'admin', pass: 'ABCD1234' },
 ];
 
@@ -59,7 +88,8 @@ async function createCtx(cam){
 }
 async function destroyCtx(c){ try{await c?.ctx?.close();}catch{} try{await c?.browser?.close();}catch{} }
 async function gotoRM(page, ip){
-  await page.goto(`http://${ip}/rmt.html`, { waitUntil:'domcontentloaded', timeout:30000 }).catch(()=>{});
+  const cam = CAMS[0];
+  await page.goto(`http://${ip}:${cam.port || 80}/rmt.html`, { waitUntil:'domcontentloaded', timeout:30000 }).catch(()=>{});
   await page.waitForURL(/\/rm(t)?\.html$/i, { timeout:15000 }).catch(()=>{});
   await page.waitForLoadState('networkidle', { timeout:15000 }).catch(()=>{});
 }
@@ -94,6 +124,24 @@ async function savonaCall(cam, ctxRef, fn, payload){
 const setValue =(cam,ctxRef,p)=>savonaCall(cam,ctxRef,'property.SetValue',p);
 const updateValue=(cam,ctxRef,p)=>savonaCall(cam,ctxRef,'property.UpdateValue',p);
 const getValues =(cam,ctxRef,n)=>savonaCall(cam,ctxRef,'property.GetValue',n);
+const getStatus =(cam,ctxRef,n)=>savonaCall(cam,ctxRef,'property.GetStatus',n);
+const getCapabilities =(cam,ctxRef,n)=>savonaCall(cam,ctxRef,'capability.GetValue',n);
+
+async function setValueWithFallbacks(cam, ctxRef, payloads){
+  const attempts = [];
+  let lastError = null;
+  for (const payload of payloads) {
+    try {
+      const resp = await setValue(cam, ctxRef, payload);
+      attempts.push({ ok: true, payload, resp });
+      return { ok: true, attempts, resp };
+    } catch (error) {
+      lastError = error;
+      attempts.push({ ok: false, payload, error: String(error) });
+    }
+  }
+  return { ok: false, attempts, error: String(lastError || 'Falha ao aplicar valor') };
+}
 
 // ===== leitura WB =====
 async function readKelvinRaw(cam, ctxRef){
@@ -156,10 +204,29 @@ async function cmdND(mode, value){
   const m=(mode||'').toLowerCase();
   await runAll(async ({cam,ctxRef})=>{
     const out={};
-    if (m==='manual' && value!=null){ out.setMode=await setValue(cam,ctxRef,{"Camera.NDFilter.SettingMethod":{"cam":"Manual"}}); out.setVal=await setValue(cam,ctxRef,{"Camera.NDFilter.Value":{"cam":Number(value)}}); }
+    if (m==='manual'){
+      out.setMode = await setValueWithFallbacks(cam, ctxRef, [
+        {"Camera.NDFilter.SettingMethod":"Manual"},
+        {"Camera.NDFilter.SettingMethod":{"cam":"Manual"}},
+      ]);
+      if (value!=null){
+        const presetMap = { clear: 5, '1/4': 32, '1/16': 64, '1/64': 128 };
+        const fromPreset = presetMap[String(value).toLowerCase()];
+        const ndNum = Number.isFinite(Number(value)) ? Number(value) : fromPreset;
+        if (Number.isFinite(ndNum)) {
+          out.setVal = await setValueWithFallbacks(cam, ctxRef, [
+            {"Camera.NDFilter.Value":ndNum},
+            {"Camera.NDFilter.Value":{"cam":ndNum}},
+            {"Camera.NDFilter.Value":{"_n":ndNum}},
+          ]);
+        } else {
+          out.setVal = { ok: false, error: `valor ND invalido: ${value}` };
+        }
+      }
+    }
     else if (m==='auto'){ out.setMode=await setValue(cam,ctxRef,{"Camera.NDFilter.SettingMethod":"Automatic"}); }
     else { out.summary='Uso: nd manual <valor> | nd auto'; }
-    out.after = await getValues(cam,ctxRef,{"Camera.NDFilter.SettingMethod":["cam"],"Camera.NDFilter.Value":["*"]});
+    out.after = await getValues(cam,ctxRef,{"Camera.NDFilter.SettingMethod":["*"],"Camera.NDFilter.Value":["*"]});
     return out;
   });
 }
@@ -168,17 +235,94 @@ async function cmdIris(mode, fnum){
   await runAll(async ({cam,ctxRef})=>{
     const out={};
     if (m==='auto'){ out.mode=await setValue(cam,ctxRef,{"Camera.Iris.SettingMethod":"Automatic"}); }
-    else if (m==='manual'){ out.mode=await setValue(cam,ctxRef,{"Camera.Iris.SettingMethod":"Manual"}); if (fnum) out.value=await setValue(cam,ctxRef,{"Camera.Iris.Value":{"_n":Number(fnum)},"Camera.Iris.Close.Enabled":false}); }
+    else if (m==='manual'){
+      out.mode = await setValueWithFallbacks(cam, ctxRef, [
+        {"Camera.Iris.SettingMethod":"Manual"},
+        {"Camera.Iris.SettingMethod":{"cam":"Manual"}},
+      ]);
+      if (fnum){
+        const irisNum = Number(fnum);
+        out.value = await setValueWithFallbacks(cam, ctxRef, [
+          {"Camera.Iris.Close.Enabled":false,"Camera.Iris.Value":irisNum},
+          {"Camera.Iris.Close.Enabled":false,"Camera.Iris.Value":{"_n":irisNum}},
+          {"Camera.Iris.Close.Enabled":false,"Camera.Iris.Value":{"cam":irisNum}},
+        ]);
+      }
+    }
     else { out.summary='Uso: iris auto | iris manual <f>'; }
     out.after=await getValues(cam,ctxRef,{"Camera.Iris.SettingMethod":["*"],"Camera.Iris.Value":["*"],"Camera.Iris.Close.Enabled":["*"]});
     return out;
   });
 }
+async function cmdFocus(mode){
+  const m=(mode||'').toLowerCase();
+  await runAll(async ({cam,ctxRef})=>{
+    const out={};
+    if (m==='auto'){ out.mode=await setValue(cam,ctxRef,{"Camera.Focus.SettingMethod":"Automatic"}); }
+    else if (m==='manual'){ out.mode=await setValue(cam,ctxRef,{"Camera.Focus.SettingMethod":"Manual"}); }
+    else { out.summary='Uso: focus auto | focus manual'; }
+    out.after=await getValues(cam,ctxRef,{"Camera.Focus.SettingMethod":["*"],"Camera.Focus.Distance":["*"],"Camera.Focus.Distance.Unit":["*"]});
+    return out;
+  });
+}
+async function cmdShutterMode(mode){
+  const m=(mode||'').toLowerCase();
+  await runAll(async ({cam,ctxRef})=>{
+    const out={};
+    if (m==='off'){
+      out.mode=await setValue(cam,ctxRef,{"Camera.Shutter.Enabled":false});
+    } else if (m==='auto'){
+      out.mode=await setValue(cam,ctxRef,{"Camera.Shutter.Enabled":true,"Camera.Shutter.SettingMethod":"Automatic"});
+    } else if (m==='manual'){
+      out.mode=await setValue(cam,ctxRef,{"Camera.Shutter.Enabled":true,"Camera.Shutter.SettingMethod":"Manual","Camera.Shutter.Mode":"Speed","Camera.Shutter.ECS.Enabled":false});
+    } else {
+      out.summary='Uso: shutter-mode off | shutter-mode auto | shutter-mode manual';
+    }
+    out.after=await getValues(cam,ctxRef,{"Camera.Shutter.Enabled":["*"],"Camera.Shutter.SettingMethod":["*"],"Camera.Shutter.Mode":["*"],"Camera.Shutter.Value":["*"]});
+    return out;
+  });
+}
 async function cmdShutter(speedStr){
   await runAll(async ({cam,ctxRef})=>{
-    const set = await setValue(cam,ctxRef,{"Camera.Shutter.ECS.Enabled":false,"Camera.Shutter.Mode":"Speed","Camera.Shutter.Value":String(speedStr||"1/50")});
+    const requested = String(speedStr || "1/50");
+    const capResp = await getCapabilities(cam, ctxRef, [["Camera.Shutter.Speed"]]).catch(() => null);
+    const candidates = [];
+    const collectCandidates = (node) => {
+      if (typeof node === 'string') {
+        if (/^\d+\/\d+$/i.test(node)) candidates.push(node);
+        return;
+      }
+      if (Array.isArray(node)) {
+        for (const item of node) collectCandidates(item);
+        return;
+      }
+      if (node && typeof node === 'object') {
+        for (const value of Object.values(node)) collectCandidates(value);
+      }
+    };
+    collectCandidates(capResp);
+    const uniqueCandidates = [...new Set(candidates)];
+    const parseShutterRatio = (value) => {
+      const match = String(value).match(/^(\d+)\/(\d+)$/);
+      if (!match) return null;
+      const num = Number(match[1]);
+      const den = Number(match[2]);
+      if (!Number.isFinite(num) || !Number.isFinite(den) || den === 0) return null;
+      return num / den;
+    };
+    let target = requested;
+    if (uniqueCandidates.length > 0 && !uniqueCandidates.includes(requested)) {
+      const reqRatio = parseShutterRatio(requested);
+      if (reqRatio != null) {
+        target = uniqueCandidates
+          .map((item) => ({ item, ratio: parseShutterRatio(item) }))
+          .filter((item) => item.ratio != null)
+          .sort((a, b) => Math.abs(a.ratio - reqRatio) - Math.abs(b.ratio - reqRatio))[0]?.item || requested;
+      }
+    }
+    const set = await setValue(cam,ctxRef,{"Camera.Shutter.Enabled":true,"Camera.Shutter.SettingMethod":"Manual","Camera.Shutter.ECS.Enabled":false,"Camera.Shutter.Mode":"Speed","Camera.Shutter.Value":target});
     const after = await getValues(cam,ctxRef,{"Camera.Shutter.Enabled":["*"],"Camera.Shutter.Mode":["*"],"Camera.Shutter.Value":["*"]});
-    return { summary:`shutter ${speedStr||'1/50'}`, set, after };
+    return { summary:`shutter ${target}`, requested, set, after, capabilities: uniqueCandidates.slice(0, 60) };
   });
 }
 async function cmdGain(dbStr){
@@ -189,10 +333,122 @@ async function cmdGain(dbStr){
   });
 }
 async function cmdWBMode(modeStr){
+  const requestedMode = String(modeStr||"Preset");
+  const modeNorm = requestedMode.toLowerCase();
+
   await runAll(async ({cam,ctxRef})=>{
-    const set = await setValue(cam,ctxRef,{"Camera.WhiteBalance.Mode":String(modeStr||"Preset")});
-    const after = await getValues(cam,ctxRef,{"Camera.WhiteBalance.Mode":["*"]});
-    return { summary:`wb-mode ${modeStr}`, set, after };
+    const out = {};
+    if (modeNorm === 'atw') {
+      out.set = await setValue(cam,ctxRef,{
+        "Camera.WhiteBalance.SettingMethod":"Automatic",
+        "Camera.WhiteBalance.AutoAdjust.Enabled":true,
+        "Camera.WhiteBalance.Mode":"ATW",
+      });
+      await sleep(120);
+      const confirm = await getValues(cam,ctxRef,{
+        "Camera.WhiteBalance.Mode":["*"],
+        "Camera.WhiteBalance.SettingMethod":["*"],
+        "Camera.WhiteBalance.AutoAdjust.Enabled":["*"],
+      });
+      out.after = confirm;
+      out.summary = `wb-mode ${requestedMode}`;
+      return out;
+    }
+
+    out.set = await setValue(cam,ctxRef,{
+      "Camera.WhiteBalance.Mode":requestedMode,
+      "Camera.WhiteBalance.SettingMethod":"Manual",
+      "Camera.WhiteBalance.AutoAdjust.Enabled":false,
+    });
+    await sleep(120);
+    out.after = await getValues(cam,ctxRef,{
+      "Camera.WhiteBalance.Mode":["*"],
+      "Camera.WhiteBalance.SettingMethod":["*"],
+      "Camera.WhiteBalance.AutoAdjust.Enabled":["*"],
+    });
+    out.summary = `wb-mode ${requestedMode}`;
+    return out;
+  });
+}
+async function cmdGammaEnabled(arg){
+  const on = /^(on|true|1)$/i.test(String(arg||''));
+  await runAll(async ({cam,ctxRef})=>{
+    const set = await setValue(cam,ctxRef,{"Paint.Gamma.Enabled":on});
+    const after = await getValues(cam,ctxRef,{"Paint.Gamma.Enabled":["*"],"Paint.Gamma.Type":["*"],"Paint.Gamma.Value":["*"]});
+    return { summary:`gamma ${on?'on':'off'}`, set, after };
+  });
+}
+async function cmdGammaType(...parts){
+  const type = parts.join(' ').trim();
+  await runAll(async ({cam,ctxRef})=>{
+    const set = await setValue(cam,ctxRef,{"Paint.Gamma.Type":type});
+    const after = await getValues(cam,ctxRef,{"Paint.Gamma.Enabled":["*"],"Paint.Gamma.Type":["*"],"Paint.Gamma.Value":["*"]});
+    return { summary:`gamma-type ${type}`, set, after };
+  });
+}
+async function cmdGammaValue(value){
+  const parsed = Number(value);
+  await runAll(async ({cam,ctxRef})=>{
+    const set = Number.isFinite(parsed)
+      ? await setValue(cam,ctxRef,{"Paint.Gamma.Value":parsed})
+      : await setValue(cam,ctxRef,{"Paint.Gamma.Value":String(value)});
+    const after = await getValues(cam,ctxRef,{"Paint.Gamma.Enabled":["*"],"Paint.Gamma.Type":["*"],"Paint.Gamma.Value":["*"]});
+    return { summary:`gamma-value ${value}`, set, after };
+  });
+}
+async function cmdGammaSet(typeArg, valueArg){
+  const type = String(typeArg || 'STD');
+  const value = String(valueArg || 'Main');
+  await runAll(async ({cam,ctxRef})=>{
+    const out = {};
+    out.remoteSetting = await getValues(cam,ctxRef,{"System.Config":["RemoteSetting"]}).catch(() => null);
+    out.step1 = await setValueWithFallbacks(cam, ctxRef, [
+      {"Paint.Gamma.Type":type, "Paint.Gamma.Value":""},
+      {"Paint.Gamma.Type":type},
+    ]);
+    out.step2 = await setValueWithFallbacks(cam, ctxRef, [
+      {"Paint.Gamma.Type":type, "Paint.Gamma.Value":value},
+      {"Paint.Gamma.Type":type, "Paint.Gamma.Value":{"cam":value}},
+    ]);
+    out.after = await getValues(cam,ctxRef,{"Paint.Gamma.Enabled":["*"],"Paint.Gamma.Type":["*"],"Paint.Gamma.Value":["*"]});
+    out.summary = `gamma-set ${type}/${value}`;
+    return out;
+  });
+}
+
+async function cmdBlackBalance(){
+  await runAll(async ({cam,ctxRef})=>{
+    const out = {};
+    out.before = await getStatus(cam,ctxRef,{"P.Control.u2x500.AutoBlackBalance":["*"]}).catch(() => null);
+    out.process = await savonaCall(cam, ctxRef, 'process.Execute.AutomaticAdjustment', [["Camera.BlackBalance"]]).catch(() => null);
+    await sleep(180);
+    out.after = await getStatus(cam,ctxRef,{"P.Control.u2x500.AutoBlackBalance":["*"]}).catch(() => null);
+    out.summary = 'black-balance';
+    return out;
+  });
+}
+
+async function cmdOutputShootingMode(value){
+  const mode = String(value || 'Normal');
+  await runAll(async ({cam,ctxRef})=>{
+    const set = await setValueWithFallbacks(cam, ctxRef, [
+      {"Camera.ShootingMode":mode},
+      {"Camera.ShootingMode":{"cam":mode}},
+    ]);
+    const after = await getValues(cam,ctxRef,{"Camera.ShootingMode":["*"],"Camera.ShootingMode.QFHD.RecOut":["cam"]});
+    return { summary:`output-shooting-mode ${mode}`, set, after };
+  });
+}
+
+async function cmdOutputRecOut(value){
+  const recOut = String(value || 'SDI+HDMI');
+  await runAll(async ({cam,ctxRef})=>{
+    const set = await setValueWithFallbacks(cam, ctxRef, [
+      {"Camera.ShootingMode.QFHD.RecOut":recOut},
+      {"Camera.ShootingMode.QFHD.RecOut":{"cam":recOut}},
+    ]);
+    const after = await getValues(cam,ctxRef,{"Camera.ShootingMode":["*"],"Camera.ShootingMode.QFHD.RecOut":["cam"]});
+    return { summary:`output-recout ${recOut}`, set, after };
   });
 }
 
@@ -510,14 +766,23 @@ async function cmdZoomStop(){ return cmdZoom(0); }
 
 // ===== dispatch =====
 (async ()=>{
-  const [,,cmd,...args]=process.argv;
+  const [cmd, ...args] = positional;
   switch((cmd||'').toLowerCase()){
     case 'colorbars':   return cmdColorBars(args[0]);
     case 'rec':         return cmdRec(args[0]);
     case 'nd':          return cmdND(args[0], args[1]);
     case 'iris':        return cmdIris(args[0], args[1]);
+    case 'focus':       return cmdFocus(args[0]);
+    case 'shutter-mode':return cmdShutterMode(args[0]);
     case 'shutter':     return cmdShutter(args[0]);
     case 'gain':        return cmdGain(args[0]);
+    case 'gamma-enabled':return cmdGammaEnabled(args[0]);
+    case 'gamma-type':  return cmdGammaType(...args);
+    case 'gamma-value': return cmdGammaValue(args[0]);
+    case 'gamma-set':   return cmdGammaSet(args[0], args[1]);
+    case 'black-balance': return cmdBlackBalance();
+    case 'output-shooting-mode': return cmdOutputShootingMode(args.join(' '));
+    case 'output-recout': return cmdOutputRecOut(args.join(' '));
 
     case 'wb-mode':     return cmdWBMode(args.join(' '));
     case 'wb-read':     return cmdWBRead();
@@ -542,8 +807,17 @@ async function cmdZoomStop(){ return cmdZoom(0); }
   rec on|off
   nd manual <valor> | nd auto
   iris auto | iris manual <f-number>
+  focus auto | focus manual
+  shutter-mode off | shutter-mode auto | shutter-mode manual
   shutter <speed>          (ex: 1/100)
   gain <dB>                (ex: 9dB)
+  gamma-enabled on|off
+  gamma-type <tipo>
+  gamma-value <valor>
+  gamma-set <tipo> <valor>   (ex: gamma-set STD STD4 | gamma-set HyperGamma HG2)
+  black-balance
+  output-shooting-mode <valor>
+  output-recout <valor>
 
   wb-mode "<Preset|Memory A|Memory B>"
   wb-read

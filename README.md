@@ -1,103 +1,125 @@
-# Z190 Control Madruga v2.0
+# Z190 Control Pro
 
-Aplicação Node.js standalone para controle remoto profissional da câmera Sony PXW-Z190 via rede local.
+Aplicacao Node.js + React para controle e monitoramento de cameras Sony PXW-Z190 via rede local (Savona/Web Remote).
+
+## Versao atual
+
+- Backend/API: `2.0.0` (package.json)
+- Dashboard Web: `1.0` (`2026-03-10`)
+
+## Principais recursos
+
+- Dashboard inicial com status de multiplas cameras.
+- Editor individual por camera.
+- Cadastro de cameras (IP, usuario, senha e porta).
+- Controle de exposicao (ND, iris, shutter, gain).
+- Controle de white balance (modo + Kelvin).
+- Controle de gamma (status e ajustes).
+- Gravacao e color bars.
+- Monitor de audio (CH1-CH4) e indicadores visuais.
+- Status de bateria/carregador.
+- Pagina `Beta` para funcoes em validacao.
+- Logs de servidor e Savona em tempo real (`logs/`).
+
+## Estrutura
+
+```text
+z190-control-pro/
+|- server.js                      # API + static + proxy /sony
+|- z190-status.js                 # leitura de status da camera (Savona/Playwright)
+|- z190-multi.js                  # comandos de controle (Savona/Playwright)
+|- logger.js                      # escrita de logs em arquivo
+|- config.json                    # configuracao local de cameras/presets
+|- camera-dashboard-control/      # frontend React (Vite + TS)
+|- docs-suport/                   # dump de arquivos originais da pagina Sony
+|- logs/                          # logs gerados pela aplicacao
+```
 
 ## Requisitos
 
-- Node.js 18 ou superior
-- Câmera Sony PXW-Z190 na mesma rede local
-- (Opcional) Controladora MIDI para integração MIDI
+- Node.js 18+
+- npm
+- Rede local com acesso a camera Sony PXW-Z190
+- Playwright Chromium instalado
 
-## Instalação
+## Instalacao
 
 ```bash
-git clone https://github.com/duduxweb/z190-control-pro.git
-cd z190-control-pro
+npm install
+npx playwright install chromium
+```
+
+Frontend (quando necessario em dev):
+
+```bash
+cd camera-dashboard-control
 npm install
 ```
 
-```bash
-npx playwright install
-npm install ws
-```
+## Execucao
 
-## Uso
-
-### Iniciar o painel de controle
+Servidor principal:
 
 ```bash
 npm start
 ```
 
-Acesse `http://localhost:3000` no navegador.
+Acesso:
 
-### Iniciar o servidor MIDI (opcional)
+- App: `http://localhost:3000`
+- Sony original via proxy: `http://localhost:3000/sony/rmt.html?cameraId=<id>`
 
-```bash
-npm run midi
-```
-
-### Atualizar via GitHub
+Frontend em desenvolvimento (opcional):
 
 ```bash
-git pull origin main
-npm install
+cd camera-dashboard-control
+npm run dev
 ```
 
-## Estrutura do Projeto
+## Logs
 
+Os logs sao gravados em `logs/` por categoria (ex.: `server`, `savona`), com timestamp.
+
+Util para diagnostico de:
+
+- comando enviado
+- resposta da camera
+- timeout de conexao
+- falha de status/polling
+
+## Pagina Beta
+
+A rota `Beta` foi criada para testes sem impactar o dashboard principal:
+
+- `/beta`
+- `/beta/:cameraId`
+
+Nela ficam funcoes em validacao (ex.: black/output/color bars) e console detalhado.
+
+## Configuracao
+
+As cameras e presets sao salvos em `config.json`.
+
+Campos por camera:
+
+- `id`
+- `name`
+- `ip`
+- `user`
+- `password`
+- `port`
+
+## Comandos CLI uteis
+
+Exemplos:
+
+```bash
+node z190-multi.js --ip 192.168.100.41 --user admin --password ABCD1234 gain 6dB
+node z190-multi.js --ip 192.168.100.41 --user admin --password ABCD1234 shutter 1/100
+node z190-multi.js --ip 192.168.100.41 --user admin --password ABCD1234 wb-mode "Memory A"
+node z190-status.js --ip 192.168.100.41 --user admin --password ABCD1234 --json --fast
 ```
-├── server.js                  # Servidor Express com proxy reverso e API REST
-├── camera-api.js              # Módulo de comunicação com a câmera (HTTP/CGI)
-├── z190-multi.js              # CLI para controle via Savona/Playwright
-├── z190-midi.js               # Integração MIDI para controladora
-├── z190-midi-server.js        # Servidor web para configuração MIDI
-├── z190-colorbars-100.js      # Controle de color bars
-├── z190-multi-colorbars.js    # Controle multi-colorbars
-├── z190-menu-colorbars.js     # Menu de colorbars
-├── z190_colorbars_panel_v5.html # Painel de colorbars (versão original)
-├── savona.min.js              # Biblioteca Savona da Sony (WebSocket)
-├── midi-mapping.json          # Mapeamento MIDI → funções da câmera
-├── config.example.json        # Template de configuração
-├── public/
-│   ├── index.html             # Interface web principal (Dashboard + Config)
-│   ├── savona.min.js          # Savona para uso no frontend
-│   └── savona-panel.html      # Painel Savona original
-└── zcontrol-web/              # Versão web (React+tRPC) arquivada
-```
 
-## Configuração
+## Historico de mudancas
 
-Na primeira execução, acesse `http://localhost:3000` e configure:
-
-1. **IP da câmera** (ex: 192.168.100.41)
-2. **Usuário** (ex: admin)
-3. **Senha** (ex: ABCD1234)
-4. **Porta** (ex: 80)
-
-Use o botão **Testar Conexão** para verificar a comunicação antes de salvar.
-
-A configuração é salva em `config.json` (criado automaticamente, não versionado).
-
-## Proxy Reverso
-
-O servidor funciona como proxy reverso para a câmera, injetando autenticação Basic automaticamente:
-
-- `/cam/*` → Câmera (com auth)
-- `/rmt.html` → Página de controle remoto da câmera
-- `/sony/*` → Endpoints Sony (com auth)
-
-## Dashboard
-
-O dashboard exibe em tempo real os valores atuais da câmera:
-
-- **White Balance**: Modo, método, temperatura Kelvin
-- **Exposição**: Íris, ganho, velocidade do obturador
-- **Filtro ND**: Método e valor
-- **Gravação**: Color bars, status
-
-Os dados são atualizados automaticamente a cada 3 segundos via polling.
-
-## Licença
-
-MIT
+Consulte `CHANGELOG.md`.
